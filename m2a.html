@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2a MEGA Dream ex — Binder</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 12px 40px}
+.app-title{font-size:16px;font-weight:700;color:#fff}
+.app-sub{font-size:11px;color:#555;margin-top:2px}
+.toolbar{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+input[type=text]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:6px 10px;font-size:13px;color:#ddd;width:150px;outline:none}
+input[type=text]:focus{border-color:#666}
+.clr{background:none;border:none;color:#555;cursor:pointer;font-size:14px;padding:0 4px}.clr:hover{color:#aaa}
+.nav{display:flex;align-items:center;gap:5px}
+.nb{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:6px 13px;font-size:13px;color:#ccc;cursor:pointer;font-family:inherit}.nb:hover:not(:disabled){background:#2a2820}.nb:disabled{opacity:.3;cursor:default}
+input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:5px 6px;font-size:13px;color:#ddd;width:48px;text-align:center;outline:none;font-family:inherit}
+.pc{font-size:12px;color:#555;white-space:nowrap}
+
+.action-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.prog-wrap{flex:1;min-width:140px;height:6px;background:#1e1c18;border-radius:999px;overflow:hidden}
+.prog-bar{height:100%;background:#c89a3a;border-radius:999px;transition:width .3s}
+.prog-text{font-size:11px;color:#666;white-space:nowrap}
+.btn{padding:6px 13px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid}
+.btn-gold{background:#1e1c18;border-color:#3a3020;color:#c89a3a}.btn-gold:hover{background:#2a2010}
+.btn-purple{background:#1e1c18;border-color:#2a2040;color:#9070e0}.btn-purple:hover{background:#22183a}
+.btn-dim{background:#1e1c18;border-color:#2a2828;color:#555}.btn-dim:hover{background:#2a2820;color:#aaa}
+.filter-lbl{display:flex;align-items:center;gap:5px;font-size:12px;color:#666;cursor:pointer;user-select:none}.filter-lbl input{accent-color:#c89a3a}
+
+.legend{width:100%;max-width:1100px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.lv{display:flex;align-items:center;gap:4px;font-size:10px;color:#555}
+.ld{width:9px;height:9px;border-radius:2px;border:2px solid}
+
+.alert{font-size:12px;color:#c07040;padding:6px 10px;background:#201408;border-radius:7px;margin-bottom:8px;display:none;max-width:1100px;width:100%}
+.spread-info{font-size:11px;color:#383430;text-align:center;margin-bottom:6px;width:100%;max-width:1100px}
+.spread{width:100%;max-width:1100px;display:flex;background:#0d0b09;border:2px solid #252018;border-radius:16px;overflow:hidden;box-shadow:0 10px 50px rgba(0,0,0,.7)}
+.spine{width:22px;flex-shrink:0;background:linear-gradient(to right,#080706,#1c1814,#1c1814,#080706)}
+.bpage{flex:1;padding:11px;min-width:0}
+.bpage.cover-pg{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#100e0c}
+.cover-ttl{font-size:20px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3}
+.cover-box{background:#181410;border:1px solid #2a2418;border-radius:9px;padding:10px 16px;font-size:11px;color:#666;line-height:2;text-align:center}
+.blank-pg{background:#0e0c0a;display:flex;align-items:center;justify-content:center}
+.pg-lbl{font-size:9px;color:#252220;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+
+/* Slots */
+.slot{background:#0b0a08;border-radius:6px;cursor:pointer;transition:border-color .12s,transform .1s;position:relative;overflow:hidden}
+.slot:hover{transform:scale(1.04);z-index:5}
+.slot.v-normal {border:2px solid #2a2826}.slot.v-normal:hover {border-color:#666}
+.slot.v-holo   {border:2px solid #4a3a10}.slot.v-holo:hover   {border-color:#c89a3a}
+.slot.v-ex     {border:2px solid #1a2c50}.slot.v-ex:hover     {border-color:#5090d8}
+.slot.v-erh    {border:2px solid #0e2a4a}.slot.v-erh:hover    {border-color:#378ADD}
+.slot.v-brh    {border:2px solid #083020}.slot.v-brh:hover    {border-color:#1D9E75}
+.slot.v-ar     {border:2px solid #221a5a}.slot.v-ar:hover     {border-color:#7F77DD}
+.slot.v-sr     {border:2px solid #332005}.slot.v-sr:hover     {border-color:#EF9F27}
+.slot.v-ma     {border:2px solid #331008}.slot.v-ma:hover     {border-color:#D85A30}
+.slot.v-sar    {border:2px solid #083020}.slot.v-sar:hover    {border-color:#5DCAA5}
+.slot.v-mur    {border:2px solid #330a0a}.slot.v-mur:hover    {border-color:#E24B4A}
+.slot.v-trainer{border:2px solid #1c2030}.slot.v-trainer:hover{border-color:#5060a0}
+.slot.empty{display:flex;align-items:center;justify-content:center;aspect-ratio:63/110;border:2px dashed #181614;cursor:default;background:transparent;border-radius:6px}
+.slot.empty:hover{transform:none;border-color:#181614}
+
+/* Slot overlays */
+.slot.owned .cimg,.slot.owned .cph{opacity:.38;filter:brightness(.6)}
+.hide-owned .slot.owned{display:none}
+.badge-owned{position:absolute;top:3px;right:3px;font-size:12px;font-weight:700;color:#4cff80;text-shadow:0 0 6px rgba(60,255,120,.5);pointer-events:none;z-index:4;line-height:1}
+.badge-star{position:absolute;top:3px;left:3px;font-size:11px;pointer-events:none;z-index:4;line-height:1}
+.badge-price{position:absolute;bottom:23px;left:0;right:0;font-size:8px;font-weight:700;color:#c89a3a;pointer-events:none;z-index:4;text-align:center;background:rgba(11,10,8,.85);padding:1px 0}
+
+.cimg{width:100%;aspect-ratio:63/88;object-fit:cover;display:block;background:#0d0c0a}
+.cph{width:100%;aspect-ratio:63/88;background:#0d0c0a;display:none;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.ph-n{font-size:10px;color:#2a2826;font-weight:600}
+.ph-nm{font-size:8px;color:#201e1c;text-align:center;padding:0 3px}
+.clbl{padding:3px 4px 4px;background:#060504}
+.cnum{font-size:8px;color:#2e2c28;font-variant-numeric:tabular-nums;line-height:1}
+.cnm{font-size:9px;font-weight:500;color:#888;line-height:1.25;margin:1px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vbg{display:inline-block;font-size:7px;padding:1px 4px;border-radius:999px;font-weight:600;line-height:1.5}
+
+/* ── Card modal ── */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
+.modal.open{display:flex}
+.mbox{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:360px;width:100%;text-align:center;margin:auto}
+.mbox .cimg{border-radius:8px;margin-bottom:10px}
+.mph{width:100%;aspect-ratio:63/88;background:#111;border-radius:8px;margin-bottom:10px;display:none;align-items:center;justify-content:center}
+.mname{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}
+.mnum{font-size:11px;color:#555;margin-bottom:6px}
+.mbadge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600;margin-bottom:14px}
+
+/* Price input area */
+.price-area{background:#111;border-radius:8px;padding:12px;margin-bottom:12px;text-align:left}
+.price-area-title{font-size:11px;color:#444;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.price-area-title a{font-size:11px;color:#5060a0;text-decoration:none}.price-area-title a:hover{color:#8090d0}
+.price-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.pfield label{display:block;font-size:10px;color:#444;margin-bottom:3px;text-align:center}
+.pfield input{width:100%;background:#0b0a08;border:1px solid #222;border-radius:5px;padding:5px 6px;font-size:12px;color:#c89a3a;text-align:center;outline:none;font-family:inherit}
+.pfield input:focus{border-color:#5a3a10}
+.pfield input::placeholder{color:#2a2826}
+.save-prices-btn{width:100%;margin-top:8px;padding:7px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;background:#1e2a10;border:1px solid #3a5020;color:#80c040}
+.save-prices-btn:hover{background:#283814}
+.price-saved{font-size:11px;color:#4cff80;text-align:center;margin-top:4px;display:none}
+.pc-btn{display:block;width:100%;margin-top:8px;padding:7px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;background:#181428;border:1px solid #2a2050;color:#7060c0;text-decoration:none;text-align:center}
+.pc-btn:hover{background:#20184a}
+
+/* Modal action buttons */
+.m-btns{display:flex;gap:7px;margin-bottom:10px}
+.m-btn{flex:1;padding:8px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:none}
+.m-btn-own{background:#1e3a20;color:#4cff80}.m-btn-own:hover{background:#2a5030}
+.m-btn-unown{background:#3a2010;color:#ff8040}.m-btn-unown:hover{background:#502818}
+.m-btn-watch{background:#22183a;color:#9070e0}.m-btn-watch:hover{background:#2e2050}
+.m-btn-unwatch{background:#2a1220;color:#e07090}.m-btn-unwatch:hover{background:#3a1830}
+.m-btn-close{width:100%;padding:8px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;background:#1a1814;border:1px solid #2a2620;color:#888}.m-btn-close:hover{background:#222}
+
+/* ── Watchlist modal ── */
+.wl-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
+.wl-modal.open{display:flex}
+.wl-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:780px;width:100%;margin:auto}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.modal-head-left .title{font-size:15px;font-weight:700;color:#fff}
+.modal-head-left .sub{font-size:11px;color:#555;margin-top:2px}
+.modal-head-right{display:flex;gap:6px;flex-wrap:wrap}
+
+.wl-empty{text-align:center;padding:30px 10px;font-size:13px;color:#333}
+.wl-empty span{display:block;font-size:12px;color:#282420;margin-top:6px}
+
+table.wt{width:100%;border-collapse:collapse;font-size:12px}
+table.wt th{text-align:left;padding:6px 8px;color:#383430;font-weight:500;border-bottom:1px solid #1e1c18;font-size:10px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+table.wt td{padding:7px 8px;border-bottom:1px solid #141210;vertical-align:middle}
+table.wt tr:last-child td{border-bottom:none}
+table.wt tr:hover td{background:#111}
+.wt-name{color:#888;cursor:pointer}.wt-name:hover{color:#ccc}
+.wt-num{color:#282420;font-variant-numeric:tabular-nums;font-size:11px}
+.wt-p{font-weight:600;color:#c89a3a;font-variant-numeric:tabular-nums}.wt-p.na{color:#282420;font-weight:400;font-style:italic}
+.wt-badge{font-size:9px;padding:1px 5px;border-radius:999px;font-weight:600}
+.mini-input{width:70px;background:#0b0a08;border:1px solid #222;border-radius:4px;padding:3px 5px;font-size:11px;color:#c89a3a;text-align:center;outline:none;font-family:inherit}.mini-input:focus{border-color:#5a3a10}
+.wt-save-btn{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid #3a5020;background:#1e2a10;color:#80c040;cursor:pointer;font-family:inherit}.wt-save-btn:hover{background:#283814}
+.wt-rm{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid #282420;background:#1a1814;color:#444;cursor:pointer;font-family:inherit}.wt-rm:hover{background:#3a1010;border-color:#5a1010;color:#e07070}
+
+/* ── Missing list modal ── */
+.ml-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
+.ml-modal.open{display:flex}
+.ml-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:720px;width:100%;margin:auto}
+.ml-total{font-size:12px;color:#c89a3a;padding:7px 10px;background:#1e1a10;border:1px solid #3a2a10;border-radius:6px;text-align:center;margin-bottom:10px}
+.ml-sec{margin-bottom:12px}
+.ml-sec-ttl{font-size:10px;font-weight:600;color:#383430;text-transform:uppercase;letter-spacing:.05em;padding-bottom:5px;border-bottom:1px solid #141210;margin-bottom:6px}
+.ml-items{display:flex;flex-wrap:wrap;gap:4px}
+.ml-chip{font-size:11px;background:#0f0e0c;border:1px solid #1e1c18;border-radius:5px;padding:3px 7px;color:#666;font-variant-numeric:tabular-nums}
+.ml-chip.holo{border-color:#3a2a08;color:#b08020}
+.ml-chip.ex{border-color:#0e1c38;color:#4070b0}
+.ml-chip.erh{border-color:#081828;color:#3870a0}
+.ml-chip.brh{border-color:#042018;color:#208050}
+.ml-chip.ar{border-color:#14103a;color:#7060b0}
+.ml-chip.sr{border-color:#221404;color:#907010}
+.ml-chip.ma{border-color:#220804;color:#904020}
+.ml-chip.sar{border-color:#042018;color:#307060}
+.ml-chip.mur{border-color:#220404;color:#902020}
+.ml-chip.trainer{border-color:#0c1018;color:#404878}
+.ml-empty{text-align:center;padding:20px;font-size:14px;color:#4cff80}
+/* ── Shared nav bar styles ── */
+#app-nav{
+  position:sticky;top:0;z-index:500;
+  background:#100e0c;border-bottom:1px solid #2a2418;
+  padding:10px 14px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.6);
+}
+.nav-back{
+  background:#1e1c18;border:1px solid #2a2620;border-radius:7px;
+  padding:6px 12px;font-size:12px;color:#888;text-decoration:none;
+  white-space:nowrap;flex-shrink:0;
+  transition:background .12s,color .12s;
+}
+.nav-back:hover{background:#2a2820;color:#ccc}
+.nav-title{flex:1;font-size:13px;font-weight:600;color:#c89a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.nav-sync{
+  background:#1e1c18;border:1px solid #2a2040;border-radius:7px;
+  padding:6px 10px;font-size:11px;color:#7060c0;cursor:pointer;
+  font-family:inherit;white-space:nowrap;flex-shrink:0;
+}
+.nav-sync:hover{background:#22183a}
+
+/* Sync modal */
+.sync-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;
+  align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto;
+}
+.sync-overlay.open{display:flex}
+.sync-box{
+  background:#1a1814;border:1px solid #2a2620;border-radius:14px;
+  padding:20px;max-width:480px;width:100%;margin:auto;
+}
+.sync-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.sync-desc{font-size:11px;color:#555;margin-bottom:16px;line-height:1.6}
+.sync-section{margin-bottom:14px}
+.sync-label{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.sync-ta{
+  width:100%;height:80px;background:#0b0a08;border:1px solid #222;border-radius:7px;
+  padding:8px;font-size:11px;color:#aaa;font-family:'Courier New',monospace;
+  resize:vertical;outline:none;display:block;
+}
+.sync-ta:focus{border-color:#5a3a10}
+.sync-row{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap}
+.sync-action-btn{
+  padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;
+  font-family:inherit;font-weight:600;border:1px solid;
+}
+.sa-green{background:#1e2a10;border-color:#3a5020;color:#80c040}.sa-green:hover{background:#283814}
+.sa-purple{background:#1e1a38;border-color:#3a3060;color:#8070d0}.sa-purple:hover{background:#26224a}
+.sa-dim{background:#1a1814;border-color:#2a2620;color:#666}.sa-dim:hover{background:#222}
+.sync-flash{font-size:11px}
+.sync-warn{font-size:10px;color:#3a2820;margin-top:5px}
+
+</style>
+</head>
+<body>
+<!-- ── Shared nav bar (injected into each binder) ── -->
+<div id="app-nav">
+  <a href="index.html" class="nav-back">← All Binders</a>
+  <div class="nav-title" id="nav-title"></div>
+  <button class="nav-sync" onclick="openSync()">⇅ Sync</button>
+</div>
+
+<!-- Sync modal -->
+<div class="sync-overlay" id="sync-overlay" onclick="if(event.target===this)closeSyncModal()">
+  <div class="sync-box">
+    <div class="sync-title">⇅ Sync Data Between Devices</div>
+    <div class="sync-desc">Data is saved locally per browser. Export your data on one device, paste it on the other.</div>
+    <div class="sync-section">
+      <div class="sync-label">Export — copy your data</div>
+      <textarea id="export-ta" class="sync-ta" readonly placeholder="Click Export to generate…"></textarea>
+      <div class="sync-row">
+        <button class="sync-action-btn sa-green" onclick="doExport()">Export & Copy</button>
+        <span class="sync-flash" id="export-flash" style="color:#4cff80;display:none">✓ Copied!</span>
+      </div>
+    </div>
+    <div class="sync-section">
+      <div class="sync-label">Import — paste data from another device</div>
+      <textarea id="import-ta" class="sync-ta" placeholder="Paste exported data here…"></textarea>
+      <div class="sync-row">
+        <button class="sync-action-btn sa-purple" onclick="doImport()">Import Data</button>
+        <span class="sync-flash" id="import-flash" style="display:none"></span>
+      </div>
+      <div class="sync-warn">⚠ Overwrites current data on this device.</div>
+    </div>
+    <button class="sync-action-btn sa-dim" onclick="closeSyncModal()" style="width:100%;margin-top:2px">Close</button>
+  </div>
+</div>
+
+
+<div class="toolbar">
+  <div>
+    <div class="app-title">M2a MEGA Dream ex — Binder</div>
+    <div class="app-sub">486 cards · 54 pages · left-click = owned · right-click = details & prices</div>
+  </div>
+  <div class="controls">
+    <div style="display:flex;align-items:center;gap:4px">
+      <input type="text" id="si" placeholder="Search name or #…" oninput="findCard(this.value)">
+      <button class="clr" onclick="document.getElementById('si').value='';findCard('')">✕</button>
+    </div>
+    <div class="nav">
+      <button class="nb" id="bprev" onclick="go(-1)">← Prev</button>
+      <span class="pc">Spread</span>
+      <input type="number" id="pgn" min="1" value="1" onchange="goTo(+this.value)">
+      <span class="pc" id="of-lbl">of 28</span>
+      <button class="nb" id="bnext" onclick="go(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="action-bar">
+  <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+  <span class="prog-text" id="prog-text">0 / 486</span>
+  <label class="filter-lbl"><input type="checkbox" id="chk-miss" onchange="toggleMissing(this.checked)"> Missing only</label>
+  <button class="btn btn-purple" onclick="openWatchlist()">⭐ Watchlist</button>
+  <button class="btn btn-gold" onclick="openMissingList()">📋 Missing</button>
+  <button class="btn btn-dim" onclick="confirmClear()">Clear all</button>
+</div>
+
+<div class="legend">
+  <span class="lv"><span class="ld" style="border-color:#555"></span>Normal</span>
+  <span class="lv"><span class="ld" style="border-color:#c89a3a"></span>Holo</span>
+  <span class="lv"><span class="ld" style="border-color:#5090d8"></span>ex</span>
+  <span class="lv"><span class="ld" style="border-color:#378ADD"></span>Energy RH</span>
+  <span class="lv"><span class="ld" style="border-color:#1D9E75"></span>Ball/R RH</span>
+  <span class="lv"><span class="ld" style="border-color:#7F77DD"></span>AR</span>
+  <span class="lv"><span class="ld" style="border-color:#EF9F27"></span>SR</span>
+  <span class="lv"><span class="ld" style="border-color:#D85A30"></span>MA</span>
+  <span class="lv"><span class="ld" style="border-color:#5DCAA5"></span>SAR</span>
+  <span class="lv"><span class="ld" style="border-color:#E24B4A"></span>MUR</span>
+  <span class="lv" style="margin-left:4px">✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced</span>
+</div>
+
+<div class="alert" id="alert"></div>
+<div class="spread-info" id="sinfo"></div>
+<div class="spread" id="spread">
+  <div id="lp"></div>
+  <div class="spine"></div>
+  <div id="rp"></div>
+</div>
+
+<!-- Card detail modal -->
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="mbox">
+    <img class="cimg" id="mimg" src="" alt="">
+    <div class="mph" id="mph"></div>
+    <div class="mname" id="mname"></div>
+    <div class="mnum" id="mnum"></div>
+    <div class="mbadge" id="mbadge"></div>
+
+    <div class="price-area">
+      <div class="price-area-title">
+        <span style="color:#444;font-size:11px">Prices (USD)</span>
+        <a id="pc-link" href="#" target="_blank">Open PriceCharting ↗</a>
+      </div>
+      <div class="price-fields">
+        <div class="pfield"><label>Ungraded</label><input type="text" id="p-raw" placeholder="$0.00"></div>
+        <div class="pfield"><label>PSA 9</label><input type="text" id="p-9" placeholder="$0.00"></div>
+        <div class="pfield"><label>PSA 10</label><input type="text" id="p-10" placeholder="$0.00"></div>
+      </div>
+      <button class="save-prices-btn" onclick="savePriceFromModal()">Save prices</button>
+      <div class="price-saved" id="price-saved">✓ Saved!</div>
+    </div>
+
+    <div class="m-btns">
+      <button class="m-btn m-btn-own" id="m-own-btn" onclick="toggleOwnModal()">Mark as owned</button>
+      <button class="m-btn m-btn-watch" id="m-watch-btn" onclick="toggleWatchModal()">⭐ Watch</button>
+    </div>
+    <button class="m-btn-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- Watchlist modal -->
+<div class="wl-modal" id="wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="wl-box">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="title">⭐ Watchlist</div>
+        <div class="sub" id="wl-sub">0 cards watched</div>
+      </div>
+      <div class="modal-head-right">
+        <button class="btn btn-dim" onclick="document.getElementById('wl-modal').classList.remove('open')">Close</button>
+      </div>
+    </div>
+    <div id="wl-body"></div>
+  </div>
+</div>
+
+<!-- Missing list modal -->
+<div class="ml-modal" id="ml-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="ml-box">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="title">Missing Cards</div>
+        <div class="sub" id="ml-stats"></div>
+      </div>
+      <div class="modal-head-right">
+        <button class="btn btn-purple" onclick="copyMissing()">Copy as text</button>
+        <button class="btn btn-dim" onclick="document.getElementById('ml-modal').classList.remove('open')">Close</button>
+      </div>
+    </div>
+    <div id="ml-total" class="ml-total" style="display:none"></div>
+    <div id="ml-body"></div>
+  </div>
+</div>
+
+<script>
+
+// Set nav bar title
+(function() {
+  var t = document.getElementById('nav-title');
+  if (t) t.textContent = 'MEGA Dream ex — M2a · 486 slots';
+})();
+// ─────────────────────────────── data ───────────────────────────────────
+const HOLOS=new Set([1,6,8,10,12,14,16,19,20,23,26,28,33,34,39,41,42,43,53,54,55,59,62,66,68,74,76,78,79,80,81,83,85,86,87,97,98,103,107,108,113,115,118,120,127,128,129,131,136,138,139,142,143,144]);
+const EX2=new Set([3,17,21,29,31,36,44,49,51,57,60,63,71,75,90,92,94,101,110,112,114,119,122,123,126,134,145]);
+const BALLS={1:"Bug",2:"Love",4:"Love",5:"Love",6:"Love",7:"Love",8:"Love",9:"Friend",10:"Friend",11:"Friend",12:"Quick",13:"Dusk",14:"Dusk",15:"R",16:"R",18:"Dusk",19:"Dusk",20:"Poké",22:"Dusk",23:"Dusk",24:"Poké",25:"Poké",26:"Poké",27:"R",28:"R",30:"Poké",32:"Poké",33:"Poké",34:"R",35:"Quick",37:"Quick",38:"Quick",39:"Quick",40:"Quick",41:"Quick",42:"Quick",43:"Quick",45:"Poké",46:"Poké",47:"Poké",48:"Poké",50:"Poké",52:"Quick",53:"Quick",54:"Quick",55:"Quick",56:"Quick",58:"Quick",59:"Quick",61:"R",62:"R",64:"Friend",65:"Friend",66:"Friend",67:"Quick",68:"Quick",69:"Friend",70:"Friend",72:"Dusk",73:"Dusk",74:"Dusk",76:"Poké",77:"Dusk",78:"Dusk",79:"R",80:"Dusk",81:"Dusk",82:"R",83:"R",84:"Quick",85:"Quick",86:"Quick",87:"Quick",88:"Dusk",89:"Dusk",91:"Quick",93:"Quick",95:"Poké",96:"Poké",97:"Poké",98:"Poké",99:"R",100:"R",102:"R",103:"R",104:"R",105:"Dusk",106:"Dusk",107:"Dusk",108:"Dusk",109:"Dusk",111:"R",113:"Dusk",116:"Poké",117:"Poké",118:"Poké",120:"Poké",121:"Poké",124:"Dusk",125:"Dusk",127:"Poké",128:"R",129:"R",130:"Dusk",131:"Dusk",132:"Dusk",133:"Dusk",135:"Dusk",136:"Poké",137:"Quick",138:"Quick",139:"Poké",140:"Poké",141:"Poké",142:"Poké",143:"Quick",144:"Poké"};
+const NAMES={1:"Ethan's Pinsir",2:"Yanma",3:"Yanmega ex",4:"Wurmple",5:"Silcoon",6:"Beautifly",7:"Cascoon",8:"Dustox",9:"Cynthia's Roselia",10:"Cynthia's Roserade",11:"Budew",12:"Shaymin",13:"Dwebble",14:"Crustle",15:"Team Rocket's Tarountula",16:"Team Rocket's Spidops",17:"Teal Mask Ogerpon ex",18:"Ethan's Slugma",19:"Ethan's Magcargo",20:"Entei",21:"Ethan's Ho-Oh ex",22:"Numel",23:"Camerupt",24:"Tepig",25:"Pignite",26:"Emboar",27:"N's Darumaka",28:"N's Darmanitan",29:"Reshiram ex",30:"Charcadet",31:"Ceruledge ex",32:"Psyduck",33:"Golduck",34:"Team Rocket's Articuno",35:"Snorunt",36:"Mega Froslass ex",37:"N's Vanillite",38:"N's Vanillish",39:"N's Vanilluxe",40:"Snom",41:"Frosmoth",42:"Glastrier",43:"Chien-Pao",44:"Pikachu ex",45:"Magnemite",46:"Magneton",47:"Tynamo",48:"Eelektrik",49:"Mega Eelektross ex",50:"Stunfisk",51:"Zekrom ex",52:"Helioptile",53:"Heliolisk",54:"Tapu Koko",55:"Zeraora",56:"Iono's Tadbulb",57:"Iono's Bellibolt ex",58:"Iono's Wattrel",59:"Iono's Kilowattrel",60:"Lillie's Clefairy ex",61:"Team Rocket's Exeggcute",62:"Team Rocket's Exeggutor",63:"Team Rocket's Mewtwo ex",64:"Togepi",65:"Togetic",66:"Togekiss",67:"Misdreavus",68:"Mismagius",69:"Ralts",70:"Kirlia",71:"Mega Gardevoir ex",72:"Duskull",73:"Dusclops",74:"Dusknoir",75:"Latias ex",76:"Rotom",77:"Hop's Phantump",78:"Hop's Trevenant",79:"Team Rocket's Mimikyu",80:"Spectrier",81:"Munkidori",82:"Team Rocket's Diglett",83:"Team Rocket's Dugtrio",84:"Meditite",85:"Medicham",86:"Lunatone",87:"Solrock",88:"Cynthia's Gible",89:"Cynthia's Gabite",90:"Cynthia's Garchomp ex",91:"Riolu",92:"Mega Lucario ex",93:"Pancham",94:"Mega Hawlucha ex",95:"Rolycoly",96:"Carkol",97:"Coalossal",98:"Okidogi",99:"Team Rocket's Zubat",100:"Team Rocket's Golbat",101:"Team Rocket's Crobat ex",102:"Team Rocket's Murkrow",103:"Team Rocket's Honchkrow",104:"Team Rocket's Sneasel",105:"Galarian Zigzagoon",106:"Galarian Linoone",107:"Galarian Obstagoon",108:"Cynthia's Spiritomb",109:"Scraggy",110:"Mega Scrafty ex",111:"N's Zorua",112:"N's Zoroark ex",113:"Pangoro",114:"Fezandipiti ex",115:"Pecharunt",116:"Pawniard",117:"Bisharp",118:"Kingambit",119:"Genesect ex",120:"Magearna",121:"Duraludon",122:"Archaludon ex",123:"Hop's Zacian ex",124:"Dratini",125:"Dragonair",126:"Mega Dragonite ex",127:"Rayquaza",128:"N's Reshiram",129:"N's Zekrom",130:"Noibat",131:"Noivern",132:"Dreepy",133:"Drakloak",134:"Dragapult ex",135:"Tatsugiri",136:"Hop's Snorlax",137:"Hoothoot",138:"Noctowl",139:"Fan Rotom",140:"Bouffalant",141:"Hop's Wooloo",142:"Hop's Dubwool",143:"Hop's Cramorant",144:"Terapagos",145:"Terapagos ex",146:"N's PP Up",147:"Energy Recycler",148:"Enhanced Hammer",149:"Glass Trumpet",150:"Sacred Ash",151:"Tool Scrapper",152:"Tera Orb",153:"Buddy-Buddy Poffin",154:"Premium Power Pro",155:"Fighting Gong",156:"Hop's Bag",157:"Bug Catching Set",158:"Mega Signal",159:"Night Stretcher",160:"Team Rocket's Transceiver",161:"Counter Gain",162:"Cynthia's Power Weight",163:"Light Ball",164:"Thick Scales",165:"Air Balloon",166:"Brave Bangle",167:"Hop's Choice Band",168:"Iris's Fighting Spirit",169:"Acerola's Mischief",170:"Canari",171:"Surfer",172:"Hilda",173:"Anthea & Concordia",174:"Ethan's Adventure",175:"Lillie's Determination",176:"Team Rocket's Ariana",177:"Team Rocket's Archer",178:"Team Rocket's Giovanni",179:"Team Rocket's Petrel",180:"Team Rocket's Proton",181:"N's Castle",182:"Forest of Vitality",183:"Gravity Mountain",184:"Area Zero Underdepths",185:"Levincia",186:"Postwick",187:"Mystery Garden",188:"Mine at Night",189:"Team Rocket's Watchtower",190:"Team Rocket's Factory",191:"Ignition Energy",192:"Prism Energy",193:"Team Rocket's Energy",194:"Beautifly",195:"Dustox",196:"Budew",197:"Ethan's Magcargo",198:"Numel",199:"Psyduck",200:"Snorunt",201:"Heliolisk",202:"Misdreavus",203:"Togekiss",204:"Hop's Trevenant",205:"Team Rocket's Mimikyu",206:"Team Rocket's Dugtrio",207:"Medicham",208:"Cynthia's Spiritomb",209:"Galarian Obstagoon",210:"N's Zekrom",211:"Dreepy",212:"Drakloak",213:"Fan Rotom",214:"N's PP Up",215:"Glass Trumpet",216:"Premium Power Pro",217:"Team Rocket's Transceiver",218:"Counter Gain",219:"Canari",220:"Iris's Fighting Spirit",221:"Anthea & Concordia",222:"Jamming Tower",223:"Mega Charizard X ex",224:"Mega Froslass ex",225:"Mega Eelektross ex",226:"Mega Gardevoir ex",227:"Mega Diancie ex",228:"Mega Lucario ex",229:"Mega Hawlucha ex",230:"Mega Gengar ex",231:"Mega Scrafty ex",232:"Mega Dragonite ex",233:"Mega Froslass ex",234:"Pikachu ex",235:"Mega Eelektross ex",236:"Iono's Bellibolt ex",237:"Team Rocket's Mewtwo ex",238:"Mega Diancie ex",239:"Mega Hawlucha ex",240:"Mega Gengar ex",241:"Mega Scrafty ex",242:"N's Zoroark ex",243:"Teal Mask Ogerpon ex",244:"Fezandipiti ex",245:"Steven's Metagross ex",246:"Mega Dragonite ex",247:"Iris's Fighting Spirit",248:"Canari",249:"Surfer",250:"Mega Dragonite ex"};
+const BC={normal:{bg:'#181410',col:'#444'},holo:{bg:'#2a1e04',col:'#c89a3a'},ex:{bg:'#0a1828',col:'#5090d0'},trainer:{bg:'#181428',col:'#5060a0'},erh:{bg:'#081828',col:'#5090d0'},brh:{bg:'#061e12',col:'#28a060'},ar:{bg:'#120e38',col:'#9080d8'},sr:{bg:'#201400',col:'#b07018'},ma:{bg:'#200c00',col:'#b04028'},sar:{bg:'#061e12',col:'#40a880'},mur:{bg:'#200606',col:'#b03030'}};
+
+// ─────────────────────────── storage ────────────────────────────────────
+let owned=new Set(), watched=new Set(), prices={};
+function load(){
+  try{owned=new Set(JSON.parse(localStorage.getItem('M2a_owned_v1')||'[]'));}catch(e){}
+  try{watched=new Set(JSON.parse(localStorage.getItem('M2a_watched_v1')||'[]'));}catch(e){}
+  try{prices=JSON.parse(localStorage.getItem('M2a_prices_v2')||'{}');}catch(e){}
+}
+function saveOwned(){localStorage.setItem('M2a_owned_v1',JSON.stringify([...owned]));}
+function saveWatched(){localStorage.setItem('M2a_watched_v1',JSON.stringify([...watched]));}
+function savePricesStore(){localStorage.setItem('M2a_prices_v2',JSON.stringify(prices));}
+
+// ─────────────────────────── slot key / type ─────────────────────────────
+function sk(s){
+  return s.num+({erh:'-erh',brh:'-brh',ar:'-ar',sr:'-sr',ma:'-ma',sar:'-sar',mur:'-mur'}[s.v]||'');
+}
+function cardType(n){
+  if(EX2.has(n)) return 'ex';
+  if(n>=1&&n<=145) return HOLOS.has(n)?'holo':'normal';
+  if(n>=146&&n<=193) return 'trainer';
+  return 'normal';
+}
+function varLabel(s){
+  return{normal:'Normal',holo:'Holo',ex:'ex',trainer:'Trainer',erh:'Energy RH',ar:'AR',sr:'SR',ma:'MA',sar:'SAR',mur:'MUR'}[s.v]||(s.v==='brh'?(s.ball||'Poké')+' Ball RH':s.v);
+}
+
+// ─────────────────────────── PriceCharting URL ───────────────────────────
+function pcUrl(s){
+  const name=NAMES[s.num]||'';
+  let slug=name.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9'\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-');
+  if(s.v==='erh') slug+='-energy';
+  else if(s.v==='brh') slug+='-ball';
+  slug+='-'+s.num;
+  return`https://www.pricecharting.com/game/pokemon-japanese-mega-dream-ex/${slug}`;
+}
+
+// ─────────────────────────── build slots ────────────────────────────────
+function buildSlots(){
+  const s=[];
+  for(let i=1;i<=145;i++){
+    s.push({num:i,v:cardType(i)});
+    if(!EX2.has(i)){s.push({num:i,v:'erh'});s.push({num:i,v:'brh',ball:BALLS[i]||'Poké'});}
+  }
+  for(let i=146;i<=193;i++) s.push({num:i,v:'trainer'});
+  for(let i=194;i<=213;i++) s.push({num:i,v:'ar'});
+  for(let i=214;i<=222;i++) s.push({num:i,v:'sr'});
+  for(let i=223;i<=232;i++) s.push({num:i,v:'ma'});
+  for(let i=233;i<=249;i++) s.push({num:i,v:'sar'});
+  s.push({num:250,v:'mur'});
+  return s;
+}
+const SLOTS=buildSlots(), TOTAL=SLOTS.length, CARD_PAGES=Math.ceil(TOTAL/9);
+const TOTAL_SPREADS=1+Math.ceil((CARD_PAGES-1)/2);
+let curSpread=1, showMissing=false;
+
+function imgUrl(n){return`https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2a/M2a_${n}_R_JP_SM.png`;}
+
+// ─────────────────────────── slot element ───────────────────────────────
+function makeSlot(s){
+  const key=sk(s), name=NAMES[s.num]||'', bc=BC[s.v]||BC.normal;
+  const div=document.createElement('div');
+  div.className='slot v-'+s.v+(owned.has(key)?' owned':'');
+  div.dataset.key=key;
+
+  // Image
+  const img=document.createElement('img');img.className='cimg';img.src=imgUrl(s.num);img.alt=name;img.loading='lazy';
+  const ph=document.createElement('div');ph.className='cph';ph.innerHTML=`<div class="ph-n">${s.num}/193</div><div class="ph-nm">${name.substring(0,15)}</div>`;
+  img.onerror=()=>{img.style.display='none';ph.style.display='flex';};
+  div.appendChild(img);div.appendChild(ph);
+
+  // Label
+  const lbl=document.createElement('div');lbl.className='clbl';
+  lbl.innerHTML=`<div class="cnum">${s.num}/193</div><div class="cnm" title="${name}">${name}</div><span class="vbg" style="background:${bc.bg};color:${bc.col}">${varLabel(s)}</span>`;
+  div.appendChild(lbl);
+
+  // Overlay badges
+  if(owned.has(key)) div.appendChild(badge('badge-owned','✓'));
+  if(watched.has(key)) div.appendChild(badge('badge-star','⭐'));
+  const p=prices[key];
+  if(p&&p.raw){const b=badge('badge-price',p.raw);div.appendChild(b);}
+
+  // Events
+  div.addEventListener('click',e=>{
+    e.preventDefault();
+    const was=owned.has(key);
+    was?owned.delete(key):owned.add(key);
+    saveOwned();updateProgress();
+    div.classList.toggle('owned',!was);
+    syncBadge(div,'badge-owned','✓',!was);
+  });
+  div.addEventListener('contextmenu',e=>{e.preventDefault();openModal(s);});
+  return div;
+}
+
+function badge(cls,txt){const b=document.createElement('div');b.className=cls;b.textContent=txt;return b;}
+function syncBadge(div,cls,txt,show){
+  let b=div.querySelector('.'+cls);
+  if(show&&!b){b=badge(cls,txt);div.appendChild(b);}
+  else if(!show&&b) b.remove();
+}
+
+// ─────────────────────────── page / spread ──────────────────────────────
+function makeCardPage(idx0,side,num1){
+  const wrap=document.createElement('div');wrap.className='bpage';wrap.style.background=side==='left'?'#13110e':'#111009';
+  const lbl=document.createElement('div');lbl.className='pg-lbl';lbl.textContent=`— page ${num1} —`;wrap.appendChild(lbl);
+  const grid=document.createElement('div');grid.className='grid';
+  const start=idx0*9,end=Math.min(start+9,TOTAL);
+  for(let i=start;i<end;i++) grid.appendChild(makeSlot(SLOTS[i]));
+  for(let i=end-start;i<9;i++){const e=document.createElement('div');e.className='slot empty';e.innerHTML='<span style="color:#141210">·</span>';grid.appendChild(e);}
+  wrap.appendChild(grid);return wrap;
+}
+function makeCover(){
+  const d=document.createElement('div');d.className='bpage cover-pg';
+  d.innerHTML=`<div class="cover-ttl">MEGA<br>ドリームex</div>
+    <div style="font-size:12px;color:#7a6030;font-weight:600;letter-spacing:.05em">M2a · Nov 28 2025</div>
+    <div class="cover-box">
+      ✓ Left-click = toggle owned<br>
+      ✓ Right-click = details &amp; price entry<br>
+      ⭐ Watch cards for price tracking<br>
+      💰 Open PriceCharting &amp; type in prices<br>
+      <span style="color:#282420;font-size:10px">── 486 slots · 54 pages ──</span>
+    </div>`;
+  return d;
+}
+
+function render(){
+  const lp=document.getElementById('lp'),rp=document.getElementById('rp');
+  lp.innerHTML='';rp.innerHTML='';
+  let info;
+  if(curSpread===1){lp.appendChild(makeCover());rp.appendChild(makeCardPage(0,'right',1));info='Cover · Page 1';}
+  else{
+    const ln=2*(curSpread-1),rn=ln+1;
+    if(ln-1<CARD_PAGES) lp.appendChild(makeCardPage(ln-1,'left',ln));
+    else{const d=document.createElement('div');d.className='bpage blank-pg';lp.appendChild(d);}
+    if(rn-1<CARD_PAGES) rp.appendChild(makeCardPage(rn-1,'right',rn));
+    else{const d=document.createElement('div');d.className='bpage blank-pg';rp.appendChild(d);}
+    info=`Page ${ln} · Page ${rn<=CARD_PAGES?rn:'—'}`;
+  }
+  document.getElementById('sinfo').textContent=info;
+  document.getElementById('pgn').value=curSpread;
+  document.getElementById('pgn').max=TOTAL_SPREADS;
+  document.getElementById('of-lbl').textContent=`of ${TOTAL_SPREADS}`;
+  document.getElementById('bprev').disabled=curSpread<=1;
+  document.getElementById('bnext').disabled=curSpread>=TOTAL_SPREADS;
+  document.getElementById('spread').classList.toggle('hide-owned',showMissing);
+}
+function go(d){curSpread=Math.max(1,Math.min(TOTAL_SPREADS,curSpread+d));render();}
+function goTo(n){if(!isNaN(n)&&n>=1&&n<=TOTAL_SPREADS){curSpread=n;render();}}
+function toggleMissing(on){showMissing=on;document.getElementById('spread').classList.toggle('hide-owned',on);}
+function updateProgress(){
+  const n=owned.size,p=Math.round(n/TOTAL*100);
+  document.getElementById('prog-bar').style.width=p+'%';
+  document.getElementById('prog-text').textContent=`${n} / ${TOTAL} (${p}%)`;
+}
+function findCard(q){
+  q=q.trim().toLowerCase();
+  const al=document.getElementById('alert');
+  if(!q){al.style.display='none';return;}
+  const num=parseInt(q);
+  const idx=!isNaN(num)&&num>=1&&num<=250
+    ?SLOTS.findIndex(s=>s.num===num&&['normal','holo','ex','trainer'].includes(s.v))
+    :SLOTS.findIndex(s=>(NAMES[s.num]||'').toLowerCase().includes(q)&&['normal','holo','ex','trainer'].includes(s.v));
+  if(idx>=0){
+    al.style.display='none';
+    const cp=Math.floor(idx/9);curSpread=cp===0?1:Math.floor((cp-1)/2)+2;render();
+  } else {al.style.display='block';al.textContent=`"${q}" not found`;}
+}
+
+// ─────────────────────────── card modal ─────────────────────────────────
+let modalSlot=null;
+function openModal(s){
+  modalSlot=s;
+  const key=sk(s),name=NAMES[s.num]||'',bc=BC[s.v]||BC.normal;
+  const mi=document.getElementById('mimg'),mph=document.getElementById('mph');
+  mi.style.display='block';mph.style.display='none';
+  mi.src=imgUrl(s.num);
+  mi.onerror=()=>{mi.style.display='none';mph.style.display='flex';mph.innerHTML=`<span style="color:#282420">${name}</span>`;};
+  document.getElementById('mname').textContent=name;
+  document.getElementById('mnum').textContent=`${s.num}/193 · ${varLabel(s)}`;
+  const mb=document.getElementById('mbadge');mb.textContent=varLabel(s);mb.style.background=bc.bg;mb.style.color=bc.col;
+  document.getElementById('pc-link').href=pcUrl(s);
+  // Prices
+  const p=prices[key]||{};
+  document.getElementById('p-raw').value=p.raw||'';
+  document.getElementById('p-9').value=p.psa9||'';
+  document.getElementById('p-10').value=p.psa10||'';
+  document.getElementById('price-saved').style.display='none';
+  // Buttons
+  syncModalBtns();
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');modalSlot=null;}
+function syncModalBtns(){
+  if(!modalSlot) return;
+  const key=sk(modalSlot);
+  const ob=document.getElementById('m-own-btn');
+  ob.textContent=owned.has(key)?'✓ Remove owned':'Mark as owned';
+  ob.className='m-btn '+(owned.has(key)?'m-btn-unown':'m-btn-own');
+  const wb=document.getElementById('m-watch-btn');
+  wb.textContent=watched.has(key)?'★ Unwatch':'⭐ Watch';
+  wb.className='m-btn '+(watched.has(key)?'m-btn-unwatch':'m-btn-watch');
+}
+function toggleOwnModal(){
+  if(!modalSlot) return;
+  const key=sk(modalSlot),was=owned.has(key);
+  was?owned.delete(key):owned.add(key);saveOwned();updateProgress();
+  const el=document.querySelector(`.slot[data-key="${key}"]`);
+  if(el){el.classList.toggle('owned',!was);syncBadge(el,'badge-owned','✓',!was);}
+  syncModalBtns();
+}
+function toggleWatchModal(){
+  if(!modalSlot) return;
+  const key=sk(modalSlot),was=watched.has(key);
+  was?watched.delete(key):watched.add(key);saveWatched();
+  const el=document.querySelector(`.slot[data-key="${key}"]`);
+  if(el) syncBadge(el,'badge-star','⭐',!was);
+  syncModalBtns();
+}
+function savePriceFromModal(){
+  if(!modalSlot) return;
+  const key=sk(modalSlot);
+  const raw=document.getElementById('p-raw').value.trim();
+  const psa9=document.getElementById('p-9').value.trim();
+  const psa10=document.getElementById('p-10').value.trim();
+  // Normalise — add $ if missing
+  const fmt=v=>{if(!v) return '';v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
+  prices[key]={raw:fmt(raw),psa9:fmt(psa9),psa10:fmt(psa10),date:new Date().toISOString().slice(0,10)};
+  savePricesStore();
+  // Update fields with formatted values
+  document.getElementById('p-raw').value=prices[key].raw;
+  document.getElementById('p-9').value=prices[key].psa9;
+  document.getElementById('p-10').value=prices[key].psa10;
+  // Update binder slot badge
+  const el=document.querySelector(`.slot[data-key="${key}"]`);
+  if(el){
+    let b=el.querySelector('.badge-price');
+    if(prices[key].raw){
+      if(!b){b=badge('badge-price',prices[key].raw);el.appendChild(b);}
+      else b.textContent=prices[key].raw;
+    } else if(b) b.remove();
+  }
+  const sv=document.getElementById('price-saved');sv.style.display='block';
+  setTimeout(()=>sv.style.display='none',1800);
+}
+
+// ─────────────────────────── watchlist ──────────────────────────────────
+function openWatchlist(){
+  renderWatchlist();
+  document.getElementById('wl-modal').classList.add('open');
+}
+function renderWatchlist(){
+  const body=document.getElementById('wl-body');
+  document.getElementById('wl-sub').textContent=`${watched.size} card${watched.size!==1?'s':''} watched`;
+  if(!watched.size){
+    body.innerHTML='<div class="wl-empty">No cards watched yet.<span>Right-click any card → ⭐ Watch</span></div>';return;
+  }
+  const slots=SLOTS.filter(s=>watched.has(sk(s)));
+  let html=`<table class="wt"><thead><tr><th>#</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 9</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
+  slots.forEach(s=>{
+    const key=sk(s),bc=BC[s.v]||BC.normal,p=prices[key]||{};
+    const fv=v=>v?`<span class="wt-p">${v}</span>`:`<span class="wt-p na">—</span>`;
+    html+=`<tr>
+      <td class="wt-num">${s.num}/193</td>
+      <td class="wt-name" onclick="jumpTo('${key}')">${NAMES[s.num]||''}</td>
+      <td><span class="wt-badge" style="background:${bc.bg};color:${bc.col}">${varLabel(s)}</span></td>
+      <td>${fv(p.raw)}</td>
+      <td>${fv(p.psa9)}</td>
+      <td>${fv(p.psa10)}</td>
+      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
+      <td><button class="wt-rm" onclick="unwatchRow('${key}',this)">✕</button></td>
+    </tr>`;
+  });
+  html+='</tbody></table>';
+  body.innerHTML=html;
+}
+function jumpTo(key){
+  document.getElementById('wl-modal').classList.remove('open');
+  const idx=SLOTS.findIndex(s=>sk(s)===key);
+  if(idx>=0){const cp=Math.floor(idx/9);curSpread=cp===0?1:Math.floor((cp-1)/2)+2;render();}
+}
+function unwatchRow(key,btn){
+  watched.delete(key);saveWatched();
+  const el=document.querySelector(`.slot[data-key="${key}"]`);
+  if(el) syncBadge(el,'badge-star','⭐',false);
+  renderWatchlist();
+}
+
+// ─────────────────────────── missing list ───────────────────────────────
+const SDEFS=[
+  {label:'Normal (Non-Holo)',f:s=>s.v==='normal'},
+  {label:'Holo Pokémon',f:s=>s.v==='holo'},
+  {label:'Pokémon ex / Mega ex',f:s=>s.v==='ex'},
+  {label:'Energy Reverse Holos',f:s=>s.v==='erh'},
+  {label:'Ball / R Reverse Holos',f:s=>s.v==='brh'},
+  {label:'Trainer Cards',f:s=>s.v==='trainer'},
+  {label:'AR — Alternate Art',f:s=>s.v==='ar'},
+  {label:'SR — Special Rare',f:s=>s.v==='sr'},
+  {label:'MA — Mega Art',f:s=>s.v==='ma'},
+  {label:'SAR — Special Art Rare',f:s=>s.v==='sar'},
+  {label:'MUR — Mega Ultra Rare',f:s=>s.v==='mur'},
+];
+function openMissingList(){
+  const miss=SLOTS.filter(s=>!owned.has(sk(s)));
+  document.getElementById('ml-stats').textContent=`${miss.length} missing · ${owned.size} owned`;
+  const priced=miss.filter(s=>{const p=prices[sk(s)];return p&&p.raw;});
+  const totEl=document.getElementById('ml-total');
+  if(priced.length){
+    const tot=priced.reduce((sum,s)=>{const v=parseFloat((prices[sk(s)].raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
+    totEl.style.display='block';totEl.textContent=`Estimated ungraded value of ${priced.length} priced missing cards: $${tot.toFixed(2)}`;
+  } else totEl.style.display='none';
+  const body=document.getElementById('ml-body');body.innerHTML='';
+  if(!miss.length){body.innerHTML='<div class="ml-empty">🎉 Master set complete!</div>';document.getElementById('ml-modal').classList.add('open');return;}
+  SDEFS.forEach(sec=>{
+    const items=miss.filter(sec.f);if(!items.length) return;
+    const wrap=document.createElement('div');wrap.className='ml-sec';
+    wrap.innerHTML=`<div class="ml-sec-ttl">${sec.label} — ${items.length}</div>`;
+    const list=document.createElement('div');list.className='ml-items';
+    items.forEach(s=>{
+      const chip=document.createElement('div');chip.className='ml-chip '+s.v;
+      let sfx='';if(s.v==='erh') sfx=' [E-RH]';else if(s.v==='brh') sfx=` [${s.ball} RH]`;
+      const p=prices[sk(s)];const pt=p&&p.raw?' · '+p.raw:'';
+      chip.textContent=`${s.num}/193 ${NAMES[s.num]||''}${sfx}${pt}`;
+      list.appendChild(chip);
+    });
+    wrap.appendChild(list);body.appendChild(wrap);
+  });
+  document.getElementById('ml-modal').classList.add('open');
+}
+function copyMissing(){
+  const miss=SLOTS.filter(s=>!owned.has(sk(s)));
+  // Group missing slots by card number, preserving slot order
+  const byNum=new Map();
+  miss.forEach(s=>{
+    if(!byNum.has(s.num)) byNum.set(s.num,[]);
+    byNum.get(s.num).push(s);
+  });
+
+  let txt=`M2a MEGA Dream ex — Missing Cards (${miss.length} slots)\n`;
+  txt+=`Generated ${new Date().toLocaleDateString()}\n`;
+  txt+=`${'─'.repeat(52)}\n`;
+
+  byNum.forEach((slots,num)=>{
+    const name=NAMES[num]||'';
+    const numStr=String(num).padStart(3,'0')+'/193';
+    // Variants on this card number that are missing
+    const varParts=slots.map(s=>{
+      if(s.v==='erh') return 'Energy RH';
+      if(s.v==='brh') return (s.ball||'Poké')+' Ball RH';
+      if(s.v==='ar')  return 'AR';
+      if(s.v==='sr')  return 'SR';
+      if(s.v==='ma')  return 'MA';
+      if(s.v==='sar') return 'SAR';
+      if(s.v==='mur') return 'MUR';
+      return s.v==='holo'?'Holo':'Normal';
+    });
+    // Price info from first slot that has a price
+    const priceSlot=slots.find(s=>prices[sk(s)]&&prices[sk(s)].raw);
+    const p=priceSlot?prices[sk(priceSlot)]:{};
+    const pricePart=p.raw?`  [${p.raw}${p.psa10?' / PSA10 '+p.psa10:''}]`:'';
+
+    txt+=`${numStr}  ${name}  — ${varParts.join(', ')}${pricePart}\n`;
+  });
+
+  txt+=`${'─'.repeat(52)}\n`;
+  txt+=`${byNum.size} cards  ·  ${miss.length} total slots missing\n`;
+
+  // Add total value if any prices logged
+  const priced=miss.filter(s=>prices[sk(s)]&&prices[sk(s)].raw);
+  if(priced.length){
+    const tot=priced.reduce((sum,s)=>{const v=parseFloat((prices[sk(s)].raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
+    txt+=`Estimated ungraded value (${priced.length} priced): $${tot.toFixed(2)}\n`;
+  }
+
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.querySelector('#ml-modal .btn-purple');const o=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=o,1500);
+  });
+}
+function confirmClear(){if(confirm('Clear all ownership data?')){owned.clear();saveOwned();render();updateProgress();}}
+
+// ─────────────────────────── init ───────────────────────────────────────
+load();updateProgress();render();
+// ── Sync data between devices ─────────────────────────────────────────────
+const SYNC_KEYS = [
+  'M2a_owned_v1','M2a_watched_v1','M2a_prices_v2',
+  'penny_owned_v1','penny_watched_v1','penny_prices_v1',
+];
+
+function openSync() {
+  document.getElementById('export-ta').value = '';
+  document.getElementById('import-ta').value = '';
+  document.getElementById('export-flash').style.display = 'none';
+  document.getElementById('import-flash').style.display = 'none';
+  document.getElementById('sync-overlay').classList.add('open');
+}
+function closeSyncModal() {
+  document.getElementById('sync-overlay').classList.remove('open');
+}
+function doExport() {
+  const data = {};
+  SYNC_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
+  const json = JSON.stringify(data, null, 2);
+  document.getElementById('export-ta').value = json;
+  navigator.clipboard.writeText(json).then(() => {
+    const f = document.getElementById('export-flash');
+    f.style.display = 'inline'; setTimeout(() => f.style.display = 'none', 2000);
+  }).catch(() => {}); // clipboard blocked in some browsers - user can copy manually
+}
+function doImport() {
+  const raw = document.getElementById('import-ta').value.trim();
+  const f = document.getElementById('import-flash');
+  if (!raw) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Paste data first.'; return; }
+  try {
+    const data = JSON.parse(raw);
+    let n = 0;
+    SYNC_KEYS.forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
+    f.style.display='inline'; f.style.color='#4cff80';
+    f.textContent = `✓ Imported ${n} keys — reload to apply.`;
+    setTimeout(() => location.reload(), 1500);
+  } catch(e) {
+    f.style.display='inline'; f.style.color='#c07040'; f.textContent='Invalid data.';
+  }
+}
+
+</script>
+</body>
+</html>
