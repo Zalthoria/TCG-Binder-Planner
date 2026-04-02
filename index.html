@@ -12,47 +12,95 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh}
 
-/* ── Tab switcher ── */
-.tab-bar{
+/* ── App header ── */
+.app-header{
   position:sticky;top:0;z-index:500;
-  background:#100e0c;
-  border-bottom:2px solid #2a2418;
-  display:flex;
-  box-shadow:0 2px 16px rgba(0,0,0,.7);
+  background:#100e0c;border-bottom:1px solid #2a2418;
+  padding:10px 14px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.6);
 }
-.tab{
-  flex:1;padding:11px 8px 9px;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  cursor:pointer;border:none;background:transparent;
-  font-family:inherit;color:#444;
-  border-bottom:3px solid transparent;
-  margin-bottom:-2px;
-  transition:color .15s,border-color .15s,background .15s;
+.app-header-title{font-size:14px;font-weight:700;color:#c89a3a;flex:1}
+.app-header-sub{font-size:10px;color:#555;margin-top:1px}
+.back-btn{
+  background:#1e1c18;border:1px solid #2a2620;border-radius:7px;
+  padding:6px 11px;font-size:12px;color:#888;cursor:pointer;
+  font-family:inherit;display:none;white-space:nowrap;
 }
-.tab:hover{background:#161412;color:#777}
-.tab.active{color:#c89a3a;border-bottom-color:#c89a3a;background:#131108}
-.tab-icon{font-size:20px;line-height:1}
-.tab-label{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-.tab-sub{font-size:9px;color:#333}
-.tab.active .tab-sub{color:#6a5020}
+.back-btn:hover{background:#2a2820;color:#ccc}
+.sync-btn{
+  background:#1e1c18;border:1px solid #2a2040;border-radius:7px;
+  padding:6px 10px;font-size:11px;color:#7060c0;cursor:pointer;
+  font-family:inherit;white-space:nowrap;
+}
+.sync-btn:hover{background:#22183a}
 
-/* ── Panels ── */
-.binder-panel{display:none;flex-direction:column;align-items:center;padding:16px 12px 40px}
-.binder-panel.active{display:flex}
+/* ── Screens ── */
+.screen{display:none;padding:0 0 40px}
+.screen.active{display:block}
+
+/* ── Binder list home screen ── */
+.home-screen{padding:14px 12px 40px}
+.home-title{font-size:11px;color:#444;text-transform:uppercase;letter-spacing:.07em;font-weight:600;margin-bottom:10px}
+.binder-list{display:flex;flex-direction:column;gap:8px;max-width:700px;margin:0 auto}
+.binder-card{
+  background:#111009;border:1px solid #2a2418;border-radius:12px;
+  padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;
+  transition:background .13s,border-color .13s;
+}
+.binder-card:hover{background:#161310;border-color:#4a3820}
+.binder-card:active{background:#1e1a10}
+.binder-icon{font-size:28px;line-height:1;flex-shrink:0}
+.binder-info{flex:1;min-width:0}
+.binder-name{font-size:14px;font-weight:700;color:#ddd;margin-bottom:2px}
+.binder-desc{font-size:11px;color:#555}
+.binder-prog-wrap{margin-top:6px;height:4px;background:#1a1814;border-radius:999px;overflow:hidden}
+.binder-prog-bar{height:100%;background:#c89a3a;border-radius:999px;transition:width .4s}
+.binder-prog-text{font-size:10px;color:#444;margin-top:3px}
+.binder-arrow{font-size:16px;color:#2a2820;flex-shrink:0}
+
+/* ── Sync modal ── */
+.sync-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
+.sync-modal.open{display:flex}
+.sync-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:500px;width:100%;margin:auto}
+.sync-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.sync-sub{font-size:11px;color:#555;margin-bottom:16px;line-height:1.6}
+.sync-section{margin-bottom:16px}
+.sync-section-title{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.sync-textarea{
+  width:100%;height:90px;background:#0b0a08;border:1px solid #222;border-radius:7px;
+  padding:8px;font-size:11px;color:#aaa;font-family:'Courier New',monospace;
+  resize:vertical;outline:none;
+}
+.sync-textarea:focus{border-color:#5a3a10}
+.sync-row{display:flex;gap:7px;flex-wrap:wrap}
+.sync-btn-action{
+  padding:8px 14px;border-radius:7px;font-size:12px;cursor:pointer;
+  font-family:inherit;font-weight:600;border:1px solid;
+}
+.sb-copy{background:#1e2a10;border-color:#3a5020;color:#80c040}
+.sb-copy:hover{background:#283814}
+.sb-import{background:#1e1a38;border-color:#3a3060;color:#8070d0}
+.sb-import:hover{background:#26224a}
+.sb-close{background:#1a1814;border-color:#2a2620;color:#666}
+.sb-close:hover{background:#222}
+.sync-note{font-size:10px;color:#333;margin-top:6px;line-height:1.5}
+.sync-flash{font-size:11px;margin-top:4px;display:none}
 
 /* ── PWA install banner ── */
 .install-banner{
   display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
   background:#1a2810;border:1px solid #3a6018;border-radius:10px;
   padding:10px 14px;font-size:12px;color:#70b030;z-index:900;
-  align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.5);
-  white-space:nowrap;
+  align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.5);white-space:nowrap;
 }
 .install-banner.show{display:flex}
-.install-btn{padding:5px 12px;border-radius:6px;background:#243810;border:1px solid #3a6018;color:#70b030;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit}
+.install-btn-pwa{padding:5px 12px;border-radius:6px;background:#243810;border:1px solid #3a6018;color:#70b030;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit}
 .install-x{background:none;border:none;color:#333;cursor:pointer;font-size:16px;padding:0 2px;line-height:1}
 
-/* ── Scoped binder styles ── */
+/* ── Binder panels ── */
+.binder-panel{display:flex;flex-direction:column;align-items:center;padding:14px 12px 40px}
+
+
 *{box-sizing:border-box;margin:0;padding:0}
 .b-m2a .app-title {font-size:16px;font-weight:700;color:#fff}
 .b-m2a .app-sub {font-size:11px;color:#555;margin-top:2px}
@@ -220,6 +268,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .b-m2a .ml-chip.mur {border-color:#220404;color:#902020}
 .b-m2a .ml-chip.trainer {border-color:#0c1018;color:#404878}
 .b-m2a .ml-empty {text-align:center;padding:20px;font-size:14px;color:#4cff80}
+
+
 *{box-sizing:border-box;margin:0;padding:0}
 .b-penny .app-title {font-size:16px;font-weight:700;color:#fff}
 .b-penny .app-sub {font-size:11px;color:#555;margin-top:2px}
@@ -334,56 +384,86 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .b-penny .wl-empty span {display:block;font-size:12px;color:#242220;margin-top:6px}
 .b-penny /* illus note */
 .illus-note {font-size:10px;color:#333;text-align:center;margin-bottom:10px;line-height:1.5}
+
+
 </style>
 </head>
 <body>
 
-<div class="tab-bar">
-  <button class="tab active" id="tab-m2a" onclick="switchBinder('m2a')">
-    <span class="tab-icon">🗂️</span>
-    <span class="tab-label">M2a Binder</span>
-    <span class="tab-sub">MEGA Dream ex · 486 cards</span>
-  </button>
-  <button class="tab" id="tab-penny" onclick="switchBinder('penny')">
-    <span class="tab-icon">⭐</span>
-    <span class="tab-label">Penny Binder</span>
-    <span class="tab-sub">ボタン · 10 prints</span>
-  </button>
+<!-- App header -->
+<div class="app-header">
+  <div style="flex:1;min-width:0">
+    <div class="app-header-title" id="header-title">🗂️ Pokémon TCG Binders</div>
+    <div class="app-header-sub" id="header-sub">Your collection tracker</div>
+  </div>
+  <button class="back-btn" id="back-btn" onclick="goHome()">← All Binders</button>
+  <button class="sync-btn" onclick="openSync()">⇅ Sync Data</button>
 </div>
 
-<div class="binder-panel active b-m2a" id="panel-m2a">
-
-
-<div class="toolbar">
-  <div>
-    <div class="app-title">M2a MEGA Dream ex — Binder</div>
-    <div class="app-sub">486 cards · 54 pages · left-click = M_owned · right-click = details & M_prices</div>
-  </div>
-  <div class="controls">
-    <div style="display:flex;align-items:center;gap:4px">
-      <input type="text" id="m-si" placeholder="Search name or #…" oninput="M_findCard(this.value)">
-      <button class="clr" onclick="document.getElementById('m-si').value='';M_findCard('')">✕</button>
+<!-- Home screen -->
+<div class="screen active" id="screen-home">
+  <div class="home-screen">
+    <div class="home-title">My Binders</div>
+    <div class="binder-list" id="binder-list">
+      <div class="binder-card" onclick="openBinder('m2a')">
+        <div class="binder-icon">🗂️</div>
+        <div class="binder-info">
+          <div class="binder-name">MEGA Dream ex</div>
+          <div class="binder-desc">M2a · Japanese High Class Pack · Nov 2025 · 486 slots</div>
+          <div class="binder-prog-wrap"><div class="binder-prog-bar" id="home-prog-m2a" style="width:0%"></div></div>
+          <div class="binder-prog-text" id="home-text-m2a">Loading…</div>
+        </div>
+        <div class="binder-arrow">›</div>
+      </div>
+      <div class="binder-card" onclick="openBinder('penny')">
+        <div class="binder-icon">⭐</div>
+        <div class="binder-info">
+          <div class="binder-name">Penny — All Prints</div>
+          <div class="binder-desc">ボタン · All Japanese & English prints · 10 cards</div>
+          <div class="binder-prog-wrap"><div class="binder-prog-bar" id="home-prog-penny" style="width:0%"></div></div>
+          <div class="binder-prog-text" id="home-text-penny">Loading…</div>
+        </div>
+        <div class="binder-arrow">›</div>
+      </div>
     </div>
-    <div class="nav">
-      <button class="nb" id="m-bprev" onclick="M_go(-1)">← Prev</button>
+  </div>
+</div>
+
+<!-- M2a Binder screen -->
+<div class="screen" id="screen-m2a">
+  <div class="binder-panel b-m2a">
+
+
+<M_div class="toolbar">
+  <M_div>
+    <M_div class="app-title">M2a MEGA Dream ex — Binder</M_div>
+    <M_div class="app-sub">486 cards · 54 pages · left-click = M_owned · right-click = details & prices</M_div>
+  </M_div>
+  <M_div class="controls">
+    <M_div style="display:flex;align-M_items:center;gap:4px">
+      <input type="text" id="ma-si" placeholder="Search M_name or #…" oninput="M_findCard(this.value)">
+      <button class="clr" onclick="document.getElementById('ma-si').value='';M_findCard('')">✕</button>
+    </M_div>
+    <M_div class="nav">
+      <button class="nb" id="ma-bprev" onclick="M_go(-1)">← Prev</button>
       <span class="pc">Spread</span>
-      <input type="number" id="m-pgn" min="1" value="1" onchange="M_goTo(+this.value)">
-      <span class="pc" id="m-of-lbl">of 28</span>
-      <button class="nb" id="m-bnext" onclick="M_go(1)">Next →</button>
-    </div>
-  </div>
-</div>
+      <input type="number" id="ma-pgn" min="1" value="1" onchange="M_goTo(+this.value)">
+      <span class="pc" id="of-M_lbl">of 28</span>
+      <button class="nb" id="ma-bnext" onclick="M_go(1)">Next →</button>
+    </M_div>
+  </M_div>
+</M_div>
 
-<div class="action-bar">
-  <div class="prog-wrap"><div class="prog-bar" id="m-prog-bar" style="width:0%"></div></div>
-  <span class="prog-text" id="m-prog-text">0 / 486</span>
-  <label class="filter-lbl"><input type="checkbox" id="m-chk-miss" onchange="M_toggleMissing(this.checked)"> Missing only</label>
+<M_div class="action-bar">
+  <M_div class="prog-M_wrap"><M_div class="prog-bar" id="ma-prog-bar" style="width:0%"></M_div></M_div>
+  <span class="prog-text" id="ma-prog-text">0 / 486</span>
+  <label class="filter-M_lbl"><input type="checkbox" id="chk-M_miss" onchange="M_toggleMissing(this.checked)"> Missing only</label>
   <button class="btn btn-purple" onclick="M_openWatchlist()">⭐ Watchlist</button>
   <button class="btn btn-gold" onclick="M_openMissingList()">📋 Missing</button>
   <button class="btn btn-dim" onclick="M_confirmClear()">Clear all</button>
-</div>
+</M_div>
 
-<div class="legend">
+<M_div class="legend">
   <span class="lv"><span class="ld" style="border-color:#555"></span>Normal</span>
   <span class="lv"><span class="ld" style="border-color:#c89a3a"></span>Holo</span>
   <span class="lv"><span class="ld" style="border-color:#5090d8"></span>ex</span>
@@ -394,464 +474,464 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <span class="lv"><span class="ld" style="border-color:#D85A30"></span>MA</span>
   <span class="lv"><span class="ld" style="border-color:#5DCAA5"></span>SAR</span>
   <span class="lv"><span class="ld" style="border-color:#E24B4A"></span>MUR</span>
-  <span class="lv" style="margin-left:4px">✓ M_owned &nbsp; ⭐ M_watched &nbsp; <span style="color:#c89a3a">$</span> priced</span>
-</div>
+  <span class="lv" style="margin-left:4px">✓ M_owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> M_priced</span>
+</M_div>
 
-<div class="alert" id="m-alert"></div>
-<div class="spread-info" id="m-sinfo"></div>
-<div class="spread" id="m-spread">
-  <div id="m-lp"></div>
-  <div class="spine"></div>
-  <div id="m-rp"></div>
-</div>
+<M_div class="alert" id="ma-alert"></M_div>
+<M_div class="spread-M_info" id="ma-sinfo"></M_div>
+<M_div class="spread" id="ma-spread">
+  <M_div id="M_lp"></M_div>
+  <M_div class="spine"></M_div>
+  <M_div id="ma-rp"></M_div>
+</M_div>
 
 <!-- Card detail modal -->
-<div class="modal" id="m-modal" onclick="if(event.target===this)M_closeModal()">
-  <div class="mbox">
-    <img class="cimg" id="m-mimg" src="" alt="">
-    <div class="mph" id="m-mph"></div>
-    <div class="mname" id="m-mname"></div>
-    <div class="mnum" id="m-mnum"></div>
-    <div class="mbadge" id="m-mbadge"></div>
+<M_div class="modal" id="ma-modal" onclick="if(event.target===this)M_closeModal()">
+  <M_div class="mbox">
+    <M_img class="cimg" id="ma-mimg" src="" alt="">
+    <M_div class="mph" id="ma-mph"></M_div>
+    <M_div class="mname" id="ma-mname"></M_div>
+    <M_div class="mnum" id="ma-mnum"></M_div>
+    <M_div class="mbadge" id="ma-mbadge"></M_div>
 
-    <div class="price-area">
-      <div class="price-area-title">
+    <M_div class="price-area">
+      <M_div class="price-area-title">
         <span style="color:#444;font-size:11px">Prices (USD)</span>
-        <a id="m-pc-link" href="#" target="_blank">Open PriceCharting ↗</a>
-      </div>
-      <div class="price-fields">
-        <div class="pfield"><label>Ungraded</label><input type="text" id="m-p-raw" placeholder="$0.00"></div>
-        <div class="pfield"><label>PSA 9</label><input type="text" id="m-p-9" placeholder="$0.00"></div>
-        <div class="pfield"><label>PSA 10</label><input type="text" id="m-p-10" placeholder="$0.00"></div>
-      </div>
-      <button class="save-M_prices-btn" onclick="M_savePriceFromModal()">Save M_prices</button>
-      <div class="price-saved" id="m-price-saved">✓ Saved!</div>
-    </div>
+        <a id="ma-pc-link" href="#" target="_blank">Open PriceCharting ↗</a>
+      </M_div>
+      <M_div class="price-fields">
+        <M_div class="pfield"><label>Ungraded</label><input type="text" id="M_p-M_raw" placeholder="$0.00"></M_div>
+        <M_div class="pfield"><label>PSA 9</label><input type="text" id="M_p-9" placeholder="$0.00"></M_div>
+        <M_div class="pfield"><label>PSA 10</label><input type="text" id="M_p-10" placeholder="$0.00"></M_div>
+      </M_div>
+      <button class="save-prices-btn" onclick="M_savePriceFromModal()">Save prices</button>
+      <M_div class="price-saved" id="price-saved">✓ Saved!</M_div>
+    </M_div>
 
-    <div class="m-btns">
-      <button class="m-btn m-btn-own" id="m-m-own-btn" onclick="M_toggleOwnModal()">Mark as M_owned</button>
-      <button class="m-btn m-btn-watch" id="m-m-watch-btn" onclick="M_toggleWatchModal()">⭐ Watch</button>
-    </div>
+    <M_div class="m-btns">
+      <button class="m-btn m-btn-own" id="ma-m-own-btn" onclick="M_toggleOwnModal()">Mark as M_owned</button>
+      <button class="m-btn m-btn-watch" id="ma-m-watch-btn" onclick="M_toggleWatchModal()">⭐ Watch</button>
+    </M_div>
     <button class="m-btn-close" onclick="M_closeModal()">Close</button>
-  </div>
-</div>
+  </M_div>
+</M_div>
 
 <!-- Watchlist modal -->
-<div class="wl-modal" id="m-wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="wl-box">
-    <div class="modal-head">
-      <div class="modal-head-left">
-        <div class="title">⭐ Watchlist</div>
-        <div class="sub" id="m-wl-sub">0 cards M_watched</div>
-      </div>
-      <div class="modal-head-right">
-        <button class="btn btn-dim" onclick="document.getElementById('m-wl-modal').classList.remove('open')">Close</button>
-      </div>
-    </div>
-    <div id="m-wl-body"></div>
-  </div>
-</div>
+<M_div class="wl-modal" id="ma-wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <M_div class="wl-box">
+    <M_div class="modal-head">
+      <M_div class="modal-head-left">
+        <M_div class="title">⭐ Watchlist</M_div>
+        <M_div class="sub" id="ma-wl-sub">0 cards watched</M_div>
+      </M_div>
+      <M_div class="modal-head-right">
+        <button class="btn btn-dim" onclick="document.getElementById('ma-wl-modal').classList.remove('open')">Close</button>
+      </M_div>
+    </M_div>
+    <M_div id="wl-M_body"></M_div>
+  </M_div>
+</M_div>
 
-<!-- Missing list modal -->
-<div class="ml-modal" id="m-ml-modal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="ml-box">
-    <div class="modal-head">
-      <div class="modal-head-left">
-        <div class="title">Missing Cards</div>
-        <div class="sub" id="m-ml-stats"></div>
-      </div>
-      <div class="modal-head-right">
+<!-- Missing M_list modal -->
+<M_div class="ml-modal" id="ma-ml-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <M_div class="ml-box">
+    <M_div class="modal-head">
+      <M_div class="modal-head-left">
+        <M_div class="title">Missing Cards</M_div>
+        <M_div class="sub" id="ma-ml-stats"></M_div>
+      </M_div>
+      <M_div class="modal-head-right">
         <button class="btn btn-purple" onclick="M_copyMissing()">Copy as text</button>
-        <button class="btn btn-dim" onclick="document.getElementById('m-ml-modal').classList.remove('open')">Close</button>
-      </div>
-    </div>
-    <div id="m-ml-total" class="ml-total" style="display:none"></div>
-    <div id="m-ml-body"></div>
-  </div>
-</div>
+        <button class="btn btn-dim" onclick="document.getElementById('ma-ml-modal').classList.remove('open')">Close</button>
+      </M_div>
+    </M_div>
+    <M_div id="ma-ml-total" class="ml-total" style="display:none"></M_div>
+    <M_div id="ml-M_body"></M_div>
+  </M_div>
+</M_div>
 
 <script>
 // ─────────────────────────────── data ───────────────────────────────────
 const M_HOLOS=new Set([1,6,8,10,12,14,16,19,20,23,26,28,33,34,39,41,42,43,53,54,55,59,62,66,68,74,76,78,79,80,81,83,85,86,87,97,98,103,107,108,113,115,118,120,127,128,129,131,136,138,139,142,143,144]);
 const M_EX2=new Set([3,17,21,29,31,36,44,49,51,57,60,63,71,75,90,92,94,101,110,112,114,119,122,123,126,134,145]);
 const M_BALLS={1:"Bug",2:"Love",4:"Love",5:"Love",6:"Love",7:"Love",8:"Love",9:"Friend",10:"Friend",11:"Friend",12:"Quick",13:"Dusk",14:"Dusk",15:"R",16:"R",18:"Dusk",19:"Dusk",20:"Poké",22:"Dusk",23:"Dusk",24:"Poké",25:"Poké",26:"Poké",27:"R",28:"R",30:"Poké",32:"Poké",33:"Poké",34:"R",35:"Quick",37:"Quick",38:"Quick",39:"Quick",40:"Quick",41:"Quick",42:"Quick",43:"Quick",45:"Poké",46:"Poké",47:"Poké",48:"Poké",50:"Poké",52:"Quick",53:"Quick",54:"Quick",55:"Quick",56:"Quick",58:"Quick",59:"Quick",61:"R",62:"R",64:"Friend",65:"Friend",66:"Friend",67:"Quick",68:"Quick",69:"Friend",70:"Friend",72:"Dusk",73:"Dusk",74:"Dusk",76:"Poké",77:"Dusk",78:"Dusk",79:"R",80:"Dusk",81:"Dusk",82:"R",83:"R",84:"Quick",85:"Quick",86:"Quick",87:"Quick",88:"Dusk",89:"Dusk",91:"Quick",93:"Quick",95:"Poké",96:"Poké",97:"Poké",98:"Poké",99:"R",100:"R",102:"R",103:"R",104:"R",105:"Dusk",106:"Dusk",107:"Dusk",108:"Dusk",109:"Dusk",111:"R",113:"Dusk",116:"Poké",117:"Poké",118:"Poké",120:"Poké",121:"Poké",124:"Dusk",125:"Dusk",127:"Poké",128:"R",129:"R",130:"Dusk",131:"Dusk",132:"Dusk",133:"Dusk",135:"Dusk",136:"Poké",137:"Quick",138:"Quick",139:"Poké",140:"Poké",141:"Poké",142:"Poké",143:"Quick",144:"Poké"};
-const M_NAMES={1:"Ethan's Pinsir",2:"Yanma",3:"Yanmega ex",4:"Wurmple",5:"Silcoon",6:"Beautifly",7:"Cascoon",8:"Dustox",9:"Cynthia's Roselia",10:"Cynthia's Roserade",11:"Budew",12:"Shaymin",13:"Dwebble",14:"Crustle",15:"Team Rocket's Tarountula",16:"Team Rocket's Spidops",17:"Teal Mask Ogerpon ex",18:"Ethan's Slugma",19:"Ethan's Magcargo",20:"Entei",21:"Ethan's Ho-Oh ex",22:"Numel",23:"Camerupt",24:"Tepig",25:"Pignite",26:"Emboar",27:"N's Darumaka",28:"N's Darmanitan",29:"Reshiram ex",30:"Charcadet",31:"Ceruledge ex",32:"Psyduck",33:"Golduck",34:"Team Rocket's Articuno",35:"Snorunt",36:"Mega Froslass ex",37:"N's Vanillite",38:"N's Vanillish",39:"N's Vanilluxe",40:"Snom",41:"Frosmoth",42:"Glastrier",43:"Chien-Pao",44:"Pikachu ex",45:"Magnemite",46:"Magneton",47:"Tynamo",48:"Eelektrik",49:"Mega Eelektross ex",50:"Stunfisk",51:"Zekrom ex",52:"Helioptile",53:"Heliolisk",54:"Tapu Koko",55:"Zeraora",56:"Iono's Tadbulb",57:"Iono's Bellibolt ex",58:"Iono's Wattrel",59:"Iono's Kilowattrel",60:"Lillie's Clefairy ex",61:"Team Rocket's Exeggcute",62:"Team Rocket's Exeggutor",63:"Team Rocket's Mewtwo ex",64:"Togepi",65:"Togetic",66:"Togekiss",67:"Misdreavus",68:"Mismagius",69:"Ralts",70:"Kirlia",71:"Mega Gardevoir ex",72:"Duskull",73:"Dusclops",74:"Dusknoir",75:"Latias ex",76:"Rotom",77:"Hop's Phantump",78:"Hop's Trevenant",79:"Team Rocket's Mimikyu",80:"Spectrier",81:"Munkidori",82:"Team Rocket's Diglett",83:"Team Rocket's Dugtrio",84:"Meditite",85:"Medicham",86:"Lunatone",87:"Solrock",88:"Cynthia's Gible",89:"Cynthia's Gabite",90:"Cynthia's Garchomp ex",91:"Riolu",92:"Mega Lucario ex",93:"Pancham",94:"Mega Hawlucha ex",95:"Rolycoly",96:"Carkol",97:"Coalossal",98:"Okidogi",99:"Team Rocket's Zubat",100:"Team Rocket's Golbat",101:"Team Rocket's Crobat ex",102:"Team Rocket's Murkrow",103:"Team Rocket's Honchkrow",104:"Team Rocket's Sneasel",105:"Galarian Zigzagoon",106:"Galarian Linoone",107:"Galarian Obstagoon",108:"Cynthia's Spiritomb",109:"Scraggy",110:"Mega Scrafty ex",111:"N's Zorua",112:"N's Zoroark ex",113:"Pangoro",114:"Fezandipiti ex",115:"Pecharunt",116:"Pawniard",117:"Bisharp",118:"Kingambit",119:"Genesect ex",120:"Magearna",121:"Duraludon",122:"Archaludon ex",123:"Hop's Zacian ex",124:"Dratini",125:"Dragonair",126:"Mega Dragonite ex",127:"Rayquaza",128:"N's Reshiram",129:"N's Zekrom",130:"Noibat",131:"Noivern",132:"Dreepy",133:"Drakloak",134:"Dragapult ex",135:"Tatsugiri",136:"Hop's Snorlax",137:"Hoothoot",138:"Noctowl",139:"Fan Rotom",140:"Bouffalant",141:"Hop's Wooloo",142:"Hop's Dubwool",143:"Hop's Cramorant",144:"Terapagos",145:"Terapagos ex",146:"N's PP Up",147:"Energy Recycler",148:"Enhanced Hammer",149:"Glass Trumpet",150:"Sacred Ash",151:"Tool Scrapper",152:"Tera Orb",153:"Buddy-Buddy Poffin",154:"Premium Power Pro",155:"Fighting Gong",156:"Hop's Bag",157:"Bug Catching Set",158:"Mega Signal",159:"Night Stretcher",160:"Team Rocket's Transceiver",161:"Counter Gain",162:"Cynthia's Power Weight",163:"Light Ball",164:"Thick Scales",165:"Air Balloon",166:"Brave Bangle",167:"Hop's Choice Band",168:"Iris's Fighting Spirit",169:"Acerola's Mischief",170:"Canari",171:"Surfer",172:"Hilda",173:"Anthea & Concordia",174:"Ethan's Adventure",175:"Lillie's Determination",176:"Team Rocket's Ariana",177:"Team Rocket's Archer",178:"Team Rocket's Giovanni",179:"Team Rocket's Petrel",180:"Team Rocket's Proton",181:"N's Castle",182:"Forest of Vitality",183:"Gravity Mountain",184:"Area Zero Underdepths",185:"Levincia",186:"Postwick",187:"Mystery Garden",188:"Mine at Night",189:"Team Rocket's Watchtower",190:"Team Rocket's Factory",191:"Ignition Energy",192:"Prism Energy",193:"Team Rocket's Energy",194:"Beautifly",195:"Dustox",196:"Budew",197:"Ethan's Magcargo",198:"Numel",199:"Psyduck",200:"Snorunt",201:"Heliolisk",202:"Misdreavus",203:"Togekiss",204:"Hop's Trevenant",205:"Team Rocket's Mimikyu",206:"Team Rocket's Dugtrio",207:"Medicham",208:"Cynthia's Spiritomb",209:"Galarian Obstagoon",210:"N's Zekrom",211:"Dreepy",212:"Drakloak",213:"Fan Rotom",214:"N's PP Up",215:"Glass Trumpet",216:"Premium Power Pro",217:"Team Rocket's Transceiver",218:"Counter Gain",219:"Canari",220:"Iris's Fighting Spirit",221:"Anthea & Concordia",222:"Jamming Tower",223:"Mega Charizard X ex",224:"Mega Froslass ex",225:"Mega Eelektross ex",226:"Mega Gardevoir ex",227:"Mega Diancie ex",228:"Mega Lucario ex",229:"Mega Hawlucha ex",230:"Mega Gengar ex",231:"Mega Scrafty ex",232:"Mega Dragonite ex",233:"Mega Froslass ex",234:"Pikachu ex",235:"Mega Eelektross ex",236:"Iono's Bellibolt ex",237:"Team Rocket's Mewtwo ex",238:"Mega Diancie ex",239:"Mega Hawlucha ex",240:"Mega Gengar ex",241:"Mega Scrafty ex",242:"N's Zoroark ex",243:"Teal Mask Ogerpon ex",244:"Fezandipiti ex",245:"Steven's Metagross ex",246:"Mega Dragonite ex",247:"Iris's Fighting Spirit",248:"Canari",249:"Surfer",250:"Mega Dragonite ex"};
+const M_NAMES={1:"Ethan'M_s Pinsir",2:"Yanma",3:"Yanmega ex",4:"Wurmple",5:"Silcoon",6:"Beautifly",7:"Cascoon",8:"Dustox",9:"Cynthia'M_s Roselia",10:"Cynthia'M_s Roserade",11:"Budew",12:"Shaymin",13:"Dwebble",14:"Crustle",15:"Team Rocket'M_s Tarountula",16:"Team Rocket'M_s Spidops",17:"Teal Mask Ogerpon ex",18:"Ethan'M_s Slugma",19:"Ethan'M_s Magcargo",20:"Entei",21:"Ethan'M_s Ho-Oh ex",22:"Numel",23:"Camerupt",24:"Tepig",25:"Pignite",26:"Emboar",27:"N'M_s Darumaka",28:"N'M_s Darmanitan",29:"Reshiram ex",30:"Charcadet",31:"Ceruledge ex",32:"Psyduck",33:"Golduck",34:"Team Rocket'M_s Articuno",35:"Snorunt",36:"Mega Froslass ex",37:"N'M_s Vanillite",38:"N'M_s Vanillish",39:"N'M_s Vanilluxe",40:"Snom",41:"Frosmoth",42:"Glastrier",43:"Chien-Pao",44:"Pikachu ex",45:"Magnemite",46:"Magneton",47:"Tynamo",48:"Eelektrik",49:"Mega Eelektross ex",50:"Stunfisk",51:"Zekrom ex",52:"Helioptile",53:"Heliolisk",54:"Tapu Koko",55:"Zeraora",56:"Iono'M_s Tadbulb",57:"Iono'M_s Bellibolt ex",58:"Iono'M_s Wattrel",59:"Iono'M_s Kilowattrel",60:"Lillie'M_s Clefairy ex",61:"Team Rocket'M_s Exeggcute",62:"Team Rocket'M_s Exeggutor",63:"Team Rocket'M_s Mewtwo ex",64:"Togepi",65:"Togetic",66:"Togekiss",67:"Misdreavus",68:"Mismagius",69:"Ralts",70:"Kirlia",71:"Mega Gardevoir ex",72:"Duskull",73:"Dusclops",74:"Dusknoir",75:"Latias ex",76:"Rotom",77:"Hop'M_s Phantump",78:"Hop'M_s Trevenant",79:"Team Rocket'M_s Mimikyu",80:"Spectrier",81:"Munkidori",82:"Team Rocket'M_s Diglett",83:"Team Rocket'M_s Dugtrio",84:"Meditite",85:"Medicham",86:"Lunatone",87:"Solrock",88:"Cynthia'M_s Gible",89:"Cynthia'M_s Gabite",90:"Cynthia'M_s Garchomp ex",91:"Riolu",92:"Mega Lucario ex",93:"Pancham",94:"Mega Hawlucha ex",95:"Rolycoly",96:"Carkol",97:"Coalossal",98:"Okidogi",99:"Team Rocket'M_s Zubat",100:"Team Rocket'M_s Golbat",101:"Team Rocket'M_s Crobat ex",102:"Team Rocket'M_s Murkrow",103:"Team Rocket'M_s Honchkrow",104:"Team Rocket'M_s Sneasel",105:"Galarian Zigzagoon",106:"Galarian Linoone",107:"Galarian Obstagoon",108:"Cynthia'M_s Spiritomb",109:"Scraggy",110:"Mega Scrafty ex",111:"N'M_s Zorua",112:"N'M_s Zoroark ex",113:"Pangoro",114:"Fezandipiti ex",115:"Pecharunt",116:"Pawniard",117:"Bisharp",118:"Kingambit",119:"Genesect ex",120:"Magearna",121:"Duraludon",122:"Archaludon ex",123:"Hop'M_s Zacian ex",124:"Dratini",125:"Dragonair",126:"Mega Dragonite ex",127:"Rayquaza",128:"N'M_s Reshiram",129:"N'M_s Zekrom",130:"Noibat",131:"Noivern",132:"Dreepy",133:"Drakloak",134:"Dragapult ex",135:"Tatsugiri",136:"Hop'M_s Snorlax",137:"Hoothoot",138:"Noctowl",139:"Fan Rotom",140:"Bouffalant",141:"Hop'M_s Wooloo",142:"Hop'M_s Dubwool",143:"Hop'M_s Cramorant",144:"Terapagos",145:"Terapagos ex",146:"N'M_s PP Up",147:"Energy Recycler",148:"Enhanced Hammer",149:"Glass Trumpet",150:"Sacred Ash",151:"Tool Scrapper",152:"Tera Orb",153:"Buddy-Buddy Poffin",154:"Premium Power Pro",155:"Fighting Gong",156:"Hop'M_s Bag",157:"Bug Catching Set",158:"Mega Signal",159:"Night Stretcher",160:"Team Rocket'M_s Transceiver",161:"Counter Gain",162:"Cynthia'M_s Power Weight",163:"Light Ball",164:"Thick Scales",165:"Air Balloon",166:"Brave Bangle",167:"Hop'M_s Choice Band",168:"Iris'M_s Fighting Spirit",169:"Acerola'M_s Mischief",170:"Canari",171:"Surfer",172:"Hilda",173:"Anthea & Concordia",174:"Ethan'M_s Adventure",175:"Lillie'M_s Determination",176:"Team Rocket'M_s Ariana",177:"Team Rocket'M_s Archer",178:"Team Rocket'M_s Giovanni",179:"Team Rocket'M_s Petrel",180:"Team Rocket'M_s Proton",181:"N'M_s Castle",182:"Forest of Vitality",183:"Gravity Mountain",184:"Area Zero Underdepths",185:"Levincia",186:"Postwick",187:"Mystery Garden",188:"Mine at Night",189:"Team Rocket'M_s Watchtower",190:"Team Rocket'M_s Factory",191:"Ignition Energy",192:"Prism Energy",193:"Team Rocket'M_s Energy",194:"Beautifly",195:"Dustox",196:"Budew",197:"Ethan'M_s Magcargo",198:"Numel",199:"Psyduck",200:"Snorunt",201:"Heliolisk",202:"Misdreavus",203:"Togekiss",204:"Hop'M_s Trevenant",205:"Team Rocket'M_s Mimikyu",206:"Team Rocket'M_s Dugtrio",207:"Medicham",208:"Cynthia'M_s Spiritomb",209:"Galarian Obstagoon",210:"N'M_s Zekrom",211:"Dreepy",212:"Drakloak",213:"Fan Rotom",214:"N'M_s PP Up",215:"Glass Trumpet",216:"Premium Power Pro",217:"Team Rocket'M_s Transceiver",218:"Counter Gain",219:"Canari",220:"Iris'M_s Fighting Spirit",221:"Anthea & Concordia",222:"Jamming Tower",223:"Mega Charizard X ex",224:"Mega Froslass ex",225:"Mega Eelektross ex",226:"Mega Gardevoir ex",227:"Mega Diancie ex",228:"Mega Lucario ex",229:"Mega Hawlucha ex",230:"Mega Gengar ex",231:"Mega Scrafty ex",232:"Mega Dragonite ex",233:"Mega Froslass ex",234:"Pikachu ex",235:"Mega Eelektross ex",236:"Iono'M_s Bellibolt ex",237:"Team Rocket'M_s Mewtwo ex",238:"Mega Diancie ex",239:"Mega Hawlucha ex",240:"Mega Gengar ex",241:"Mega Scrafty ex",242:"N'M_s Zoroark ex",243:"Teal Mask Ogerpon ex",244:"Fezandipiti ex",245:"Steven'M_s Metagross ex",246:"Mega Dragonite ex",247:"Iris'M_s Fighting Spirit",248:"Canari",249:"Surfer",250:"Mega Dragonite ex"};
 const M_BC={normal:{bg:'#181410',col:'#444'},holo:{bg:'#2a1e04',col:'#c89a3a'},ex:{bg:'#0a1828',col:'#5090d0'},trainer:{bg:'#181428',col:'#5060a0'},erh:{bg:'#081828',col:'#5090d0'},brh:{bg:'#061e12',col:'#28a060'},ar:{bg:'#120e38',col:'#9080d8'},sr:{bg:'#201400',col:'#b07018'},ma:{bg:'#200c00',col:'#b04028'},sar:{bg:'#061e12',col:'#40a880'},mur:{bg:'#200606',col:'#b03030'}};
 
 // ─────────────────────────── storage ────────────────────────────────────
-let M_owned=new Set(), M_watched=new Set(), M_prices={};
+let M_owned=new Set(), watched=new Set(), prices={};
 function M_load(){
   try{M_owned=new Set(JSON.parse(localStorage.getItem('M2a_owned_v1')||'[]'));}catch(e){}
-  try{M_watched=new Set(JSON.parse(localStorage.getItem('M2a_watched_v1')||'[]'));}catch(e){}
-  try{M_prices=JSON.parse(localStorage.getItem('M2a_prices_v2')||'{}');}catch(e){}
+  try{watched=new Set(JSON.parse(localStorage.getItem('M2a_watched_v1')||'[]'));}catch(e){}
+  try{prices=JSON.parse(localStorage.getItem('M2a_prices_v2')||'{}');}catch(e){}
 }
 function M_saveOwned(){localStorage.setItem('M2a_owned_v1',JSON.stringify([...M_owned]));}
-function M_saveWatched(){localStorage.setItem('M2a_watched_v1',JSON.stringify([...M_watched]));}
-function M_savePricesStore(){localStorage.setItem('M2a_prices_v2',JSON.stringify(M_prices));}
+function M_saveWatched(){localStorage.setItem('M2a_watched_v1',JSON.stringify([...watched]));}
+function M_savePricesStore(){localStorage.setItem('M2a_prices_v2',JSON.stringify(prices));}
 
-// ─────────────────────────── slot key / type ─────────────────────────────
-function M_sk(s){
-  return s.num+({erh:'-erh',brh:'-brh',ar:'-ar',sr:'-sr',ma:'-ma',sar:'-sar',mur:'-mur'}[s.v]||'');
+// ─────────────────────────── slot M_key / type ─────────────────────────────
+function M_sk(M_s){
+  return M_s.M_num+({erh:'-erh',brh:'-brh',ar:'-ar',sr:'-sr',ma:'-ma',sar:'-sar',mur:'-mur'}[M_s.v]||'');
 }
-function M_cardType(n){
-  if(M_EX2.has(n)) return 'ex';
-  if(n>=1&&n<=145) return M_HOLOS.has(n)?'holo':'normal';
-  if(n>=146&&n<=193) return 'trainer';
+function M_cardType(M_n){
+  if(M_EX2.has(M_n)) return 'ex';
+  if(M_n>=1&&M_n<=145) return M_HOLOS.has(M_n)?'holo':'normal';
+  if(M_n>=146&&M_n<=193) return 'trainer';
   return 'normal';
 }
-function M_varLabel(s){
-  return{normal:'Normal',holo:'Holo',ex:'ex',trainer:'Trainer',erh:'Energy RH',ar:'AR',sr:'SR',ma:'MA',sar:'SAR',mur:'MUR'}[s.v]||(s.v==='brh'?(s.ball||'Poké')+' Ball RH':s.v);
+function M_varLabel(M_s){
+  return{normal:'Normal',holo:'Holo',ex:'ex',trainer:'Trainer',erh:'Energy RH',ar:'AR',sr:'SR',ma:'MA',sar:'SAR',mur:'MUR'}[M_s.v]||(M_s.v==='brh'?(M_s.ball||'Poké')+' Ball RH':M_s.v);
 }
 
 // ─────────────────────────── PriceCharting URL ───────────────────────────
-function M_pcUrl(s){
-  const name=M_NAMES[s.num]||'';
-  let slug=name.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9'\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-');
-  if(s.v==='erh') slug+='-energy';
-  else if(s.v==='brh') slug+='-ball';
-  slug+='-'+s.num;
-  return`https://www.pricecharting.com/game/pokemon-japanese-mega-dream-ex/${slug}`;
+function M_pcUrl(M_s){
+  const M_name=M_NAMES[M_s.M_num]||'';
+  let M_slug=M_name.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9'\M_s-]/g,'').trim().replace(/\M_s+/g,'-').replace(/-+/g,'-');
+  if(M_s.v==='erh') M_slug+='-energy';
+  else if(M_s.v==='brh') M_slug+='-ball';
+  M_slug+='-'+M_s.M_num;
+  return`https://www.pricecharting.com/game/pokemon-japanese-mega-dream-ex/${M_slug}`;
 }
 
-// ─────────────────────────── build slots ────────────────────────────────
+// ─────────────────────────── build M_slots ────────────────────────────────
 function M_buildSlots(){
-  const s=[];
+  const M_s=[];
   for(let i=1;i<=145;i++){
-    s.push({num:i,v:M_cardType(i)});
-    if(!M_EX2.has(i)){s.push({num:i,v:'erh'});s.push({num:i,v:'brh',ball:M_BALLS[i]||'Poké'});}
+    M_s.push({M_num:i,v:M_cardType(i)});
+    if(!M_EX2.has(i)){M_s.push({M_num:i,v:'erh'});M_s.push({M_num:i,v:'brh',ball:M_BALLS[i]||'Poké'});}
   }
-  for(let i=146;i<=193;i++) s.push({num:i,v:'trainer'});
-  for(let i=194;i<=213;i++) s.push({num:i,v:'ar'});
-  for(let i=214;i<=222;i++) s.push({num:i,v:'sr'});
-  for(let i=223;i<=232;i++) s.push({num:i,v:'ma'});
-  for(let i=233;i<=249;i++) s.push({num:i,v:'sar'});
-  s.push({num:250,v:'mur'});
-  return s;
+  for(let i=146;i<=193;i++) M_s.push({M_num:i,v:'trainer'});
+  for(let i=194;i<=213;i++) M_s.push({M_num:i,v:'ar'});
+  for(let i=214;i<=222;i++) M_s.push({M_num:i,v:'sr'});
+  for(let i=223;i<=232;i++) M_s.push({M_num:i,v:'ma'});
+  for(let i=233;i<=249;i++) M_s.push({M_num:i,v:'sar'});
+  M_s.push({M_num:250,v:'mur'});
+  return M_s;
 }
-const M_SLOTS=M_buildSlots(), M_TOTAL=M_SLOTS.length, M_CARD_PAGES=Math.ceil(M_TOTAL/9);
-const M_TOTAL_SPREADS=1+Math.ceil((M_CARD_PAGES-1)/2);
-let M_curSpread=1, M_showMissing=false;
+const M_SLOTS=M_buildSlots(), TOTAL=M_SLOTS.length, CARD_PAGES=Math.ceil(TOTAL/9);
+const M_TOTAL_SPREADS=1+Math.ceil((CARD_PAGES-1)/2);
+let M_curSpread=1, showMissing=false;
 
-function M_imgUrl(n){return`https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2a/M2a_${n}_R_JP_SM.png`;}
+function M_imgUrl(M_n){return`https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2a/M2a_${M_n}_R_JP_SM.png`;}
 
 // ─────────────────────────── slot element ───────────────────────────────
-function M_makeSlot(s){
-  const key=M_sk(s), name=M_NAMES[s.num]||'', bc=M_BC[s.v]||M_BC.normal;
-  const div=document.createElement('div');
-  div.className='slot v-'+s.v+(M_owned.has(key)?' M_owned':'');
-  div.dataset.key=key;
+function M_makeSlot(M_s){
+  const M_key=M_sk(M_s), M_name=M_NAMES[M_s.M_num]||'', bc=M_BC[M_s.v]||M_BC.normal;
+  const M_div=document.createElement('M_div');
+  M_div.className='slot v-'+M_s.v+(M_owned.has(M_key)?' M_owned':'');
+  M_div.dataset.M_key=M_key;
 
   // Image
-  const img=document.createElement('img');img.className='cimg';img.src=M_imgUrl(s.num);img.alt=name;img.loading='lazy';
-  const ph=document.createElement('div');ph.className='cph';ph.innerHTML=`<div class="ph-n">${s.num}/193</div><div class="ph-nm">${name.substring(0,15)}</div>`;
-  img.onerror=()=>{img.style.display='none';ph.style.display='flex';};
-  div.appendChild(img);div.appendChild(ph);
+  const M_img=document.createElement('M_img');M_img.className='cimg';M_img.src=M_imgUrl(M_s.M_num);M_img.alt=M_name;M_img.loading='lazy';
+  const M_ph=document.createElement('M_div');M_ph.className='cph';M_ph.innerHTML=`<M_div class="M_ph-M_n">${M_s.M_num}/193</M_div><M_div class="M_ph-nm">${M_name.substring(0,15)}</M_div>`;
+  M_img.onerror=()=>{M_img.style.display='none';M_ph.style.display='flex';};
+  M_div.appendChild(M_img);M_div.appendChild(M_ph);
 
   // Label
-  const lbl=document.createElement('div');lbl.className='clbl';
-  lbl.innerHTML=`<div class="cnum">${s.num}/193</div><div class="cnm" title="${name}">${name}</div><span class="vbg" style="background:${bc.bg};color:${bc.col}">${M_varLabel(s)}</span>`;
-  div.appendChild(lbl);
+  const M_lbl=document.createElement('M_div');M_lbl.className='clbl';
+  M_lbl.innerHTML=`<M_div class="cnum">${M_s.M_num}/193</M_div><M_div class="cnm" title="${M_name}">${M_name}</M_div><span class="vbg" style="background:${bc.bg};color:${bc.col}">${M_varLabel(M_s)}</span>`;
+  M_div.appendChild(M_lbl);
 
   // Overlay badges
-  if(M_owned.has(key)) div.appendChild(M_badge('M_badge-M_owned','✓'));
-  if(M_watched.has(key)) div.appendChild(M_badge('M_badge-star','⭐'));
-  const p=M_prices[key];
-  if(p&&p.raw){const b=M_badge('M_badge-price',p.raw);div.appendChild(b);}
+  if(M_owned.has(M_key)) M_div.appendChild(M_badge('M_badge-M_owned','✓'));
+  if(watched.has(M_key)) M_div.appendChild(M_badge('M_badge-star','⭐'));
+  const M_p=prices[M_key];
+  if(M_p&&M_p.M_raw){const M_b=M_badge('M_badge-price',M_p.M_raw);M_div.appendChild(M_b);}
 
   // Events
-  div.addEventListener('click',e=>{
+  M_div.addEventListener('click',e=>{
     e.preventDefault();
-    const was=M_owned.has(key);
-    was?M_owned.delete(key):M_owned.add(key);
+    const M_was=M_owned.has(M_key);
+    M_was?M_owned.delete(M_key):M_owned.add(M_key);
     M_saveOwned();M_updateProgress();
-    div.classList.toggle('M_owned',!was);
-    M_syncBadge(div,'M_badge-M_owned','✓',!was);
+    M_div.classList.toggle('M_owned',!M_was);
+    M_syncBadge(M_div,'M_badge-M_owned','✓',!M_was);
   });
-  div.addEventListener('contextmenu',e=>{e.preventDefault();M_openModal(s);});
-  return div;
+  M_div.addEventListener('contextmenu',e=>{e.preventDefault();M_openModal(M_s);});
+  return M_div;
 }
 
-function M_badge(cls,txt){const b=document.createElement('div');b.className=cls;b.textContent=txt;return b;}
-function M_syncBadge(div,cls,txt,show){
-  let b=div.querySelector('.'+cls);
-  if(show&&!b){b=M_badge(cls,txt);div.appendChild(b);}
-  else if(!show&&b) b.remove();
+function M_badge(cls,M_txt){const M_b=document.createElement('M_div');M_b.className=cls;M_b.textContent=M_txt;return M_b;}
+function M_syncBadge(M_div,cls,M_txt,show){
+  let M_b=M_div.querySelector('.'+cls);
+  if(show&&!M_b){M_b=M_badge(cls,M_txt);M_div.appendChild(M_b);}
+  else if(!show&&M_b) M_b.remove();
 }
 
 // ─────────────────────────── page / spread ──────────────────────────────
 function M_makeCardPage(idx0,side,num1){
-  const wrap=document.createElement('div');wrap.className='bpage';wrap.style.background=side==='left'?'#13110e':'#111009';
-  const lbl=document.createElement('div');lbl.className='pg-lbl';lbl.textContent=`— page ${num1} —`;wrap.appendChild(lbl);
-  const grid=document.createElement('div');grid.className='grid';
-  const start=idx0*9,end=Math.min(start+9,M_TOTAL);
-  for(let i=start;i<end;i++) grid.appendChild(M_makeSlot(M_SLOTS[i]));
-  for(let i=end-start;i<9;i++){const e=document.createElement('div');e.className='slot empty';e.innerHTML='<span style="color:#141210">·</span>';grid.appendChild(e);}
-  wrap.appendChild(grid);return wrap;
+  const M_wrap=document.createElement('M_div');M_wrap.className='bpage';M_wrap.style.background=side==='left'?'#13110e':'#111009';
+  const M_lbl=document.createElement('M_div');M_lbl.className='pg-M_lbl';M_lbl.textContent=`— page ${num1} —`;M_wrap.appendChild(M_lbl);
+  const M_grid=document.createElement('M_div');M_grid.className='M_grid';
+  const M_start=idx0*9,end=Math.min(M_start+9,TOTAL);
+  for(let i=M_start;i<end;i++) M_grid.appendChild(M_makeSlot(M_SLOTS[i]));
+  for(let i=end-M_start;i<9;i++){const e=document.createElement('M_div');e.className='slot empty';e.innerHTML='<span style="color:#141210">·</span>';M_grid.appendChild(e);}
+  M_wrap.appendChild(M_grid);return M_wrap;
 }
 function M_makeCover(){
-  const d=document.createElement('div');d.className='bpage cover-pg';
-  d.innerHTML=`<div class="cover-ttl">MEGA<br>ドリームex</div>
-    <div style="font-size:12px;color:#7a6030;font-weight:600;letter-spacing:.05em">M2a · Nov 28 2025</div>
-    <div class="cover-box">
+  const M_d=document.createElement('M_div');M_d.className='bpage cover-pg';
+  M_d.innerHTML=`<M_div class="cover-ttl">MEGA<br>ドリームex</M_div>
+    <M_div style="font-size:12px;color:#7a6030;font-weight:600;letter-spacing:.05em">M2a · Nov 28 2025</M_div>
+    <M_div class="cover-box">
       ✓ Left-click = toggle M_owned<br>
       ✓ Right-click = details &amp; price entry<br>
       ⭐ Watch cards for price tracking<br>
-      💰 Open PriceCharting &amp; type in M_prices<br>
-      <span style="color:#282420;font-size:10px">── 486 slots · 54 pages ──</span>
-    </div>`;
-  return d;
+      💰 Open PriceCharting &amp; type in prices<br>
+      <span style="color:#282420;font-size:10px">── 486 M_slots · 54 pages ──</span>
+    </M_div>`;
+  return M_d;
 }
 
 function M_render(){
-  const lp=document.getElementById('m-lp'),rp=document.getElementById('m-rp');
-  lp.innerHTML='';rp.innerHTML='';
-  let info;
-  if(M_curSpread===1){lp.appendChild(M_makeCover());rp.appendChild(M_makeCardPage(0,'right',1));info='Cover · Page 1';}
+  const M_lp=document.getElementById('M_lp'),rp=document.getElementById('ma-rp');
+  M_lp.innerHTML='';rp.innerHTML='';
+  let M_info;
+  if(M_curSpread===1){M_lp.appendChild(M_makeCover());rp.appendChild(M_makeCardPage(0,'right',1));M_info='Cover · Page 1';}
   else{
-    const ln=2*(M_curSpread-1),rn=ln+1;
-    if(ln-1<M_CARD_PAGES) lp.appendChild(M_makeCardPage(ln-1,'left',ln));
-    else{const d=document.createElement('div');d.className='bpage blank-pg';lp.appendChild(d);}
-    if(rn-1<M_CARD_PAGES) rp.appendChild(M_makeCardPage(rn-1,'right',rn));
-    else{const d=document.createElement('div');d.className='bpage blank-pg';rp.appendChild(d);}
-    info=`Page ${ln} · Page ${rn<=M_CARD_PAGES?rn:'—'}`;
+    const M_ln=2*(M_curSpread-1),rn=M_ln+1;
+    if(M_ln-1<CARD_PAGES) M_lp.appendChild(M_makeCardPage(M_ln-1,'left',M_ln));
+    else{const M_d=document.createElement('M_div');M_d.className='bpage blank-pg';M_lp.appendChild(M_d);}
+    if(rn-1<CARD_PAGES) rp.appendChild(M_makeCardPage(rn-1,'right',rn));
+    else{const M_d=document.createElement('M_div');M_d.className='bpage blank-pg';rp.appendChild(M_d);}
+    M_info=`Page ${M_ln} · Page ${rn<=CARD_PAGES?rn:'—'}`;
   }
-  document.getElementById('m-sinfo').textContent=info;
-  document.getElementById('m-pgn').value=M_curSpread;
-  document.getElementById('m-pgn').max=M_TOTAL_SPREADS;
-  document.getElementById('m-of-lbl').textContent=`of ${M_TOTAL_SPREADS}`;
-  document.getElementById('m-bprev').disabled=M_curSpread<=1;
-  document.getElementById('m-bnext').disabled=M_curSpread>=M_TOTAL_SPREADS;
-  document.getElementById('m-spread').classList.toggle('hide-M_owned',M_showMissing);
+  document.getElementById('ma-sinfo').textContent=M_info;
+  document.getElementById('ma-pgn').value=M_curSpread;
+  document.getElementById('ma-pgn').max=M_TOTAL_SPREADS;
+  document.getElementById('of-M_lbl').textContent=`of ${M_TOTAL_SPREADS}`;
+  document.getElementById('ma-bprev').disabled=M_curSpread<=1;
+  document.getElementById('ma-bnext').disabled=M_curSpread>=M_TOTAL_SPREADS;
+  document.getElementById('ma-spread').classList.toggle('hide-M_owned',showMissing);
 }
-function M_go(d){M_curSpread=Math.max(1,Math.min(M_TOTAL_SPREADS,M_curSpread+d));M_render();}
-function M_goTo(n){if(!isNaN(n)&&n>=1&&n<=M_TOTAL_SPREADS){M_curSpread=n;M_render();}}
-function M_toggleMissing(on){M_showMissing=on;document.getElementById('m-spread').classList.toggle('hide-M_owned',on);}
+function M_go(M_d){M_curSpread=Math.max(1,Math.min(M_TOTAL_SPREADS,M_curSpread+M_d));M_render();}
+function M_goTo(M_n){if(!isNaN(M_n)&&M_n>=1&&M_n<=M_TOTAL_SPREADS){M_curSpread=M_n;M_render();}}
+function M_toggleMissing(on){showMissing=on;document.getElementById('ma-spread').classList.toggle('hide-M_owned',on);}
 function M_updateProgress(){
-  const n=M_owned.size,p=Math.round(n/M_TOTAL*100);
-  document.getElementById('m-prog-bar').style.width=p+'%';
-  document.getElementById('m-prog-text').textContent=`${n} / ${M_TOTAL} (${p}%)`;
+  const M_n=M_owned.size,M_p=Math.round(M_n/TOTAL*100);
+  document.getElementById('ma-prog-bar').style.width=M_p+'%';
+  document.getElementById('ma-prog-text').textContent=`${M_n} / ${TOTAL} (${M_p}%)`;
 }
 function M_findCard(q){
   q=q.trim().toLowerCase();
-  const al=document.getElementById('m-alert');
-  if(!q){al.style.display='none';return;}
-  const num=parseInt(q);
-  const idx=!isNaN(num)&&num>=1&&num<=250
-    ?M_SLOTS.findIndex(s=>s.num===num&&['normal','holo','ex','trainer'].includes(s.v))
-    :M_SLOTS.findIndex(s=>(M_NAMES[s.num]||'').toLowerCase().includes(q)&&['normal','holo','ex','trainer'].includes(s.v));
-  if(idx>=0){
-    al.style.display='none';
-    const cp=Math.floor(idx/9);M_curSpread=cp===0?1:Math.floor((cp-1)/2)+2;M_render();
-  } else {al.style.display='block';al.textContent=`"${q}" not found`;}
+  const M_al=document.getElementById('ma-alert');
+  if(!q){M_al.style.display='none';return;}
+  const M_num=parseInt(q);
+  const M_idx=!isNaN(M_num)&&M_num>=1&&M_num<=250
+    ?M_SLOTS.findIndex(M_s=>M_s.M_num===M_num&&['normal','holo','ex','trainer'].includes(M_s.v))
+    :M_SLOTS.findIndex(M_s=>(M_NAMES[M_s.M_num]||'').toLowerCase().includes(q)&&['normal','holo','ex','trainer'].includes(M_s.v));
+  if(M_idx>=0){
+    M_al.style.display='none';
+    const M_cp=Math.floor(M_idx/9);M_curSpread=M_cp===0?1:Math.floor((M_cp-1)/2)+2;M_render();
+  } else {M_al.style.display='block';M_al.textContent=`"${q}" not found`;}
 }
 
 // ─────────────────────────── card modal ─────────────────────────────────
 let M_modalSlot=null;
-function M_openModal(s){
-  M_modalSlot=s;
-  const key=M_sk(s),name=M_NAMES[s.num]||'',bc=M_BC[s.v]||M_BC.normal;
-  const mi=document.getElementById('m-mimg'),mph=document.getElementById('m-mph');
-  mi.style.display='block';mph.style.display='none';
-  mi.src=M_imgUrl(s.num);
-  mi.onerror=()=>{mi.style.display='none';mph.style.display='flex';mph.innerHTML=`<span style="color:#282420">${name}</span>`;};
-  document.getElementById('m-mname').textContent=name;
-  document.getElementById('m-mnum').textContent=`${s.num}/193 · ${M_varLabel(s)}`;
-  const mb=document.getElementById('m-mbadge');mb.textContent=M_varLabel(s);mb.style.background=bc.bg;mb.style.color=bc.col;
-  document.getElementById('m-pc-link').href=M_pcUrl(s);
+function M_openModal(M_s){
+  M_modalSlot=M_s;
+  const M_key=M_sk(M_s),M_name=M_NAMES[M_s.M_num]||'',bc=M_BC[M_s.v]||M_BC.normal;
+  const M_mi=document.getElementById('ma-mimg'),mph=document.getElementById('ma-mph');
+  M_mi.style.display='block';mph.style.display='none';
+  M_mi.src=M_imgUrl(M_s.M_num);
+  M_mi.onerror=()=>{M_mi.style.display='none';mph.style.display='flex';mph.innerHTML=`<span style="color:#282420">${M_name}</span>`;};
+  document.getElementById('ma-mname').textContent=M_name;
+  document.getElementById('ma-mnum').textContent=`${M_s.M_num}/193 · ${M_varLabel(M_s)}`;
+  const M_mb=document.getElementById('ma-mbadge');M_mb.textContent=M_varLabel(M_s);M_mb.style.background=bc.bg;M_mb.style.color=bc.col;
+  document.getElementById('ma-pc-link').href=M_pcUrl(M_s);
   // Prices
-  const p=M_prices[key]||{};
-  document.getElementById('m-p-raw').value=p.raw||'';
-  document.getElementById('m-p-9').value=p.psa9||'';
-  document.getElementById('m-p-10').value=p.psa10||'';
-  document.getElementById('m-price-saved').style.display='none';
+  const M_p=prices[M_key]||{};
+  document.getElementById('M_p-M_raw').value=M_p.M_raw||'';
+  document.getElementById('M_p-9').value=M_p.M_psa9||'';
+  document.getElementById('M_p-10').value=M_p.M_psa10||'';
+  document.getElementById('price-saved').style.display='none';
   // Buttons
   M_syncModalBtns();
-  document.getElementById('m-modal').classList.add('open');
+  document.getElementById('ma-modal').classList.add('open');
 }
-function M_closeModal(){document.getElementById('m-modal').classList.remove('open');M_modalSlot=null;}
+function M_closeModal(){document.getElementById('ma-modal').classList.remove('open');M_modalSlot=null;}
 function M_syncModalBtns(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot);
-  const ob=document.getElementById('m-m-own-btn');
-  ob.textContent=M_owned.has(key)?'✓ Remove M_owned':'Mark as M_owned';
-  ob.className='m-btn '+(M_owned.has(key)?'m-btn-unown':'m-btn-own');
-  const wb=document.getElementById('m-m-watch-btn');
-  wb.textContent=M_watched.has(key)?'★ Unwatch':'⭐ Watch';
-  wb.className='m-btn '+(M_watched.has(key)?'m-btn-unwatch':'m-btn-watch');
+  const M_key=M_sk(M_modalSlot);
+  const M_ob=document.getElementById('ma-m-own-btn');
+  M_ob.textContent=M_owned.has(M_key)?'✓ Remove M_owned':'Mark as M_owned';
+  M_ob.className='m-btn '+(M_owned.has(M_key)?'m-btn-unown':'m-btn-own');
+  const M_wb=document.getElementById('ma-m-watch-btn');
+  M_wb.textContent=watched.has(M_key)?'★ Unwatch':'⭐ Watch';
+  M_wb.className='m-btn '+(watched.has(M_key)?'m-btn-unwatch':'m-btn-watch');
 }
 function M_toggleOwnModal(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot),was=M_owned.has(key);
-  was?M_owned.delete(key):M_owned.add(key);M_saveOwned();M_updateProgress();
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el){el.classList.toggle('M_owned',!was);M_syncBadge(el,'M_badge-M_owned','✓',!was);}
+  const M_key=M_sk(M_modalSlot),M_was=M_owned.has(M_key);
+  M_was?M_owned.delete(M_key):M_owned.add(M_key);M_saveOwned();M_updateProgress();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el){M_el.classList.toggle('M_owned',!M_was);M_syncBadge(M_el,'M_badge-M_owned','✓',!M_was);}
   M_syncModalBtns();
 }
 function M_toggleWatchModal(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot),was=M_watched.has(key);
-  was?M_watched.delete(key):M_watched.add(key);M_saveWatched();
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el) M_syncBadge(el,'M_badge-star','⭐',!was);
+  const M_key=M_sk(M_modalSlot),M_was=watched.has(M_key);
+  M_was?watched.delete(M_key):watched.add(M_key);M_saveWatched();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el) M_syncBadge(M_el,'M_badge-star','⭐',!M_was);
   M_syncModalBtns();
 }
 function M_savePriceFromModal(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot);
-  const raw=document.getElementById('m-p-raw').value.trim();
-  const psa9=document.getElementById('m-p-9').value.trim();
-  const psa10=document.getElementById('m-p-10').value.trim();
+  const M_key=M_sk(M_modalSlot);
+  const M_raw=document.getElementById('M_p-M_raw').value.trim();
+  const M_psa9=document.getElementById('M_p-9').value.trim();
+  const M_psa10=document.getElementById('M_p-10').value.trim();
   // Normalise — add $ if missing
-  const fmt=v=>{if(!v) return '';v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
-  M_prices[key]={raw:fmt(raw),psa9:fmt(psa9),psa10:fmt(psa10),date:new Date().toISOString().slice(0,10)};
+  const M_fmt=v=>{if(!v) return '';v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
+  prices[M_key]={M_raw:M_fmt(M_raw),M_psa9:M_fmt(M_psa9),M_psa10:M_fmt(M_psa10),date:new Date().toISOString().slice(0,10)};
   M_savePricesStore();
   // Update fields with formatted values
-  document.getElementById('m-p-raw').value=M_prices[key].raw;
-  document.getElementById('m-p-9').value=M_prices[key].psa9;
-  document.getElementById('m-p-10').value=M_prices[key].psa10;
+  document.getElementById('M_p-M_raw').value=prices[M_key].M_raw;
+  document.getElementById('M_p-9').value=prices[M_key].M_psa9;
+  document.getElementById('M_p-10').value=prices[M_key].M_psa10;
   // Update binder slot M_badge
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el){
-    let b=el.querySelector('.M_badge-price');
-    if(M_prices[key].raw){
-      if(!b){b=M_badge('M_badge-price',M_prices[key].raw);el.appendChild(b);}
-      else b.textContent=M_prices[key].raw;
-    } else if(b) b.remove();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el){
+    let M_b=M_el.querySelector('.M_badge-price');
+    if(prices[M_key].M_raw){
+      if(!M_b){M_b=M_badge('M_badge-price',prices[M_key].M_raw);M_el.appendChild(M_b);}
+      else M_b.textContent=prices[M_key].M_raw;
+    } else if(M_b) M_b.remove();
   }
-  const sv=document.getElementById('m-price-saved');sv.style.display='block';
-  setTimeout(()=>sv.style.display='none',1800);
+  const M_sv=document.getElementById('price-saved');M_sv.style.display='block';
+  setTimeout(()=>M_sv.style.display='none',1800);
 }
 
 // ─────────────────────────── watchlist ──────────────────────────────────
 function M_openWatchlist(){
   M_renderWatchlist();
-  document.getElementById('m-wl-modal').classList.add('open');
+  document.getElementById('ma-wl-modal').classList.add('open');
 }
 function M_renderWatchlist(){
-  const body=document.getElementById('m-wl-body');
-  document.getElementById('m-wl-sub').textContent=`${M_watched.size} card${M_watched.size!==1?'s':''} M_watched`;
-  if(!M_watched.size){
-    body.innerHTML='<div class="wl-empty">No cards M_watched yet.<span>Right-click any card → ⭐ Watch</span></div>';return;
+  const M_body=document.getElementById('wl-M_body');
+  document.getElementById('ma-wl-sub').textContent=`${watched.size} card${watched.size!==1?'M_s':''} watched`;
+  if(!watched.size){
+    M_body.innerHTML='<M_div class="wl-empty">No cards watched yet.<span>Right-click any card → ⭐ Watch</span></M_div>';return;
   }
-  const slots=M_SLOTS.filter(s=>M_watched.has(M_sk(s)));
-  let html=`<table class="wt"><thead><tr><th>#</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 9</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
-  slots.forEach(s=>{
-    const key=M_sk(s),bc=M_BC[s.v]||M_BC.normal,p=M_prices[key]||{};
-    const fv=v=>v?`<span class="wt-p">${v}</span>`:`<span class="wt-p na">—</span>`;
-    html+=`<tr>
-      <td class="wt-num">${s.num}/193</td>
-      <td class="wt-name" onclick="M_jumpTo('${key}')">${M_NAMES[s.num]||''}</td>
-      <td><span class="wt-M_badge" style="background:${bc.bg};color:${bc.col}">${M_varLabel(s)}</span></td>
-      <td>${fv(p.raw)}</td>
-      <td>${fv(p.psa9)}</td>
-      <td>${fv(p.psa10)}</td>
-      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
-      <td><button class="wt-rm" onclick="M_unwatchRow('${key}',this)">✕</button></td>
+  const M_slots=M_SLOTS.filter(M_s=>watched.has(M_sk(M_s)));
+  let M_html=`<table class="wt"><thead><tr><th>#</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 9</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
+  M_slots.forEach(M_s=>{
+    const M_key=M_sk(M_s),bc=M_BC[M_s.v]||M_BC.normal,M_p=prices[M_key]||{};
+    const M_fv=v=>v?`<span class="wt-M_p">${v}</span>`:`<span class="wt-M_p na">—</span>`;
+    M_html+=`<tr>
+      <td class="wt-M_num">${M_s.M_num}/193</td>
+      <td class="wt-M_name" onclick="M_jumpTo('${M_key}')">${M_NAMES[M_s.M_num]||''}</td>
+      <td><span class="wt-M_badge" style="background:${bc.bg};color:${bc.col}">${M_varLabel(M_s)}</span></td>
+      <td>${M_fv(M_p.M_raw)}</td>
+      <td>${M_fv(M_p.M_psa9)}</td>
+      <td>${M_fv(M_p.M_psa10)}</td>
+      <td style="font-size:10px;color:#282420">${M_p.date||'—'}</td>
+      <td><button class="wt-rm" onclick="M_unwatchRow('${M_key}',this)">✕</button></td>
     </tr>`;
   });
-  html+='</tbody></table>';
-  body.innerHTML=html;
+  M_html+='</tbody></table>';
+  M_body.innerHTML=M_html;
 }
-function M_jumpTo(key){
-  document.getElementById('m-wl-modal').classList.remove('open');
-  const idx=M_SLOTS.findIndex(s=>M_sk(s)===key);
-  if(idx>=0){const cp=Math.floor(idx/9);M_curSpread=cp===0?1:Math.floor((cp-1)/2)+2;M_render();}
+function M_jumpTo(M_key){
+  document.getElementById('ma-wl-modal').classList.remove('open');
+  const M_idx=M_SLOTS.findIndex(M_s=>M_sk(M_s)===M_key);
+  if(M_idx>=0){const M_cp=Math.floor(M_idx/9);M_curSpread=M_cp===0?1:Math.floor((M_cp-1)/2)+2;M_render();}
 }
-function M_unwatchRow(key,btn){
-  M_watched.delete(key);M_saveWatched();
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el) M_syncBadge(el,'M_badge-star','⭐',false);
+function M_unwatchRow(M_key,btn){
+  watched.delete(M_key);M_saveWatched();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el) M_syncBadge(M_el,'M_badge-star','⭐',false);
   M_renderWatchlist();
 }
 
-// ─────────────────────────── missing list ───────────────────────────────
+// ─────────────────────────── missing M_list ───────────────────────────────
 const M_SDEFS=[
-  {label:'Normal (Non-Holo)',f:s=>s.v==='normal'},
-  {label:'Holo Pokémon',f:s=>s.v==='holo'},
-  {label:'Pokémon ex / Mega ex',f:s=>s.v==='ex'},
-  {label:'Energy Reverse Holos',f:s=>s.v==='erh'},
-  {label:'Ball / R Reverse Holos',f:s=>s.v==='brh'},
-  {label:'Trainer Cards',f:s=>s.v==='trainer'},
-  {label:'AR — Alternate Art',f:s=>s.v==='ar'},
-  {label:'SR — Special Rare',f:s=>s.v==='sr'},
-  {label:'MA — Mega Art',f:s=>s.v==='ma'},
-  {label:'SAR — Special Art Rare',f:s=>s.v==='sar'},
-  {label:'MUR — Mega Ultra Rare',f:s=>s.v==='mur'},
+  {label:'Normal (Non-Holo)',f:M_s=>M_s.v==='normal'},
+  {label:'Holo Pokémon',f:M_s=>M_s.v==='holo'},
+  {label:'Pokémon ex / Mega ex',f:M_s=>M_s.v==='ex'},
+  {label:'Energy Reverse Holos',f:M_s=>M_s.v==='erh'},
+  {label:'Ball / R Reverse Holos',f:M_s=>M_s.v==='brh'},
+  {label:'Trainer Cards',f:M_s=>M_s.v==='trainer'},
+  {label:'AR — Alternate Art',f:M_s=>M_s.v==='ar'},
+  {label:'SR — Special Rare',f:M_s=>M_s.v==='sr'},
+  {label:'MA — Mega Art',f:M_s=>M_s.v==='ma'},
+  {label:'SAR — Special Art Rare',f:M_s=>M_s.v==='sar'},
+  {label:'MUR — Mega Ultra Rare',f:M_s=>M_s.v==='mur'},
 ];
 function M_openMissingList(){
-  const miss=M_SLOTS.filter(s=>!M_owned.has(M_sk(s)));
-  document.getElementById('m-ml-stats').textContent=`${miss.length} missing · ${M_owned.size} M_owned`;
-  const priced=miss.filter(s=>{const p=M_prices[M_sk(s)];return p&&p.raw;});
-  const totEl=document.getElementById('m-ml-total');
-  if(priced.length){
-    const tot=priced.reduce((sum,s)=>{const v=parseFloat((M_prices[M_sk(s)].raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
-    totEl.style.display='block';totEl.textContent=`Estimated ungraded value of ${priced.length} priced missing cards: $${tot.toFixed(2)}`;
-  } else totEl.style.display='none';
-  const body=document.getElementById('m-ml-body');body.innerHTML='';
-  if(!miss.length){body.innerHTML='<div class="ml-empty">🎉 Master set complete!</div>';document.getElementById('m-ml-modal').classList.add('open');return;}
+  const M_miss=M_SLOTS.filter(M_s=>!M_owned.has(M_sk(M_s)));
+  document.getElementById('ma-ml-stats').textContent=`${M_miss.length} missing · ${M_owned.size} M_owned`;
+  const M_priced=M_miss.filter(M_s=>{const M_p=prices[M_sk(M_s)];return M_p&&M_p.M_raw;});
+  const M_totEl=document.getElementById('ma-ml-total');
+  if(M_priced.length){
+    const M_tot=M_priced.reduce((sum,M_s)=>{const v=parseFloat((prices[M_sk(M_s)].M_raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
+    M_totEl.style.display='block';M_totEl.textContent=`Estimated ungraded value of ${M_priced.length} M_priced missing cards: $${M_tot.toFixed(2)}`;
+  } else M_totEl.style.display='none';
+  const M_body=document.getElementById('ml-M_body');M_body.innerHTML='';
+  if(!M_miss.length){M_body.innerHTML='<M_div class="ml-empty">🎉 Master set complete!</M_div>';document.getElementById('ma-ml-modal').classList.add('open');return;}
   M_SDEFS.forEach(sec=>{
-    const items=miss.filter(sec.f);if(!items.length) return;
-    const wrap=document.createElement('div');wrap.className='ml-sec';
-    wrap.innerHTML=`<div class="ml-sec-ttl">${sec.label} — ${items.length}</div>`;
-    const list=document.createElement('div');list.className='ml-items';
-    items.forEach(s=>{
-      const chip=document.createElement('div');chip.className='ml-chip '+s.v;
-      let sfx='';if(s.v==='erh') sfx=' [E-RH]';else if(s.v==='brh') sfx=` [${s.ball} RH]`;
-      const p=M_prices[M_sk(s)];const pt=p&&p.raw?' · '+p.raw:'';
-      chip.textContent=`${s.num}/193 ${M_NAMES[s.num]||''}${sfx}${pt}`;
-      list.appendChild(chip);
+    const M_items=M_miss.filter(sec.f);if(!M_items.length) return;
+    const M_wrap=document.createElement('M_div');M_wrap.className='ml-sec';
+    M_wrap.innerHTML=`<M_div class="ml-sec-ttl">${sec.label} — ${M_items.length}</M_div>`;
+    const M_list=document.createElement('M_div');M_list.className='ml-M_items';
+    M_items.forEach(M_s=>{
+      const M_chip=document.createElement('M_div');M_chip.className='ml-M_chip '+M_s.v;
+      let M_sfx='';if(M_s.v==='erh') M_sfx=' [E-RH]';else if(M_s.v==='brh') M_sfx=` [${M_s.ball} RH]`;
+      const M_p=prices[M_sk(M_s)];const pt=M_p&&M_p.M_raw?' · '+M_p.M_raw:'';
+      M_chip.textContent=`${M_s.M_num}/193 ${M_NAMES[M_s.M_num]||''}${M_sfx}${pt}`;
+      M_list.appendChild(M_chip);
     });
-    wrap.appendChild(list);body.appendChild(wrap);
+    M_wrap.appendChild(M_list);M_body.appendChild(M_wrap);
   });
-  document.getElementById('m-ml-modal').classList.add('open');
+  document.getElementById('ma-ml-modal').classList.add('open');
 }
 function M_copyMissing(){
-  const miss=M_SLOTS.filter(s=>!M_owned.has(M_sk(s)));
-  // Group missing slots by card number, preserving slot order
-  const byNum=new Map();
-  miss.forEach(s=>{
-    if(!byNum.has(s.num)) byNum.set(s.num,[]);
-    byNum.get(s.num).push(s);
+  const M_miss=M_SLOTS.filter(M_s=>!M_owned.has(M_sk(M_s)));
+  // Group missing M_slots by card number, preserving slot order
+  const M_byNum=new Map();
+  M_miss.forEach(M_s=>{
+    if(!M_byNum.has(M_s.M_num)) M_byNum.set(M_s.M_num,[]);
+    M_byNum.get(M_s.M_num).push(M_s);
   });
 
-  let txt=`M2a MEGA Dream ex — Missing Cards (${miss.length} slots)\n`;
-  txt+=`Generated ${new Date().toLocaleDateString()}\n`;
-  txt+=`${'─'.repeat(52)}\n`;
+  let M_txt=`M2a MEGA Dream ex — Missing Cards (${M_miss.length} M_slots)\M_n`;
+  M_txt+=`Generated ${new Date().toLocaleDateString()}\M_n`;
+  M_txt+=`${'─'.repeat(52)}\M_n`;
 
-  byNum.forEach((slots,num)=>{
-    const name=M_NAMES[num]||'';
-    const numStr=String(num).padStart(3,'0')+'/193';
+  M_byNum.forEach((M_slots,M_num)=>{
+    const M_name=M_NAMES[M_num]||'';
+    const M_numStr=String(M_num).padStart(3,'0')+'/193';
     // Variants on this card number that are missing
-    const varParts=slots.map(s=>{
-      if(s.v==='erh') return 'Energy RH';
-      if(s.v==='brh') return (s.ball||'Poké')+' Ball RH';
-      if(s.v==='ar')  return 'AR';
-      if(s.v==='sr')  return 'SR';
-      if(s.v==='ma')  return 'MA';
-      if(s.v==='sar') return 'SAR';
-      if(s.v==='mur') return 'MUR';
-      return s.v==='holo'?'Holo':'Normal';
+    const M_varParts=M_slots.map(M_s=>{
+      if(M_s.v==='erh') return 'Energy RH';
+      if(M_s.v==='brh') return (M_s.ball||'Poké')+' Ball RH';
+      if(M_s.v==='ar')  return 'AR';
+      if(M_s.v==='sr')  return 'SR';
+      if(M_s.v==='ma')  return 'MA';
+      if(M_s.v==='sar') return 'SAR';
+      if(M_s.v==='mur') return 'MUR';
+      return M_s.v==='holo'?'Holo':'Normal';
     });
-    // Price info from first slot that has a price
-    const priceSlot=slots.find(s=>M_prices[M_sk(s)]&&M_prices[M_sk(s)].raw);
-    const p=priceSlot?M_prices[M_sk(priceSlot)]:{};
-    const pricePart=p.raw?`  [${p.raw}${p.psa10?' / PSA10 '+p.psa10:''}]`:'';
+    // Price M_info from first slot that has a price
+    const M_priceSlot=M_slots.find(M_s=>prices[M_sk(M_s)]&&prices[M_sk(M_s)].M_raw);
+    const M_p=M_priceSlot?prices[M_sk(M_priceSlot)]:{};
+    const M_pricePart=M_p.M_raw?`  [${M_p.M_raw}${M_p.M_psa10?' / PSA10 '+M_p.M_psa10:''}]`:'';
 
-    txt+=`${numStr}  ${name}  — ${varParts.join(', ')}${pricePart}\n`;
+    M_txt+=`${M_numStr}  ${M_name}  — ${M_varParts.join(', ')}${M_pricePart}\M_n`;
   });
 
-  txt+=`${'─'.repeat(52)}\n`;
-  txt+=`${byNum.size} cards  ·  ${miss.length} total slots missing\n`;
+  M_txt+=`${'─'.repeat(52)}\M_n`;
+  M_txt+=`${M_byNum.size} cards  ·  ${M_miss.length} total M_slots missing\M_n`;
 
-  // Add total value if any M_prices logged
-  const priced=miss.filter(s=>M_prices[M_sk(s)]&&M_prices[M_sk(s)].raw);
-  if(priced.length){
-    const tot=priced.reduce((sum,s)=>{const v=parseFloat((M_prices[M_sk(s)].raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
-    txt+=`Estimated ungraded value (${priced.length} priced): $${tot.toFixed(2)}\n`;
+  // Add total value if any prices logged
+  const M_priced=M_miss.filter(M_s=>prices[M_sk(M_s)]&&prices[M_sk(M_s)].M_raw);
+  if(M_priced.length){
+    const M_tot=M_priced.reduce((sum,M_s)=>{const v=parseFloat((prices[M_sk(M_s)].M_raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
+    M_txt+=`Estimated ungraded value (${M_priced.length} M_priced): $${M_tot.toFixed(2)}\M_n`;
   }
 
-  navigator.clipboard.writeText(txt).then(()=>{
-    const b=document.querySelector('#m-ml-modal .btn-purple');const o=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=o,1500);
+  navigator.clipboard.writeText(M_txt).then(()=>{
+    const M_b=document.querySelector('#ml-modal .btn-purple');const o=M_b.textContent;M_b.textContent='Copied!';setTimeout(()=>M_b.textContent=o,1500);
   });
 }
 function M_confirmClear(){if(confirm('Clear all ownership data?')){M_owned.clear();M_saveOwned();M_render();M_updateProgress();}}
@@ -860,119 +940,122 @@ function M_confirmClear(){if(confirm('Clear all ownership data?')){M_owned.clear
 M_load();M_updateProgress();M_render();
 </script>
 
+  </div>
 </div>
 
-<div class="binder-panel b-penny" id="panel-penny">
+<!-- Penny Binder screen -->
+<div class="screen" id="screen-penny">
+  <div class="binder-panel b-penny">
 
 
-<div class="toolbar">
-  <div>
-    <div class="app-title">Penny (ボタン) — All Prints Binder</div>
-    <div class="app-sub">10 cards across all Japanese &amp; English sets · left-click = P_owned · right-click = price &amp; details</div>
-  </div>
-  <div class="controls">
+<P_div class="toolbar">
+  <P_div>
+    <P_div class="app-title">Penny (ボタン) — All Prints Binder</P_div>
+    <P_div class="app-sub">10 P_cards across all Japanese &amp; English sets · left-click = P_owned · right-click = price &amp; details</P_div>
+  </P_div>
+  <P_div class="controls">
     <button class="btn btn-purple" onclick="P_openWatchlist()">⭐ Watchlist</button>
     <button class="btn btn-dim" onclick="P_confirmClear()">Clear all</button>
-  </div>
-</div>
+  </P_div>
+</P_div>
 
-<div class="action-bar">
-  <div class="prog-wrap"><div class="prog-bar" id="p-prog-bar" style="width:0%"></div></div>
-  <span class="prog-text" id="p-prog-text">0 / 10 P_owned</span>
-</div>
+<P_div class="action-bar">
+  <P_div class="prog-wrap"><P_div class="prog-bar" id="py-prog-bar" style="width:0%"></P_div></P_div>
+  <span class="prog-text" id="py-prog-text">0 / 10 P_owned</span>
+</P_div>
 
-<div class="spread" id="p-spread">
-  <div id="p-lp"></div>
-  <div class="spine"></div>
-  <div id="p-rp"></div>
-</div>
+<P_div class="spread" id="py-spread">
+  <P_div id="P_lp"></P_div>
+  <P_div class="spine"></P_div>
+  <P_div id="py-rp"></P_div>
+</P_div>
 
 <!-- Card detail modal -->
-<div class="modal" id="p-modal" onclick="if(event.target===this)P_closeModal()">
-  <div class="mbox">
-    <img class="cimg" id="p-mimg" src="" alt="">
-    <div class="mph" id="p-mph"></div>
-    <div class="mname" id="p-mname"></div>
-    <div class="mnum" id="p-mnum"></div>
-    <div class="illus-note" id="p-millus"></div>
-    <div class="mbadge" id="p-mbadge"></div>
-    <div class="price-area">
-      <div class="pa-title">
+<P_div class="modal" id="py-modal" onclick="if(event.target===this)P_closeModal()">
+  <P_div class="mbox">
+    <P_img class="cimg" id="py-mimg" src="" alt="">
+    <P_div class="mph" id="py-mph"></P_div>
+    <P_div class="mname" id="py-mname"></P_div>
+    <P_div class="mnum" id="py-mnum"></P_div>
+    <P_div class="illus-note" id="py-millus"></P_div>
+    <P_div class="mbadge" id="py-mbadge"></P_div>
+    <P_div class="price-area">
+      <P_div class="pa-title">
         <span>Prices (USD)</span>
-        <a id="p-pc-link" href="#" target="_blank">PriceCharting ↗</a>
-      </div>
-      <div class="pfields">
-        <div class="pf"><label>Ungraded</label><input type="text" id="p-p-raw" placeholder="$0.00"></div>
-        <div class="pf"><label>PSA 9</label><input type="text" id="p-p-9" placeholder="$0.00"></div>
-        <div class="pf"><label>PSA 10</label><input type="text" id="p-p-10" placeholder="$0.00"></div>
-      </div>
-      <button class="save-btn" onclick="P_savePrice()">Save P_prices</button>
-      <div class="saved-flash" id="p-saved-flash">✓ Saved!</div>
-    </div>
-    <div class="m-btns">
-      <button class="m-btn m-btn-own" id="p-m-own-btn" onclick="P_toggleOwn()">Mark as P_owned</button>
-      <button class="m-btn m-btn-watch" id="p-m-watch-btn" onclick="P_toggleWatch()">⭐ Watch</button>
-    </div>
+        <a id="py-pc-link" href="#" target="_blank">PriceCharting ↗</a>
+      </P_div>
+      <P_div class="pfields">
+        <P_div class="pf"><label>Ungraded</label><input type="text" id="P_p-P_raw" placeholder="$0.00"></P_div>
+        <P_div class="pf"><label>PSA 9</label><input type="text" id="P_p-9" placeholder="$0.00"></P_div>
+        <P_div class="pf"><label>PSA 10</label><input type="text" id="P_p-10" placeholder="$0.00"></P_div>
+      </P_div>
+      <button class="save-btn" onclick="P_savePrice()">Save prices</button>
+      <P_div class="saved-flash" id="py-saved-flash">✓ Saved!</P_div>
+    </P_div>
+    <P_div class="m-btns">
+      <button class="m-btn m-btn-own" id="py-m-own-btn" onclick="P_toggleOwn()">Mark as P_owned</button>
+      <button class="m-btn m-btn-watch" id="py-m-watch-btn" onclick="P_toggleWatch()">⭐ Watch</button>
+    </P_div>
     <button class="m-btn-close" onclick="P_closeModal()">Close</button>
-  </div>
-</div>
+  </P_div>
+</P_div>
 
 <!-- Watchlist modal -->
-<div class="wl-modal" id="p-wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="wl-box">
-    <div class="mh">
-      <div class="mh-l"><div class="title">⭐ Watchlist</div><div class="sub" id="p-wl-sub">0 cards</div></div>
-      <div class="mh-r"><button class="btn btn-dim" onclick="document.getElementById('p-wl-modal').classList.remove('open')">Close</button></div>
-    </div>
-    <div id="p-wl-body"></div>
-  </div>
-</div>
+<P_div class="wl-modal" id="py-wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <P_div class="wl-box">
+    <P_div class="mh">
+      <P_div class="mh-l"><P_div class="title">⭐ Watchlist</P_div><P_div class="sub" id="py-wl-sub">0 P_cards</P_div></P_div>
+      <P_div class="mh-r"><button class="btn btn-dim" onclick="document.getElementById('py-wl-modal').classList.remove('open')">Close</button></P_div>
+    </P_div>
+    <P_div id="wl-P_body"></P_div>
+  </P_div>
+</P_div>
 
 <script>
 // ── Card data ─────────────────────────────────────────────────────────────
-// Each card: id, set, setName, num, rarity, lang, illus, pcSlug
+// Each P_card: id, set, setName, num, rarity, lang, illus, pcSlug
 const P_CARDS = [
   // ── Japanese ──────────────────────────────────────────────────────────
   {
     id:'SV1S-077', set:'SV1S', setName:'Scarlet ex (SV1s)', num:'077/078',
     rarity:'Regular', lang:'JP', illus:'yuu',
     cls:'r-jp', bc:{bg:'#181410',col:'#666'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-77'
   },
   {
     id:'SV1S-100', set:'SV1S', setName:'Scarlet ex (SV1s)', num:'100/078',
     rarity:'SR (Full Art)', lang:'JP', illus:'yuu',
     cls:'sr-jp', bc:{bg:'#2a1e04',col:'#c89a3a'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-100'
   },
   {
     id:'SV1S-105', set:'SV1S', setName:'Scarlet ex (SV1s)', num:'105/078',
     rarity:'SAR', lang:'JP', illus:'OKACHEKE',
     cls:'sar-jp', bc:{bg:'#1e1040',col:'#9870e0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-105'
   },
   {
     id:'SVP-057', set:'SVP', setName:'SV-P Promo', num:'057/SV-P',
     rarity:'Promo (Mirror Holo)', lang:'JP', illus:'yuu',
     cls:'promo-jp', bc:{bg:'#0a2a28',col:'#40c0a0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-p-promos/penny-57'
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
+    pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-P_p-promos/penny-57'
   },
   {
     id:'SV4A-182', set:'SV4A', setName:'Shiny Treasure ex (SV4a)', num:'182/190',
     rarity:'Regular (reprint)', lang:'JP', illus:'yuu',
     cls:'r-jp', bc:{bg:'#181410',col:'#666'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_182_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_182_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182'
   },
   {
     id:'SV4A-354', set:'SV4A', setName:'Shiny Treasure ex (SV4a)', num:'354/190',
     rarity:'SAR', lang:'JP', illus:'aspara',
     cls:'sar-jp', bc:{bg:'#1e1040',col:'#9870e0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_354_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_354_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-354'
   },
   // ── English ────────────────────────────────────────────────────────────
@@ -980,237 +1063,237 @@ const P_CARDS = [
     id:'SVI-183', set:'SVI', setName:'Scarlet & Violet (EN)', num:'183/198',
     rarity:'Regular', lang:'EN', illus:'yuu',
     cls:'r-en', bc:{bg:'#181428',col:'#6070c0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_183_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_183_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183'
   },
   {
     id:'SVI-239', set:'SVI', setName:'Scarlet & Violet (EN)', num:'239/198',
     rarity:'Ultra Rare (Full Art)', lang:'EN', illus:'yuu',
     cls:'ur-en', bc:{bg:'#102030',col:'#50a0d8'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_239_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_239_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-239'
   },
   {
     id:'SVI-252', set:'SVI', setName:'Scarlet & Violet (EN)', num:'252/198',
     rarity:'Special Illustration Rare', lang:'EN', illus:'OKACHEKE',
     cls:'sir-en', bc:{bg:'#200838',col:'#b070d8'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_252_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_252_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-252'
   },
   {
     id:'PAF-239', set:'PAF', setName:'Paldean Fates (EN)', num:'239/091',
     rarity:'Special Illustration Rare', lang:'EN', illus:'aspara',
     cls:'sir-en', bc:{bg:'#200838',col:'#b070d8'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/PAF/PAF_239_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/PAF/PAF_239_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239'
   },
 ];
 const P_TOTAL = P_CARDS.length; // 10
 
 // ── Storage ───────────────────────────────────────────────────────────────
-let P_owned=new Set(), P_watched=new Set(), P_prices={};
+let P_owned=new Set(), watched=new Set(), prices={};
 function P_load(){
-  try{P_owned=new Set(JSON.parse(localStorage.getItem('penny_owned_v1')||'[]'));}catch(e){}
-  try{P_watched=new Set(JSON.parse(localStorage.getItem('penny_watched_v1')||'[]'));}catch(e){}
-  try{P_prices=JSON.parse(localStorage.getItem('penny_prices_v1')||'{}');}catch(e){}
+  try{P_owned=new Set(JSON.parse(localStorage.getItem('penny_owned_v1')||'[]'));}catch(P_e){}
+  try{watched=new Set(JSON.parse(localStorage.getItem('penny_watched_v1')||'[]'));}catch(P_e){}
+  try{prices=JSON.parse(localStorage.getItem('penny_prices_v1')||'{}');}catch(P_e){}
 }
 function P_saveOwned(){localStorage.setItem('penny_owned_v1',JSON.stringify([...P_owned]));}
-function P_saveWatched(){localStorage.setItem('penny_watched_v1',JSON.stringify([...P_watched]));}
-function P_savePricesStore(){localStorage.setItem('penny_prices_v1',JSON.stringify(P_prices));}
+function P_saveWatched(){localStorage.setItem('penny_watched_v1',JSON.stringify([...watched]));}
+function P_savePricesStore(){localStorage.setItem('penny_prices_v1',JSON.stringify(prices));}
 
 // ── Helpers ───────────────────────────────────────────────────────────────
-function P_badge(cls,txt){const b=document.createElement('div');b.className=cls;b.textContent=txt;return b;}
-function P_syncBadge(div,cls,txt,show){
-  let b=div.querySelector('.'+cls);
-  if(show&&!b){b=P_badge(cls,txt);div.appendChild(b);}
-  else if(!show&&b) b.remove();
+function P_badge(cls,txt){const P_b=document.createElement('P_div');P_b.className=cls;P_b.textContent=txt;return P_b;}
+function P_syncBadge(P_div,cls,txt,show){
+  let P_b=P_div.querySelector('.'+cls);
+  if(show&&!P_b){P_b=P_badge(cls,txt);P_div.appendChild(P_b);}
+  else if(!show&&P_b) P_b.remove();
 }
 function P_updateProgress(){
-  const n=P_owned.size,p=Math.round(n/P_TOTAL*100);
-  document.getElementById('p-prog-bar').style.width=p+'%';
-  document.getElementById('p-prog-text').textContent=`${n} / ${P_TOTAL} P_owned (${p}%)`;
+  const P_n=P_owned.size,P_p=Math.round(P_n/P_TOTAL*100);
+  document.getElementById('py-prog-bar').style.width=P_p+'%';
+  document.getElementById('py-prog-text').textContent=`${P_n} / ${P_TOTAL} P_owned (${P_p}%)`;
 }
 
 // ── Slot element ─────────────────────────────────────────────────────────
-function P_makeSlot(card){
-  const div=document.createElement('div');
-  div.className='slot '+card.cls+(P_owned.has(card.id)?' P_owned':'');
-  div.dataset.id=card.id;
+function P_makeSlot(P_card){
+  const P_div=document.createElement('P_div');
+  P_div.className='slot '+P_card.cls+(P_owned.has(P_card.id)?' P_owned':'');
+  P_div.dataset.id=P_card.id;
 
-  const img=document.createElement('img');img.className='cimg';img.src=card.img;img.alt=card.num;img.loading='lazy';
-  const ph=document.createElement('div');ph.className='cph';
-  ph.innerHTML=`<div class="ph-set" style="color:#383430">${card.setName}</div><div class="ph-num">${card.num}</div><div class="ph-set">${card.rarity}</div>`;
-  img.onerror=()=>{img.style.display='none';ph.style.display='flex';};
-  div.appendChild(img);div.appendChild(ph);
+  const P_img=document.createElement('P_img');P_img.className='cimg';P_img.src=P_card.P_img;P_img.alt=P_card.num;P_img.loading='lazy';
+  const P_ph=document.createElement('P_div');P_ph.className='cph';
+  P_ph.innerHTML=`<P_div class="P_ph-set" style="color:#383430">${P_card.setName}</P_div><P_div class="P_ph-num">${P_card.num}</P_div><P_div class="P_ph-set">${P_card.rarity}</P_div>`;
+  P_img.onerror=()=>{P_img.style.display='none';P_ph.style.display='flex';};
+  P_div.appendChild(P_img);P_div.appendChild(P_ph);
 
-  const lbl=document.createElement('div');lbl.className='clbl';
-  lbl.innerHTML=`<div class="cset">${card.setName}</div><div class="cnm">${card.num} · ${card.lang}</div><span class="vbg" style="background:${card.bc.bg};color:${card.bc.col}">${card.rarity}</span>`;
-  div.appendChild(lbl);
+  const P_lbl=document.createElement('P_div');P_lbl.className='clbl';
+  P_lbl.innerHTML=`<P_div class="cset">${P_card.setName}</P_div><P_div class="cnm">${P_card.num} · ${P_card.lang}</P_div><span class="vbg" style="background:${P_card.bc.bg};color:${P_card.bc.col}">${P_card.rarity}</span>`;
+  P_div.appendChild(P_lbl);
 
-  if(P_owned.has(card.id)) div.appendChild(P_badge('P_badge-P_owned','✓'));
-  if(P_watched.has(card.id)) div.appendChild(P_badge('P_badge-star','⭐'));
-  const p=P_prices[card.id];
-  if(p&&p.raw){const b=P_badge('P_badge-price',p.raw);div.appendChild(b);}
+  if(P_owned.has(P_card.id)) P_div.appendChild(P_badge('P_badge-P_owned','✓'));
+  if(watched.has(P_card.id)) P_div.appendChild(P_badge('P_badge-star','⭐'));
+  const P_p=prices[P_card.id];
+  if(P_p&&P_p.P_raw){const P_b=P_badge('P_badge-price',P_p.P_raw);P_div.appendChild(P_b);}
 
-  div.addEventListener('click',e=>{
-    e.preventDefault();
-    const was=P_owned.has(card.id);
-    was?P_owned.delete(card.id):P_owned.add(card.id);
+  P_div.addEventListener('click',P_e=>{
+    P_e.preventDefault();
+    const P_was=P_owned.has(P_card.id);
+    P_was?P_owned.delete(P_card.id):P_owned.add(P_card.id);
     P_saveOwned();P_updateProgress();
-    div.classList.toggle('P_owned',!was);
-    P_syncBadge(div,'P_badge-P_owned','✓',!was);
+    P_div.classList.toggle('P_owned',!P_was);
+    P_syncBadge(P_div,'P_badge-P_owned','✓',!P_was);
   });
-  div.addEventListener('contextmenu',e=>{e.preventDefault();P_openModal(card);});
-  return div;
+  P_div.addEventListener('contextmenu',P_e=>{P_e.preventDefault();P_openModal(P_card);});
+  return P_div;
 }
 
 // ── Render spread ─────────────────────────────────────────────────────────
 function P_render(){
-  const lp=document.getElementById('p-lp'), rp=document.getElementById('p-rp');
-  lp.innerHTML='';rp.innerHTML='';
+  const P_lp=document.getElementById('P_lp'), rp=document.getElementById('py-rp');
+  P_lp.innerHTML='';rp.innerHTML='';
 
   // Cover page
-  const cover=document.createElement('div');cover.className='bpage cover-pg';
-  cover.innerHTML=`
-    <div class="cover-ttl">ボタン<br><span style="font-size:16px;color:#888;font-weight:400">Penny</span></div>
-    <div class="cover-char" style="font-size:11px;color:#555">Pokémon Scarlet &amp; Violet · Paldea</div>
-    <div class="cover-box">
+  const P_cover=document.createElement('P_div');P_cover.className='bpage P_cover-pg';
+  P_cover.innerHTML=`
+    <P_div class="P_cover-ttl">ボタン<br><span style="font-size:16px;color:#888;font-weight:400">Penny</span></P_div>
+    <P_div class="P_cover-char" style="font-size:11px;color:#555">Pokémon Scarlet &amp; Violet · Paldea</P_div>
+    <P_div class="P_cover-box">
       🇯🇵  Scarlet ex (SV1s) — 3 prints<br>
       🇯🇵  SV-P Promo — 1 print<br>
       🇯🇵  Shiny Treasure ex (SV4a) — 2 prints<br>
       🇬🇧  Scarlet &amp; Violet — 3 prints<br>
       🇬🇧  Paldean Fates — 1 print<br>
-      <span style="color:#282420;font-size:10px">── 10 cards total ──</span>
-    </div>
-    <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.6">
+      <span style="color:#282420;font-size:10px">── 10 P_cards total ──</span>
+    </P_div>
+    <P_div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.6">
       Left-click = toggle P_owned<br>
       Right-click = price entry &amp; details
-    </div>`;
-  lp.appendChild(cover);
+    </P_div>`;
+  P_lp.appendChild(P_cover);
 
-  // Card page — all 10 cards in one 3×3+1 grid
-  const cardPage=document.createElement('div');cardPage.className='bpage';
-  cardPage.style.background='#111009';
-  const lbl=document.createElement('div');lbl.className='pg-lbl';lbl.textContent='— all prints —';cardPage.appendChild(lbl);
-  const grid=document.createElement('div');grid.className='grid';
-  P_CARDS.forEach(c=>grid.appendChild(P_makeSlot(c)));
+  // Card page — all 10 P_cards in one 3×3+1 P_grid
+  const P_cardPage=document.createElement('P_div');P_cardPage.className='bpage';
+  P_cardPage.style.background='#111009';
+  const P_lbl=document.createElement('P_div');P_lbl.className='pg-P_lbl';P_lbl.textContent='— all prints —';P_cardPage.appendChild(P_lbl);
+  const P_grid=document.createElement('P_div');P_grid.className='P_grid';
+  P_CARDS.forEach(c=>P_grid.appendChild(P_makeSlot(c)));
   // One empty filler slot
-  const e=document.createElement('div');e.className='slot empty';e.innerHTML='<span style="color:#141210">·</span>';grid.appendChild(e);
-  cardPage.appendChild(grid);
-  rp.appendChild(cardPage);
+  const P_e=document.createElement('P_div');P_e.className='slot empty';P_e.innerHTML='<span style="color:#141210">·</span>';P_grid.appendChild(P_e);
+  P_cardPage.appendChild(P_grid);
+  rp.appendChild(P_cardPage);
 }
 
 // ── Modal ─────────────────────────────────────────────────────────────────
 let P_modalCard=null;
-function P_openModal(card){
-  P_modalCard=card;
-  const mi=document.getElementById('p-mimg'), mph=document.getElementById('p-mph');
-  mi.style.display='block';mph.style.display='none';
-  mi.src=card.img;
-  mi.onerror=()=>{
-    mi.style.display='none';mph.style.display='flex';
-    mph.innerHTML=`<div style="color:#383430;font-size:11px;text-align:center">${card.setName}<br>${card.num}<br>${card.rarity}</div>`;
+function P_openModal(P_card){
+  P_modalCard=P_card;
+  const P_mi=document.getElementById('py-mimg'), mph=document.getElementById('py-mph');
+  P_mi.style.display='block';mph.style.display='none';
+  P_mi.src=P_card.P_img;
+  P_mi.onerror=()=>{
+    P_mi.style.display='none';mph.style.display='flex';
+    mph.innerHTML=`<P_div style="color:#383430;font-size:11px;text-align:center">${P_card.setName}<br>${P_card.num}<br>${P_card.rarity}</P_div>`;
   };
-  document.getElementById('p-mname').textContent='Penny';
-  document.getElementById('p-mnum').textContent=`${card.num} · ${card.setName}`;
-  document.getElementById('p-millus').textContent=`Illus. ${card.illus} · ${card.lang==='JP'?'🇯🇵 Japanese':'🇬🇧 English'}`;
-  const mb=document.getElementById('p-mbadge');mb.textContent=card.rarity;mb.style.background=card.bc.bg;mb.style.color=card.bc.col;
-  document.getElementById('p-pc-link').href=card.pc;
-  const p=P_prices[card.id]||{};
-  document.getElementById('p-p-raw').value=p.raw||'';
-  document.getElementById('p-p-9').value=p.psa9||'';
-  document.getElementById('p-p-10').value=p.psa10||'';
-  document.getElementById('p-saved-flash').style.display='none';
+  document.getElementById('py-mname').textContent='Penny';
+  document.getElementById('py-mnum').textContent=`${P_card.num} · ${P_card.setName}`;
+  document.getElementById('py-millus').textContent=`Illus. ${P_card.illus} · ${P_card.lang==='JP'?'🇯🇵 Japanese':'🇬🇧 English'}`;
+  const P_mb=document.getElementById('py-mbadge');P_mb.textContent=P_card.rarity;P_mb.style.background=P_card.bc.bg;P_mb.style.color=P_card.bc.col;
+  document.getElementById('py-pc-link').href=P_card.pc;
+  const P_p=prices[P_card.id]||{};
+  document.getElementById('P_p-P_raw').value=P_p.P_raw||'';
+  document.getElementById('P_p-9').value=P_p.P_psa9||'';
+  document.getElementById('P_p-10').value=P_p.P_psa10||'';
+  document.getElementById('py-saved-flash').style.display='none';
   P_syncModalBtns();
-  document.getElementById('p-modal').classList.add('open');
+  document.getElementById('py-modal').classList.add('open');
 }
-function P_closeModal(){document.getElementById('p-modal').classList.remove('open');P_modalCard=null;}
+function P_closeModal(){document.getElementById('py-modal').classList.remove('open');P_modalCard=null;}
 function P_syncModalBtns(){
   if(!P_modalCard) return;
-  const ob=document.getElementById('p-m-own-btn');
-  ob.textContent=P_owned.has(P_modalCard.id)?'✓ Remove P_owned':'Mark as P_owned';
-  ob.className='m-btn '+(P_owned.has(P_modalCard.id)?'m-btn-unown':'m-btn-own');
-  const wb=document.getElementById('p-m-watch-btn');
-  wb.textContent=P_watched.has(P_modalCard.id)?'★ Unwatch':'⭐ Watch';
-  wb.className='m-btn '+(P_watched.has(P_modalCard.id)?'m-btn-unwatch':'m-btn-watch');
+  const P_ob=document.getElementById('py-m-own-btn');
+  P_ob.textContent=P_owned.has(P_modalCard.id)?'✓ Remove P_owned':'Mark as P_owned';
+  P_ob.className='m-btn '+(P_owned.has(P_modalCard.id)?'m-btn-unown':'m-btn-own');
+  const P_wb=document.getElementById('py-m-watch-btn');
+  P_wb.textContent=watched.has(P_modalCard.id)?'★ Unwatch':'⭐ Watch';
+  P_wb.className='m-btn '+(watched.has(P_modalCard.id)?'m-btn-unwatch':'m-btn-watch');
 }
 function P_toggleOwn(){
   if(!P_modalCard) return;
-  const was=P_owned.has(P_modalCard.id);
-  was?P_owned.delete(P_modalCard.id):P_owned.add(P_modalCard.id);
+  const P_was=P_owned.has(P_modalCard.id);
+  P_was?P_owned.delete(P_modalCard.id):P_owned.add(P_modalCard.id);
   P_saveOwned();P_updateProgress();
-  const el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
-  if(el){el.classList.toggle('P_owned',!was);P_syncBadge(el,'P_badge-P_owned','✓',!was);}
+  const P_el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
+  if(P_el){P_el.classList.toggle('P_owned',!P_was);P_syncBadge(P_el,'P_badge-P_owned','✓',!P_was);}
   P_syncModalBtns();
 }
 function P_toggleWatch(){
   if(!P_modalCard) return;
-  const was=P_watched.has(P_modalCard.id);
-  was?P_watched.delete(P_modalCard.id):P_watched.add(P_modalCard.id);
+  const P_was=watched.has(P_modalCard.id);
+  P_was?watched.delete(P_modalCard.id):watched.add(P_modalCard.id);
   P_saveWatched();
-  const el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
-  if(el) P_syncBadge(el,'P_badge-star','⭐',!was);
+  const P_el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
+  if(P_el) P_syncBadge(P_el,'P_badge-star','⭐',!P_was);
   P_syncModalBtns();
 }
 function P_savePrice(){
   if(!P_modalCard) return;
-  const fmt=v=>{v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
-  const raw=fmt(document.getElementById('p-p-raw').value);
-  const psa9=fmt(document.getElementById('p-p-9').value);
-  const psa10=fmt(document.getElementById('p-p-10').value);
-  P_prices[P_modalCard.id]={raw,psa9,psa10,date:new Date().toISOString().slice(0,10)};
+  const P_fmt=v=>{v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
+  const P_raw=P_fmt(document.getElementById('P_p-P_raw').value);
+  const P_psa9=P_fmt(document.getElementById('P_p-9').value);
+  const P_psa10=P_fmt(document.getElementById('P_p-10').value);
+  prices[P_modalCard.id]={P_raw,P_psa9,P_psa10,date:new Date().toISOString().slice(0,10)};
   P_savePricesStore();
-  document.getElementById('p-p-raw').value=raw;
-  document.getElementById('p-p-9').value=psa9;
-  document.getElementById('p-p-10').value=psa10;
-  const el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
-  if(el){
-    let b=el.querySelector('.P_badge-price');
-    if(raw){if(!b){b=P_badge('P_badge-price',raw);el.appendChild(b);}else b.textContent=raw;}
-    else if(b) b.remove();
+  document.getElementById('P_p-P_raw').value=P_raw;
+  document.getElementById('P_p-9').value=P_psa9;
+  document.getElementById('P_p-10').value=P_psa10;
+  const P_el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
+  if(P_el){
+    let P_b=P_el.querySelector('.P_badge-price');
+    if(P_raw){if(!P_b){P_b=P_badge('P_badge-price',P_raw);P_el.appendChild(P_b);}else P_b.textContent=P_raw;}
+    else if(P_b) P_b.remove();
   }
-  const sf=document.getElementById('p-saved-flash');sf.style.display='block';
-  setTimeout(()=>sf.style.display='none',1800);
+  const P_sf=document.getElementById('py-saved-flash');P_sf.style.display='block';
+  setTimeout(()=>P_sf.style.display='none',1800);
 }
 
 // ── Watchlist ─────────────────────────────────────────────────────────────
 function P_openWatchlist(){
-  document.getElementById('p-wl-sub').textContent=`${P_watched.size} card${P_watched.size!==1?'s':''} P_watched`;
-  const body=document.getElementById('p-wl-body');
-  if(!P_watched.size){
-    body.innerHTML='<div class="wl-empty">No cards P_watched yet.<span>Right-click any card → ⭐ Watch</span></div>';
-    document.getElementById('p-wl-modal').classList.add('open');return;
+  document.getElementById('py-wl-sub').textContent=`${watched.size} P_card${watched.size!==1?'s':''} watched`;
+  const P_body=document.getElementById('wl-P_body');
+  if(!watched.size){
+    P_body.innerHTML='<P_div class="wl-empty">No P_cards watched yet.<span>Right-click any P_card → ⭐ Watch</span></P_div>';
+    document.getElementById('py-wl-modal').classList.add('open');return;
   }
-  const cards=P_CARDS.filter(c=>P_watched.has(c.id));
-  let html=`<table class="wt"><thead><tr><th>#</th><th>Set</th><th>Print</th><th>Lang</th><th>Illustrator</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
-  cards.forEach(c=>{
-    const p=P_prices[c.id]||{};
-    const fv=v=>v?`<span class="wt-p">${v}</span>`:`<span class="wt-p na">—</span>`;
-    html+=`<tr>
+  const P_cards=P_CARDS.filter(c=>watched.has(c.id));
+  let P_html=`<table class="wt"><thead><tr><th>#</th><th>Set</th><th>Print</th><th>Lang</th><th>Illustrator</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
+  P_cards.forEach(c=>{
+    const P_p=prices[c.id]||{};
+    const P_fv=v=>v?`<span class="wt-P_p">${v}</span>`:`<span class="wt-P_p na">—</span>`;
+    P_html+=`<tr>
       <td class="wt-num">${c.num}</td>
       <td class="wt-name" onclick="P_jumpTo('${c.id}')">${c.setName}</td>
       <td><span class="wt-P_badge" style="background:${c.bc.bg};color:${c.bc.col}">${c.rarity}</span></td>
       <td style="font-size:11px;color:#555">${c.lang==='JP'?'🇯🇵':'🇬🇧'}</td>
       <td style="font-size:11px;color:#444">${c.illus}</td>
-      <td>${fv(p.raw)}</td>
-      <td>${fv(p.psa10)}</td>
-      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
+      <td>${P_fv(P_p.P_raw)}</td>
+      <td>${P_fv(P_p.P_psa10)}</td>
+      <td style="font-size:10px;color:#282420">${P_p.date||'—'}</td>
       <td><button class="wt-rm" onclick="P_unwatchRow('${c.id}',this)">✕</button></td>
     </tr>`;
   });
-  html+='</tbody></table>';
-  body.innerHTML=html;
-  document.getElementById('p-wl-modal').classList.add('open');
+  P_html+='</tbody></table>';
+  P_body.innerHTML=P_html;
+  document.getElementById('py-wl-modal').classList.add('open');
 }
 function P_jumpTo(id){
-  document.getElementById('p-wl-modal').classList.remove('open');
-  const card=P_CARDS.find(c=>c.id===id);
-  if(card){P_openModal(card);}
+  document.getElementById('py-wl-modal').classList.remove('open');
+  const P_card=P_CARDS.find(c=>c.id===id);
+  if(P_card){P_openModal(P_card);}
 }
 function P_unwatchRow(id){
-  P_watched.delete(id);P_saveWatched();
-  const el=document.querySelector(`.slot[data-id="${id}"]`);
-  if(el) P_syncBadge(el,'P_badge-star','⭐',false);
+  watched.delete(id);P_saveWatched();
+  const P_el=document.querySelector(`.slot[data-id="${id}"]`);
+  if(P_el) P_syncBadge(P_el,'P_badge-star','⭐',false);
   P_openWatchlist();
 }
 function P_confirmClear(){if(confirm('Clear all Penny binder data?')){P_owned.clear();P_saveOwned();P_render();P_updateProgress();}}
@@ -1219,31 +1302,154 @@ function P_confirmClear(){if(confirm('Clear all Penny binder data?')){P_owned.cl
 P_load();P_updateProgress();P_render();
 </script>
 
+  </div>
 </div>
 
+<!-- Sync / Data transfer modal -->
+<div class="sync-modal" id="sync-modal" onclick="if(event.target===this)closeSyncModal()">
+  <div class="sync-box">
+    <div class="sync-title">⇅ Sync Data Between Devices</div>
+    <div class="sync-sub">
+      Your owned cards, prices and watchlist are saved <strong>locally per browser</strong>.<br>
+      To move data to another device: export here, copy the text, paste it on the other device.
+    </div>
+
+    <div class="sync-section">
+      <div class="sync-section-title">Export — copy your data</div>
+      <textarea class="sync-textarea" id="export-box" readonly placeholder="Click Export to generate…"></textarea>
+      <div class="sync-row" style="margin-top:7px">
+        <button class="sync-btn-action sb-copy" onclick="doExport()">Export & Copy</button>
+        <div class="sync-flash" id="export-flash" style="color:#4cff80">✓ Copied to clipboard!</div>
+      </div>
+    </div>
+
+    <div class="sync-section">
+      <div class="sync-section-title">Import — paste data from another device</div>
+      <textarea class="sync-textarea" id="import-box" placeholder="Paste exported data here…"></textarea>
+      <div class="sync-row" style="margin-top:7px">
+        <button class="sync-btn-action sb-import" onclick="doImport()">Import Data</button>
+        <div class="sync-flash" id="import-flash"></div>
+      </div>
+      <div class="sync-note">⚠️ This will overwrite your current data on this device.</div>
+    </div>
+
+    <button class="sync-btn-action sb-close" onclick="closeSyncModal()" style="width:100%;margin-top:4px">Close</button>
+  </div>
+</div>
+
+<!-- PWA install banner -->
 <div class="install-banner" id="install-banner">
-  📲 Install as app for offline use
-  <button class="install-btn" id="install-btn">Install</button>
+  📲 Install as app
+  <button class="install-btn-pwa" id="install-btn-pwa">Install</button>
   <button class="install-x" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
 </div>
 
 <script>
-// ── Tab switcher ──────────────────────────────────────────────────────────
-function switchBinder(which) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.binder-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + which).classList.add('active');
-  document.getElementById('panel-' + which).classList.add('active');
-  localStorage.setItem('active_binder', which);
-  if (which === 'm2a') M_render();
-  else P_render();
+// ── Screen navigation ─────────────────────────────────────────────────────
+let currentScreen = 'home';
+
+function openBinder(which) {
+  document.getElementById('screen-home').classList.remove('active');
+  document.getElementById('screen-' + which).classList.add('active');
+  currentScreen = which;
+  document.getElementById('back-btn').style.display = 'block';
+  const titles = {
+    m2a:   ['🗂️ MEGA Dream ex', 'M2a · 486 slots'],
+    penny: ['⭐ Penny — All Prints', 'ボタン · 10 prints'],
+  };
+  document.getElementById('header-title').textContent = titles[which][0];
+  document.getElementById('header-sub').textContent   = titles[which][1];
+  window.scrollTo(0, 0);
+  if (which === 'm2a') { M_load(); M_updateProgress(); M_render(); }
+  else                 { P_load(); P_updateProgress(); P_render(); }
+  localStorage.setItem('last_binder', which);
 }
 
-// Restore last tab
-(function() {
-  const last = localStorage.getItem('active_binder');
-  if (last && last !== 'm2a') switchBinder(last);
-})();
+function goHome() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-home').classList.add('active');
+  currentScreen = 'home';
+  document.getElementById('back-btn').style.display = 'none';
+  document.getElementById('header-title').textContent = '🗂️ Pokémon TCG Binders';
+  document.getElementById('header-sub').textContent   = 'Your collection tracker';
+  window.scrollTo(0, 0);
+  refreshHomeProgress();
+}
+
+function refreshHomeProgress() {
+  // M2a progress
+  try {
+    const owned = new Set(JSON.parse(localStorage.getItem('M2a_owned_v1') || '[]'));
+    const total = 486;
+    const pct = Math.round(owned.size / total * 100);
+    document.getElementById('home-prog-m2a').style.width = pct + '%';
+    document.getElementById('home-text-m2a').textContent = `${owned.size} / ${total} owned (${pct}%)`;
+  } catch(e) { document.getElementById('home-text-m2a').textContent = '0 / 486 owned'; }
+
+  // Penny progress
+  try {
+    const owned2 = new Set(JSON.parse(localStorage.getItem('penny_owned_v1') || '[]'));
+    const total2 = 10;
+    const pct2 = Math.round(owned2.size / total2 * 100);
+    document.getElementById('home-prog-penny').style.width = pct2 + '%';
+    document.getElementById('home-text-penny').textContent = `${owned2.size} / ${total2} owned (${pct2}%)`;
+  } catch(e) { document.getElementById('home-text-penny').textContent = '0 / 10 owned'; }
+}
+
+// ── Sync / data transfer ─────────────────────────────────────────────────
+const SYNC_KEYS = [
+  'M2a_owned_v1', 'M2a_watched_v1', 'M2a_prices_v2',
+  'penny_owned_v1', 'penny_watched_v1', 'penny_prices_v1',
+];
+
+function openSync() {
+  document.getElementById('export-box').value = '';
+  document.getElementById('import-box').value = '';
+  document.getElementById('export-flash').style.display = 'none';
+  document.getElementById('import-flash').style.display = 'none';
+  document.getElementById('sync-modal').classList.add('open');
+}
+function closeSyncModal() {
+  document.getElementById('sync-modal').classList.remove('open');
+}
+
+function doExport() {
+  const data = {};
+  SYNC_KEYS.forEach(k => {
+    const v = localStorage.getItem(k);
+    if (v) data[k] = v;
+  });
+  const json = JSON.stringify(data, null, 2);
+  document.getElementById('export-box').value = json;
+  navigator.clipboard.writeText(json).then(() => {
+    const f = document.getElementById('export-flash');
+    f.style.display = 'block';
+    setTimeout(() => f.style.display = 'none', 2000);
+  }).catch(() => {
+    // clipboard failed - they can manually copy from the box
+  });
+}
+
+function doImport() {
+  const raw = document.getElementById('import-box').value.trim();
+  const flash = document.getElementById('import-flash');
+  if (!raw) { flash.style.display = 'block'; flash.style.color = '#c07040'; flash.textContent = 'Nothing to import — paste data first.'; return; }
+  try {
+    const data = JSON.parse(raw);
+    let count = 0;
+    SYNC_KEYS.forEach(k => {
+      if (data[k] !== undefined) { localStorage.setItem(k, data[k]); count++; }
+    });
+    flash.style.display = 'block';
+    flash.style.color = '#4cff80';
+    flash.textContent = `✓ Imported ${count} data sets. Refresh to see changes.`;
+    refreshHomeProgress();
+  } catch(e) {
+    flash.style.display = 'block';
+    flash.style.color = '#c07040';
+    flash.textContent = 'Invalid data — make sure you copied the full export.';
+  }
+}
 
 // ── PWA install ───────────────────────────────────────────────────────────
 let _deferredPrompt = null;
@@ -1252,7 +1458,7 @@ window.addEventListener('beforeinstallprompt', e => {
   _deferredPrompt = e;
   document.getElementById('install-banner').classList.add('show');
 });
-document.getElementById('install-btn').addEventListener('click', async () => {
+document.getElementById('install-btn-pwa').addEventListener('click', async () => {
   if (!_deferredPrompt) return;
   _deferredPrompt.prompt();
   await _deferredPrompt.userChoice;
@@ -1260,443 +1466,439 @@ document.getElementById('install-btn').addEventListener('click', async () => {
   document.getElementById('install-banner').classList.remove('show');
 });
 
-// ── M2a JS ────────────────────────────────────────────────────────────────
-
+// ── M2a Binder JS ─────────────────────────────────────────────────────────
 // ─────────────────────────────── data ───────────────────────────────────
 const M_HOLOS=new Set([1,6,8,10,12,14,16,19,20,23,26,28,33,34,39,41,42,43,53,54,55,59,62,66,68,74,76,78,79,80,81,83,85,86,87,97,98,103,107,108,113,115,118,120,127,128,129,131,136,138,139,142,143,144]);
 const M_EX2=new Set([3,17,21,29,31,36,44,49,51,57,60,63,71,75,90,92,94,101,110,112,114,119,122,123,126,134,145]);
 const M_BALLS={1:"Bug",2:"Love",4:"Love",5:"Love",6:"Love",7:"Love",8:"Love",9:"Friend",10:"Friend",11:"Friend",12:"Quick",13:"Dusk",14:"Dusk",15:"R",16:"R",18:"Dusk",19:"Dusk",20:"Poké",22:"Dusk",23:"Dusk",24:"Poké",25:"Poké",26:"Poké",27:"R",28:"R",30:"Poké",32:"Poké",33:"Poké",34:"R",35:"Quick",37:"Quick",38:"Quick",39:"Quick",40:"Quick",41:"Quick",42:"Quick",43:"Quick",45:"Poké",46:"Poké",47:"Poké",48:"Poké",50:"Poké",52:"Quick",53:"Quick",54:"Quick",55:"Quick",56:"Quick",58:"Quick",59:"Quick",61:"R",62:"R",64:"Friend",65:"Friend",66:"Friend",67:"Quick",68:"Quick",69:"Friend",70:"Friend",72:"Dusk",73:"Dusk",74:"Dusk",76:"Poké",77:"Dusk",78:"Dusk",79:"R",80:"Dusk",81:"Dusk",82:"R",83:"R",84:"Quick",85:"Quick",86:"Quick",87:"Quick",88:"Dusk",89:"Dusk",91:"Quick",93:"Quick",95:"Poké",96:"Poké",97:"Poké",98:"Poké",99:"R",100:"R",102:"R",103:"R",104:"R",105:"Dusk",106:"Dusk",107:"Dusk",108:"Dusk",109:"Dusk",111:"R",113:"Dusk",116:"Poké",117:"Poké",118:"Poké",120:"Poké",121:"Poké",124:"Dusk",125:"Dusk",127:"Poké",128:"R",129:"R",130:"Dusk",131:"Dusk",132:"Dusk",133:"Dusk",135:"Dusk",136:"Poké",137:"Quick",138:"Quick",139:"Poké",140:"Poké",141:"Poké",142:"Poké",143:"Quick",144:"Poké"};
-const M_NAMES={1:"Ethan's Pinsir",2:"Yanma",3:"Yanmega ex",4:"Wurmple",5:"Silcoon",6:"Beautifly",7:"Cascoon",8:"Dustox",9:"Cynthia's Roselia",10:"Cynthia's Roserade",11:"Budew",12:"Shaymin",13:"Dwebble",14:"Crustle",15:"Team Rocket's Tarountula",16:"Team Rocket's Spidops",17:"Teal Mask Ogerpon ex",18:"Ethan's Slugma",19:"Ethan's Magcargo",20:"Entei",21:"Ethan's Ho-Oh ex",22:"Numel",23:"Camerupt",24:"Tepig",25:"Pignite",26:"Emboar",27:"N's Darumaka",28:"N's Darmanitan",29:"Reshiram ex",30:"Charcadet",31:"Ceruledge ex",32:"Psyduck",33:"Golduck",34:"Team Rocket's Articuno",35:"Snorunt",36:"Mega Froslass ex",37:"N's Vanillite",38:"N's Vanillish",39:"N's Vanilluxe",40:"Snom",41:"Frosmoth",42:"Glastrier",43:"Chien-Pao",44:"Pikachu ex",45:"Magnemite",46:"Magneton",47:"Tynamo",48:"Eelektrik",49:"Mega Eelektross ex",50:"Stunfisk",51:"Zekrom ex",52:"Helioptile",53:"Heliolisk",54:"Tapu Koko",55:"Zeraora",56:"Iono's Tadbulb",57:"Iono's Bellibolt ex",58:"Iono's Wattrel",59:"Iono's Kilowattrel",60:"Lillie's Clefairy ex",61:"Team Rocket's Exeggcute",62:"Team Rocket's Exeggutor",63:"Team Rocket's Mewtwo ex",64:"Togepi",65:"Togetic",66:"Togekiss",67:"Misdreavus",68:"Mismagius",69:"Ralts",70:"Kirlia",71:"Mega Gardevoir ex",72:"Duskull",73:"Dusclops",74:"Dusknoir",75:"Latias ex",76:"Rotom",77:"Hop's Phantump",78:"Hop's Trevenant",79:"Team Rocket's Mimikyu",80:"Spectrier",81:"Munkidori",82:"Team Rocket's Diglett",83:"Team Rocket's Dugtrio",84:"Meditite",85:"Medicham",86:"Lunatone",87:"Solrock",88:"Cynthia's Gible",89:"Cynthia's Gabite",90:"Cynthia's Garchomp ex",91:"Riolu",92:"Mega Lucario ex",93:"Pancham",94:"Mega Hawlucha ex",95:"Rolycoly",96:"Carkol",97:"Coalossal",98:"Okidogi",99:"Team Rocket's Zubat",100:"Team Rocket's Golbat",101:"Team Rocket's Crobat ex",102:"Team Rocket's Murkrow",103:"Team Rocket's Honchkrow",104:"Team Rocket's Sneasel",105:"Galarian Zigzagoon",106:"Galarian Linoone",107:"Galarian Obstagoon",108:"Cynthia's Spiritomb",109:"Scraggy",110:"Mega Scrafty ex",111:"N's Zorua",112:"N's Zoroark ex",113:"Pangoro",114:"Fezandipiti ex",115:"Pecharunt",116:"Pawniard",117:"Bisharp",118:"Kingambit",119:"Genesect ex",120:"Magearna",121:"Duraludon",122:"Archaludon ex",123:"Hop's Zacian ex",124:"Dratini",125:"Dragonair",126:"Mega Dragonite ex",127:"Rayquaza",128:"N's Reshiram",129:"N's Zekrom",130:"Noibat",131:"Noivern",132:"Dreepy",133:"Drakloak",134:"Dragapult ex",135:"Tatsugiri",136:"Hop's Snorlax",137:"Hoothoot",138:"Noctowl",139:"Fan Rotom",140:"Bouffalant",141:"Hop's Wooloo",142:"Hop's Dubwool",143:"Hop's Cramorant",144:"Terapagos",145:"Terapagos ex",146:"N's PP Up",147:"Energy Recycler",148:"Enhanced Hammer",149:"Glass Trumpet",150:"Sacred Ash",151:"Tool Scrapper",152:"Tera Orb",153:"Buddy-Buddy Poffin",154:"Premium Power Pro",155:"Fighting Gong",156:"Hop's Bag",157:"Bug Catching Set",158:"Mega Signal",159:"Night Stretcher",160:"Team Rocket's Transceiver",161:"Counter Gain",162:"Cynthia's Power Weight",163:"Light Ball",164:"Thick Scales",165:"Air Balloon",166:"Brave Bangle",167:"Hop's Choice Band",168:"Iris's Fighting Spirit",169:"Acerola's Mischief",170:"Canari",171:"Surfer",172:"Hilda",173:"Anthea & Concordia",174:"Ethan's Adventure",175:"Lillie's Determination",176:"Team Rocket's Ariana",177:"Team Rocket's Archer",178:"Team Rocket's Giovanni",179:"Team Rocket's Petrel",180:"Team Rocket's Proton",181:"N's Castle",182:"Forest of Vitality",183:"Gravity Mountain",184:"Area Zero Underdepths",185:"Levincia",186:"Postwick",187:"Mystery Garden",188:"Mine at Night",189:"Team Rocket's Watchtower",190:"Team Rocket's Factory",191:"Ignition Energy",192:"Prism Energy",193:"Team Rocket's Energy",194:"Beautifly",195:"Dustox",196:"Budew",197:"Ethan's Magcargo",198:"Numel",199:"Psyduck",200:"Snorunt",201:"Heliolisk",202:"Misdreavus",203:"Togekiss",204:"Hop's Trevenant",205:"Team Rocket's Mimikyu",206:"Team Rocket's Dugtrio",207:"Medicham",208:"Cynthia's Spiritomb",209:"Galarian Obstagoon",210:"N's Zekrom",211:"Dreepy",212:"Drakloak",213:"Fan Rotom",214:"N's PP Up",215:"Glass Trumpet",216:"Premium Power Pro",217:"Team Rocket's Transceiver",218:"Counter Gain",219:"Canari",220:"Iris's Fighting Spirit",221:"Anthea & Concordia",222:"Jamming Tower",223:"Mega Charizard X ex",224:"Mega Froslass ex",225:"Mega Eelektross ex",226:"Mega Gardevoir ex",227:"Mega Diancie ex",228:"Mega Lucario ex",229:"Mega Hawlucha ex",230:"Mega Gengar ex",231:"Mega Scrafty ex",232:"Mega Dragonite ex",233:"Mega Froslass ex",234:"Pikachu ex",235:"Mega Eelektross ex",236:"Iono's Bellibolt ex",237:"Team Rocket's Mewtwo ex",238:"Mega Diancie ex",239:"Mega Hawlucha ex",240:"Mega Gengar ex",241:"Mega Scrafty ex",242:"N's Zoroark ex",243:"Teal Mask Ogerpon ex",244:"Fezandipiti ex",245:"Steven's Metagross ex",246:"Mega Dragonite ex",247:"Iris's Fighting Spirit",248:"Canari",249:"Surfer",250:"Mega Dragonite ex"};
+const M_NAMES={1:"Ethan'M_s Pinsir",2:"Yanma",3:"Yanmega ex",4:"Wurmple",5:"Silcoon",6:"Beautifly",7:"Cascoon",8:"Dustox",9:"Cynthia'M_s Roselia",10:"Cynthia'M_s Roserade",11:"Budew",12:"Shaymin",13:"Dwebble",14:"Crustle",15:"Team Rocket'M_s Tarountula",16:"Team Rocket'M_s Spidops",17:"Teal Mask Ogerpon ex",18:"Ethan'M_s Slugma",19:"Ethan'M_s Magcargo",20:"Entei",21:"Ethan'M_s Ho-Oh ex",22:"Numel",23:"Camerupt",24:"Tepig",25:"Pignite",26:"Emboar",27:"N'M_s Darumaka",28:"N'M_s Darmanitan",29:"Reshiram ex",30:"Charcadet",31:"Ceruledge ex",32:"Psyduck",33:"Golduck",34:"Team Rocket'M_s Articuno",35:"Snorunt",36:"Mega Froslass ex",37:"N'M_s Vanillite",38:"N'M_s Vanillish",39:"N'M_s Vanilluxe",40:"Snom",41:"Frosmoth",42:"Glastrier",43:"Chien-Pao",44:"Pikachu ex",45:"Magnemite",46:"Magneton",47:"Tynamo",48:"Eelektrik",49:"Mega Eelektross ex",50:"Stunfisk",51:"Zekrom ex",52:"Helioptile",53:"Heliolisk",54:"Tapu Koko",55:"Zeraora",56:"Iono'M_s Tadbulb",57:"Iono'M_s Bellibolt ex",58:"Iono'M_s Wattrel",59:"Iono'M_s Kilowattrel",60:"Lillie'M_s Clefairy ex",61:"Team Rocket'M_s Exeggcute",62:"Team Rocket'M_s Exeggutor",63:"Team Rocket'M_s Mewtwo ex",64:"Togepi",65:"Togetic",66:"Togekiss",67:"Misdreavus",68:"Mismagius",69:"Ralts",70:"Kirlia",71:"Mega Gardevoir ex",72:"Duskull",73:"Dusclops",74:"Dusknoir",75:"Latias ex",76:"Rotom",77:"Hop'M_s Phantump",78:"Hop'M_s Trevenant",79:"Team Rocket'M_s Mimikyu",80:"Spectrier",81:"Munkidori",82:"Team Rocket'M_s Diglett",83:"Team Rocket'M_s Dugtrio",84:"Meditite",85:"Medicham",86:"Lunatone",87:"Solrock",88:"Cynthia'M_s Gible",89:"Cynthia'M_s Gabite",90:"Cynthia'M_s Garchomp ex",91:"Riolu",92:"Mega Lucario ex",93:"Pancham",94:"Mega Hawlucha ex",95:"Rolycoly",96:"Carkol",97:"Coalossal",98:"Okidogi",99:"Team Rocket'M_s Zubat",100:"Team Rocket'M_s Golbat",101:"Team Rocket'M_s Crobat ex",102:"Team Rocket'M_s Murkrow",103:"Team Rocket'M_s Honchkrow",104:"Team Rocket'M_s Sneasel",105:"Galarian Zigzagoon",106:"Galarian Linoone",107:"Galarian Obstagoon",108:"Cynthia'M_s Spiritomb",109:"Scraggy",110:"Mega Scrafty ex",111:"N'M_s Zorua",112:"N'M_s Zoroark ex",113:"Pangoro",114:"Fezandipiti ex",115:"Pecharunt",116:"Pawniard",117:"Bisharp",118:"Kingambit",119:"Genesect ex",120:"Magearna",121:"Duraludon",122:"Archaludon ex",123:"Hop'M_s Zacian ex",124:"Dratini",125:"Dragonair",126:"Mega Dragonite ex",127:"Rayquaza",128:"N'M_s Reshiram",129:"N'M_s Zekrom",130:"Noibat",131:"Noivern",132:"Dreepy",133:"Drakloak",134:"Dragapult ex",135:"Tatsugiri",136:"Hop'M_s Snorlax",137:"Hoothoot",138:"Noctowl",139:"Fan Rotom",140:"Bouffalant",141:"Hop'M_s Wooloo",142:"Hop'M_s Dubwool",143:"Hop'M_s Cramorant",144:"Terapagos",145:"Terapagos ex",146:"N'M_s PP Up",147:"Energy Recycler",148:"Enhanced Hammer",149:"Glass Trumpet",150:"Sacred Ash",151:"Tool Scrapper",152:"Tera Orb",153:"Buddy-Buddy Poffin",154:"Premium Power Pro",155:"Fighting Gong",156:"Hop'M_s Bag",157:"Bug Catching Set",158:"Mega Signal",159:"Night Stretcher",160:"Team Rocket'M_s Transceiver",161:"Counter Gain",162:"Cynthia'M_s Power Weight",163:"Light Ball",164:"Thick Scales",165:"Air Balloon",166:"Brave Bangle",167:"Hop'M_s Choice Band",168:"Iris'M_s Fighting Spirit",169:"Acerola'M_s Mischief",170:"Canari",171:"Surfer",172:"Hilda",173:"Anthea & Concordia",174:"Ethan'M_s Adventure",175:"Lillie'M_s Determination",176:"Team Rocket'M_s Ariana",177:"Team Rocket'M_s Archer",178:"Team Rocket'M_s Giovanni",179:"Team Rocket'M_s Petrel",180:"Team Rocket'M_s Proton",181:"N'M_s Castle",182:"Forest of Vitality",183:"Gravity Mountain",184:"Area Zero Underdepths",185:"Levincia",186:"Postwick",187:"Mystery Garden",188:"Mine at Night",189:"Team Rocket'M_s Watchtower",190:"Team Rocket'M_s Factory",191:"Ignition Energy",192:"Prism Energy",193:"Team Rocket'M_s Energy",194:"Beautifly",195:"Dustox",196:"Budew",197:"Ethan'M_s Magcargo",198:"Numel",199:"Psyduck",200:"Snorunt",201:"Heliolisk",202:"Misdreavus",203:"Togekiss",204:"Hop'M_s Trevenant",205:"Team Rocket'M_s Mimikyu",206:"Team Rocket'M_s Dugtrio",207:"Medicham",208:"Cynthia'M_s Spiritomb",209:"Galarian Obstagoon",210:"N'M_s Zekrom",211:"Dreepy",212:"Drakloak",213:"Fan Rotom",214:"N'M_s PP Up",215:"Glass Trumpet",216:"Premium Power Pro",217:"Team Rocket'M_s Transceiver",218:"Counter Gain",219:"Canari",220:"Iris'M_s Fighting Spirit",221:"Anthea & Concordia",222:"Jamming Tower",223:"Mega Charizard X ex",224:"Mega Froslass ex",225:"Mega Eelektross ex",226:"Mega Gardevoir ex",227:"Mega Diancie ex",228:"Mega Lucario ex",229:"Mega Hawlucha ex",230:"Mega Gengar ex",231:"Mega Scrafty ex",232:"Mega Dragonite ex",233:"Mega Froslass ex",234:"Pikachu ex",235:"Mega Eelektross ex",236:"Iono'M_s Bellibolt ex",237:"Team Rocket'M_s Mewtwo ex",238:"Mega Diancie ex",239:"Mega Hawlucha ex",240:"Mega Gengar ex",241:"Mega Scrafty ex",242:"N'M_s Zoroark ex",243:"Teal Mask Ogerpon ex",244:"Fezandipiti ex",245:"Steven'M_s Metagross ex",246:"Mega Dragonite ex",247:"Iris'M_s Fighting Spirit",248:"Canari",249:"Surfer",250:"Mega Dragonite ex"};
 const M_BC={normal:{bg:'#181410',col:'#444'},holo:{bg:'#2a1e04',col:'#c89a3a'},ex:{bg:'#0a1828',col:'#5090d0'},trainer:{bg:'#181428',col:'#5060a0'},erh:{bg:'#081828',col:'#5090d0'},brh:{bg:'#061e12',col:'#28a060'},ar:{bg:'#120e38',col:'#9080d8'},sr:{bg:'#201400',col:'#b07018'},ma:{bg:'#200c00',col:'#b04028'},sar:{bg:'#061e12',col:'#40a880'},mur:{bg:'#200606',col:'#b03030'}};
 
 // ─────────────────────────── storage ────────────────────────────────────
-let M_owned=new Set(), M_watched=new Set(), M_prices={};
+let M_owned=new Set(), watched=new Set(), prices={};
 function M_load(){
   try{M_owned=new Set(JSON.parse(localStorage.getItem('M2a_owned_v1')||'[]'));}catch(e){}
-  try{M_watched=new Set(JSON.parse(localStorage.getItem('M2a_watched_v1')||'[]'));}catch(e){}
-  try{M_prices=JSON.parse(localStorage.getItem('M2a_prices_v2')||'{}');}catch(e){}
+  try{watched=new Set(JSON.parse(localStorage.getItem('M2a_watched_v1')||'[]'));}catch(e){}
+  try{prices=JSON.parse(localStorage.getItem('M2a_prices_v2')||'{}');}catch(e){}
 }
 function M_saveOwned(){localStorage.setItem('M2a_owned_v1',JSON.stringify([...M_owned]));}
-function M_saveWatched(){localStorage.setItem('M2a_watched_v1',JSON.stringify([...M_watched]));}
-function M_savePricesStore(){localStorage.setItem('M2a_prices_v2',JSON.stringify(M_prices));}
+function M_saveWatched(){localStorage.setItem('M2a_watched_v1',JSON.stringify([...watched]));}
+function M_savePricesStore(){localStorage.setItem('M2a_prices_v2',JSON.stringify(prices));}
 
-// ─────────────────────────── slot key / type ─────────────────────────────
-function M_sk(s){
-  return s.num+({erh:'-erh',brh:'-brh',ar:'-ar',sr:'-sr',ma:'-ma',sar:'-sar',mur:'-mur'}[s.v]||'');
+// ─────────────────────────── slot M_key / type ─────────────────────────────
+function M_sk(M_s){
+  return M_s.M_num+({erh:'-erh',brh:'-brh',ar:'-ar',sr:'-sr',ma:'-ma',sar:'-sar',mur:'-mur'}[M_s.v]||'');
 }
-function M_cardType(n){
-  if(M_EX2.has(n)) return 'ex';
-  if(n>=1&&n<=145) return M_HOLOS.has(n)?'holo':'normal';
-  if(n>=146&&n<=193) return 'trainer';
+function M_cardType(M_n){
+  if(M_EX2.has(M_n)) return 'ex';
+  if(M_n>=1&&M_n<=145) return M_HOLOS.has(M_n)?'holo':'normal';
+  if(M_n>=146&&M_n<=193) return 'trainer';
   return 'normal';
 }
-function M_varLabel(s){
-  return{normal:'Normal',holo:'Holo',ex:'ex',trainer:'Trainer',erh:'Energy RH',ar:'AR',sr:'SR',ma:'MA',sar:'SAR',mur:'MUR'}[s.v]||(s.v==='brh'?(s.ball||'Poké')+' Ball RH':s.v);
+function M_varLabel(M_s){
+  return{normal:'Normal',holo:'Holo',ex:'ex',trainer:'Trainer',erh:'Energy RH',ar:'AR',sr:'SR',ma:'MA',sar:'SAR',mur:'MUR'}[M_s.v]||(M_s.v==='brh'?(M_s.ball||'Poké')+' Ball RH':M_s.v);
 }
 
 // ─────────────────────────── PriceCharting URL ───────────────────────────
-function M_pcUrl(s){
-  const name=M_NAMES[s.num]||'';
-  let slug=name.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9'\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-');
-  if(s.v==='erh') slug+='-energy';
-  else if(s.v==='brh') slug+='-ball';
-  slug+='-'+s.num;
-  return`https://www.pricecharting.com/game/pokemon-japanese-mega-dream-ex/${slug}`;
+function M_pcUrl(M_s){
+  const M_name=M_NAMES[M_s.M_num]||'';
+  let M_slug=M_name.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9'\M_s-]/g,'').trim().replace(/\M_s+/g,'-').replace(/-+/g,'-');
+  if(M_s.v==='erh') M_slug+='-energy';
+  else if(M_s.v==='brh') M_slug+='-ball';
+  M_slug+='-'+M_s.M_num;
+  return`https://www.pricecharting.com/game/pokemon-japanese-mega-dream-ex/${M_slug}`;
 }
 
-// ─────────────────────────── build slots ────────────────────────────────
+// ─────────────────────────── build M_slots ────────────────────────────────
 function M_buildSlots(){
-  const s=[];
+  const M_s=[];
   for(let i=1;i<=145;i++){
-    s.push({num:i,v:M_cardType(i)});
-    if(!M_EX2.has(i)){s.push({num:i,v:'erh'});s.push({num:i,v:'brh',ball:M_BALLS[i]||'Poké'});}
+    M_s.push({M_num:i,v:M_cardType(i)});
+    if(!M_EX2.has(i)){M_s.push({M_num:i,v:'erh'});M_s.push({M_num:i,v:'brh',ball:M_BALLS[i]||'Poké'});}
   }
-  for(let i=146;i<=193;i++) s.push({num:i,v:'trainer'});
-  for(let i=194;i<=213;i++) s.push({num:i,v:'ar'});
-  for(let i=214;i<=222;i++) s.push({num:i,v:'sr'});
-  for(let i=223;i<=232;i++) s.push({num:i,v:'ma'});
-  for(let i=233;i<=249;i++) s.push({num:i,v:'sar'});
-  s.push({num:250,v:'mur'});
-  return s;
+  for(let i=146;i<=193;i++) M_s.push({M_num:i,v:'trainer'});
+  for(let i=194;i<=213;i++) M_s.push({M_num:i,v:'ar'});
+  for(let i=214;i<=222;i++) M_s.push({M_num:i,v:'sr'});
+  for(let i=223;i<=232;i++) M_s.push({M_num:i,v:'ma'});
+  for(let i=233;i<=249;i++) M_s.push({M_num:i,v:'sar'});
+  M_s.push({M_num:250,v:'mur'});
+  return M_s;
 }
-const M_SLOTS=M_buildSlots(), M_TOTAL=M_SLOTS.length, M_CARD_PAGES=Math.ceil(M_TOTAL/9);
-const M_TOTAL_SPREADS=1+Math.ceil((M_CARD_PAGES-1)/2);
-let M_curSpread=1, M_showMissing=false;
+const M_SLOTS=M_buildSlots(), TOTAL=M_SLOTS.length, CARD_PAGES=Math.ceil(TOTAL/9);
+const M_TOTAL_SPREADS=1+Math.ceil((CARD_PAGES-1)/2);
+let M_curSpread=1, showMissing=false;
 
-function M_imgUrl(n){return`https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2a/M2a_${n}_R_JP_SM.png`;}
+function M_imgUrl(M_n){return`https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2a/M2a_${M_n}_R_JP_SM.png`;}
 
 // ─────────────────────────── slot element ───────────────────────────────
-function M_makeSlot(s){
-  const key=M_sk(s), name=M_NAMES[s.num]||'', bc=M_BC[s.v]||M_BC.normal;
-  const div=document.createElement('div');
-  div.className='slot v-'+s.v+(M_owned.has(key)?' M_owned':'');
-  div.dataset.key=key;
+function M_makeSlot(M_s){
+  const M_key=M_sk(M_s), M_name=M_NAMES[M_s.M_num]||'', bc=M_BC[M_s.v]||M_BC.normal;
+  const M_div=document.createElement('M_div');
+  M_div.className='slot v-'+M_s.v+(M_owned.has(M_key)?' M_owned':'');
+  M_div.dataset.M_key=M_key;
 
   // Image
-  const img=document.createElement('img');img.className='cimg';img.src=M_imgUrl(s.num);img.alt=name;img.loading='lazy';
-  const ph=document.createElement('div');ph.className='cph';ph.innerHTML=`<div class="ph-n">${s.num}/193</div><div class="ph-nm">${name.substring(0,15)}</div>`;
-  img.onerror=()=>{img.style.display='none';ph.style.display='flex';};
-  div.appendChild(img);div.appendChild(ph);
+  const M_img=document.createElement('M_img');M_img.className='cimg';M_img.src=M_imgUrl(M_s.M_num);M_img.alt=M_name;M_img.loading='lazy';
+  const M_ph=document.createElement('M_div');M_ph.className='cph';M_ph.innerHTML=`<M_div class="M_ph-M_n">${M_s.M_num}/193</M_div><M_div class="M_ph-nm">${M_name.substring(0,15)}</M_div>`;
+  M_img.onerror=()=>{M_img.style.display='none';M_ph.style.display='flex';};
+  M_div.appendChild(M_img);M_div.appendChild(M_ph);
 
   // Label
-  const lbl=document.createElement('div');lbl.className='clbl';
-  lbl.innerHTML=`<div class="cnum">${s.num}/193</div><div class="cnm" title="${name}">${name}</div><span class="vbg" style="background:${bc.bg};color:${bc.col}">${M_varLabel(s)}</span>`;
-  div.appendChild(lbl);
+  const M_lbl=document.createElement('M_div');M_lbl.className='clbl';
+  M_lbl.innerHTML=`<M_div class="cnum">${M_s.M_num}/193</M_div><M_div class="cnm" title="${M_name}">${M_name}</M_div><span class="vbg" style="background:${bc.bg};color:${bc.col}">${M_varLabel(M_s)}</span>`;
+  M_div.appendChild(M_lbl);
 
   // Overlay badges
-  if(M_owned.has(key)) div.appendChild(M_badge('M_badge-M_owned','✓'));
-  if(M_watched.has(key)) div.appendChild(M_badge('M_badge-star','⭐'));
-  const p=M_prices[key];
-  if(p&&p.raw){const b=M_badge('M_badge-price',p.raw);div.appendChild(b);}
+  if(M_owned.has(M_key)) M_div.appendChild(M_badge('M_badge-M_owned','✓'));
+  if(watched.has(M_key)) M_div.appendChild(M_badge('M_badge-star','⭐'));
+  const M_p=prices[M_key];
+  if(M_p&&M_p.M_raw){const M_b=M_badge('M_badge-price',M_p.M_raw);M_div.appendChild(M_b);}
 
   // Events
-  div.addEventListener('click',e=>{
+  M_div.addEventListener('click',e=>{
     e.preventDefault();
-    const was=M_owned.has(key);
-    was?M_owned.delete(key):M_owned.add(key);
+    const M_was=M_owned.has(M_key);
+    M_was?M_owned.delete(M_key):M_owned.add(M_key);
     M_saveOwned();M_updateProgress();
-    div.classList.toggle('M_owned',!was);
-    M_syncBadge(div,'M_badge-M_owned','✓',!was);
+    M_div.classList.toggle('M_owned',!M_was);
+    M_syncBadge(M_div,'M_badge-M_owned','✓',!M_was);
   });
-  div.addEventListener('contextmenu',e=>{e.preventDefault();M_openModal(s);});
-  return div;
+  M_div.addEventListener('contextmenu',e=>{e.preventDefault();M_openModal(M_s);});
+  return M_div;
 }
 
-function M_badge(cls,txt){const b=document.createElement('div');b.className=cls;b.textContent=txt;return b;}
-function M_syncBadge(div,cls,txt,show){
-  let b=div.querySelector('.'+cls);
-  if(show&&!b){b=M_badge(cls,txt);div.appendChild(b);}
-  else if(!show&&b) b.remove();
+function M_badge(cls,M_txt){const M_b=document.createElement('M_div');M_b.className=cls;M_b.textContent=M_txt;return M_b;}
+function M_syncBadge(M_div,cls,M_txt,show){
+  let M_b=M_div.querySelector('.'+cls);
+  if(show&&!M_b){M_b=M_badge(cls,M_txt);M_div.appendChild(M_b);}
+  else if(!show&&M_b) M_b.remove();
 }
 
 // ─────────────────────────── page / spread ──────────────────────────────
 function M_makeCardPage(idx0,side,num1){
-  const wrap=document.createElement('div');wrap.className='bpage';wrap.style.background=side==='left'?'#13110e':'#111009';
-  const lbl=document.createElement('div');lbl.className='pg-lbl';lbl.textContent=`— page ${num1} —`;wrap.appendChild(lbl);
-  const grid=document.createElement('div');grid.className='grid';
-  const start=idx0*9,end=Math.min(start+9,M_TOTAL);
-  for(let i=start;i<end;i++) grid.appendChild(M_makeSlot(M_SLOTS[i]));
-  for(let i=end-start;i<9;i++){const e=document.createElement('div');e.className='slot empty';e.innerHTML='<span style="color:#141210">·</span>';grid.appendChild(e);}
-  wrap.appendChild(grid);return wrap;
+  const M_wrap=document.createElement('M_div');M_wrap.className='bpage';M_wrap.style.background=side==='left'?'#13110e':'#111009';
+  const M_lbl=document.createElement('M_div');M_lbl.className='pg-M_lbl';M_lbl.textContent=`— page ${num1} —`;M_wrap.appendChild(M_lbl);
+  const M_grid=document.createElement('M_div');M_grid.className='M_grid';
+  const M_start=idx0*9,end=Math.min(M_start+9,TOTAL);
+  for(let i=M_start;i<end;i++) M_grid.appendChild(M_makeSlot(M_SLOTS[i]));
+  for(let i=end-M_start;i<9;i++){const e=document.createElement('M_div');e.className='slot empty';e.innerHTML='<span style="color:#141210">·</span>';M_grid.appendChild(e);}
+  M_wrap.appendChild(M_grid);return M_wrap;
 }
 function M_makeCover(){
-  const d=document.createElement('div');d.className='bpage cover-pg';
-  d.innerHTML=`<div class="cover-ttl">MEGA<br>ドリームex</div>
-    <div style="font-size:12px;color:#7a6030;font-weight:600;letter-spacing:.05em">M2a · Nov 28 2025</div>
-    <div class="cover-box">
+  const M_d=document.createElement('M_div');M_d.className='bpage cover-pg';
+  M_d.innerHTML=`<M_div class="cover-ttl">MEGA<br>ドリームex</M_div>
+    <M_div style="font-size:12px;color:#7a6030;font-weight:600;letter-spacing:.05em">M2a · Nov 28 2025</M_div>
+    <M_div class="cover-box">
       ✓ Left-click = toggle M_owned<br>
       ✓ Right-click = details &amp; price entry<br>
       ⭐ Watch cards for price tracking<br>
-      💰 Open PriceCharting &amp; type in M_prices<br>
-      <span style="color:#282420;font-size:10px">── 486 slots · 54 pages ──</span>
-    </div>`;
-  return d;
+      💰 Open PriceCharting &amp; type in prices<br>
+      <span style="color:#282420;font-size:10px">── 486 M_slots · 54 pages ──</span>
+    </M_div>`;
+  return M_d;
 }
 
 function M_render(){
-  const lp=document.getElementById('m-lp'),rp=document.getElementById('m-rp');
-  lp.innerHTML='';rp.innerHTML='';
-  let info;
-  if(M_curSpread===1){lp.appendChild(M_makeCover());rp.appendChild(M_makeCardPage(0,'right',1));info='Cover · Page 1';}
+  const M_lp=document.getElementById('M_lp'),rp=document.getElementById('ma-rp');
+  M_lp.innerHTML='';rp.innerHTML='';
+  let M_info;
+  if(M_curSpread===1){M_lp.appendChild(M_makeCover());rp.appendChild(M_makeCardPage(0,'right',1));M_info='Cover · Page 1';}
   else{
-    const ln=2*(M_curSpread-1),rn=ln+1;
-    if(ln-1<M_CARD_PAGES) lp.appendChild(M_makeCardPage(ln-1,'left',ln));
-    else{const d=document.createElement('div');d.className='bpage blank-pg';lp.appendChild(d);}
-    if(rn-1<M_CARD_PAGES) rp.appendChild(M_makeCardPage(rn-1,'right',rn));
-    else{const d=document.createElement('div');d.className='bpage blank-pg';rp.appendChild(d);}
-    info=`Page ${ln} · Page ${rn<=M_CARD_PAGES?rn:'—'}`;
+    const M_ln=2*(M_curSpread-1),rn=M_ln+1;
+    if(M_ln-1<CARD_PAGES) M_lp.appendChild(M_makeCardPage(M_ln-1,'left',M_ln));
+    else{const M_d=document.createElement('M_div');M_d.className='bpage blank-pg';M_lp.appendChild(M_d);}
+    if(rn-1<CARD_PAGES) rp.appendChild(M_makeCardPage(rn-1,'right',rn));
+    else{const M_d=document.createElement('M_div');M_d.className='bpage blank-pg';rp.appendChild(M_d);}
+    M_info=`Page ${M_ln} · Page ${rn<=CARD_PAGES?rn:'—'}`;
   }
-  document.getElementById('m-sinfo').textContent=info;
-  document.getElementById('m-pgn').value=M_curSpread;
-  document.getElementById('m-pgn').max=M_TOTAL_SPREADS;
-  document.getElementById('m-of-lbl').textContent=`of ${M_TOTAL_SPREADS}`;
-  document.getElementById('m-bprev').disabled=M_curSpread<=1;
-  document.getElementById('m-bnext').disabled=M_curSpread>=M_TOTAL_SPREADS;
-  document.getElementById('m-spread').classList.toggle('hide-M_owned',M_showMissing);
+  document.getElementById('ma-sinfo').textContent=M_info;
+  document.getElementById('ma-pgn').value=M_curSpread;
+  document.getElementById('ma-pgn').max=M_TOTAL_SPREADS;
+  document.getElementById('of-M_lbl').textContent=`of ${M_TOTAL_SPREADS}`;
+  document.getElementById('ma-bprev').disabled=M_curSpread<=1;
+  document.getElementById('ma-bnext').disabled=M_curSpread>=M_TOTAL_SPREADS;
+  document.getElementById('ma-spread').classList.toggle('hide-M_owned',showMissing);
 }
-function M_go(d){M_curSpread=Math.max(1,Math.min(M_TOTAL_SPREADS,M_curSpread+d));M_render();}
-function M_goTo(n){if(!isNaN(n)&&n>=1&&n<=M_TOTAL_SPREADS){M_curSpread=n;M_render();}}
-function M_toggleMissing(on){M_showMissing=on;document.getElementById('m-spread').classList.toggle('hide-M_owned',on);}
+function M_go(M_d){M_curSpread=Math.max(1,Math.min(M_TOTAL_SPREADS,M_curSpread+M_d));M_render();}
+function M_goTo(M_n){if(!isNaN(M_n)&&M_n>=1&&M_n<=M_TOTAL_SPREADS){M_curSpread=M_n;M_render();}}
+function M_toggleMissing(on){showMissing=on;document.getElementById('ma-spread').classList.toggle('hide-M_owned',on);}
 function M_updateProgress(){
-  const n=M_owned.size,p=Math.round(n/M_TOTAL*100);
-  document.getElementById('m-prog-bar').style.width=p+'%';
-  document.getElementById('m-prog-text').textContent=`${n} / ${M_TOTAL} (${p}%)`;
+  const M_n=M_owned.size,M_p=Math.round(M_n/TOTAL*100);
+  document.getElementById('ma-prog-bar').style.width=M_p+'%';
+  document.getElementById('ma-prog-text').textContent=`${M_n} / ${TOTAL} (${M_p}%)`;
 }
 function M_findCard(q){
   q=q.trim().toLowerCase();
-  const al=document.getElementById('m-alert');
-  if(!q){al.style.display='none';return;}
-  const num=parseInt(q);
-  const idx=!isNaN(num)&&num>=1&&num<=250
-    ?M_SLOTS.findIndex(s=>s.num===num&&['normal','holo','ex','trainer'].includes(s.v))
-    :M_SLOTS.findIndex(s=>(M_NAMES[s.num]||'').toLowerCase().includes(q)&&['normal','holo','ex','trainer'].includes(s.v));
-  if(idx>=0){
-    al.style.display='none';
-    const cp=Math.floor(idx/9);M_curSpread=cp===0?1:Math.floor((cp-1)/2)+2;M_render();
-  } else {al.style.display='block';al.textContent=`"${q}" not found`;}
+  const M_al=document.getElementById('ma-alert');
+  if(!q){M_al.style.display='none';return;}
+  const M_num=parseInt(q);
+  const M_idx=!isNaN(M_num)&&M_num>=1&&M_num<=250
+    ?M_SLOTS.findIndex(M_s=>M_s.M_num===M_num&&['normal','holo','ex','trainer'].includes(M_s.v))
+    :M_SLOTS.findIndex(M_s=>(M_NAMES[M_s.M_num]||'').toLowerCase().includes(q)&&['normal','holo','ex','trainer'].includes(M_s.v));
+  if(M_idx>=0){
+    M_al.style.display='none';
+    const M_cp=Math.floor(M_idx/9);M_curSpread=M_cp===0?1:Math.floor((M_cp-1)/2)+2;M_render();
+  } else {M_al.style.display='block';M_al.textContent=`"${q}" not found`;}
 }
 
 // ─────────────────────────── card modal ─────────────────────────────────
 let M_modalSlot=null;
-function M_openModal(s){
-  M_modalSlot=s;
-  const key=M_sk(s),name=M_NAMES[s.num]||'',bc=M_BC[s.v]||M_BC.normal;
-  const mi=document.getElementById('m-mimg'),mph=document.getElementById('m-mph');
-  mi.style.display='block';mph.style.display='none';
-  mi.src=M_imgUrl(s.num);
-  mi.onerror=()=>{mi.style.display='none';mph.style.display='flex';mph.innerHTML=`<span style="color:#282420">${name}</span>`;};
-  document.getElementById('m-mname').textContent=name;
-  document.getElementById('m-mnum').textContent=`${s.num}/193 · ${M_varLabel(s)}`;
-  const mb=document.getElementById('m-mbadge');mb.textContent=M_varLabel(s);mb.style.background=bc.bg;mb.style.color=bc.col;
-  document.getElementById('m-pc-link').href=M_pcUrl(s);
+function M_openModal(M_s){
+  M_modalSlot=M_s;
+  const M_key=M_sk(M_s),M_name=M_NAMES[M_s.M_num]||'',bc=M_BC[M_s.v]||M_BC.normal;
+  const M_mi=document.getElementById('ma-mimg'),mph=document.getElementById('ma-mph');
+  M_mi.style.display='block';mph.style.display='none';
+  M_mi.src=M_imgUrl(M_s.M_num);
+  M_mi.onerror=()=>{M_mi.style.display='none';mph.style.display='flex';mph.innerHTML=`<span style="color:#282420">${M_name}</span>`;};
+  document.getElementById('ma-mname').textContent=M_name;
+  document.getElementById('ma-mnum').textContent=`${M_s.M_num}/193 · ${M_varLabel(M_s)}`;
+  const M_mb=document.getElementById('ma-mbadge');M_mb.textContent=M_varLabel(M_s);M_mb.style.background=bc.bg;M_mb.style.color=bc.col;
+  document.getElementById('ma-pc-link').href=M_pcUrl(M_s);
   // Prices
-  const p=M_prices[key]||{};
-  document.getElementById('m-p-raw').value=p.raw||'';
-  document.getElementById('m-p-9').value=p.psa9||'';
-  document.getElementById('m-p-10').value=p.psa10||'';
-  document.getElementById('m-price-saved').style.display='none';
+  const M_p=prices[M_key]||{};
+  document.getElementById('M_p-M_raw').value=M_p.M_raw||'';
+  document.getElementById('M_p-9').value=M_p.M_psa9||'';
+  document.getElementById('M_p-10').value=M_p.M_psa10||'';
+  document.getElementById('price-saved').style.display='none';
   // Buttons
   M_syncModalBtns();
-  document.getElementById('m-modal').classList.add('open');
+  document.getElementById('ma-modal').classList.add('open');
 }
-function M_closeModal(){document.getElementById('m-modal').classList.remove('open');M_modalSlot=null;}
+function M_closeModal(){document.getElementById('ma-modal').classList.remove('open');M_modalSlot=null;}
 function M_syncModalBtns(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot);
-  const ob=document.getElementById('m-m-own-btn');
-  ob.textContent=M_owned.has(key)?'✓ Remove M_owned':'Mark as M_owned';
-  ob.className='m-btn '+(M_owned.has(key)?'m-btn-unown':'m-btn-own');
-  const wb=document.getElementById('m-m-watch-btn');
-  wb.textContent=M_watched.has(key)?'★ Unwatch':'⭐ Watch';
-  wb.className='m-btn '+(M_watched.has(key)?'m-btn-unwatch':'m-btn-watch');
+  const M_key=M_sk(M_modalSlot);
+  const M_ob=document.getElementById('ma-m-own-btn');
+  M_ob.textContent=M_owned.has(M_key)?'✓ Remove M_owned':'Mark as M_owned';
+  M_ob.className='m-btn '+(M_owned.has(M_key)?'m-btn-unown':'m-btn-own');
+  const M_wb=document.getElementById('ma-m-watch-btn');
+  M_wb.textContent=watched.has(M_key)?'★ Unwatch':'⭐ Watch';
+  M_wb.className='m-btn '+(watched.has(M_key)?'m-btn-unwatch':'m-btn-watch');
 }
 function M_toggleOwnModal(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot),was=M_owned.has(key);
-  was?M_owned.delete(key):M_owned.add(key);M_saveOwned();M_updateProgress();
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el){el.classList.toggle('M_owned',!was);M_syncBadge(el,'M_badge-M_owned','✓',!was);}
+  const M_key=M_sk(M_modalSlot),M_was=M_owned.has(M_key);
+  M_was?M_owned.delete(M_key):M_owned.add(M_key);M_saveOwned();M_updateProgress();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el){M_el.classList.toggle('M_owned',!M_was);M_syncBadge(M_el,'M_badge-M_owned','✓',!M_was);}
   M_syncModalBtns();
 }
 function M_toggleWatchModal(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot),was=M_watched.has(key);
-  was?M_watched.delete(key):M_watched.add(key);M_saveWatched();
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el) M_syncBadge(el,'M_badge-star','⭐',!was);
+  const M_key=M_sk(M_modalSlot),M_was=watched.has(M_key);
+  M_was?watched.delete(M_key):watched.add(M_key);M_saveWatched();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el) M_syncBadge(M_el,'M_badge-star','⭐',!M_was);
   M_syncModalBtns();
 }
 function M_savePriceFromModal(){
   if(!M_modalSlot) return;
-  const key=M_sk(M_modalSlot);
-  const raw=document.getElementById('m-p-raw').value.trim();
-  const psa9=document.getElementById('m-p-9').value.trim();
-  const psa10=document.getElementById('m-p-10').value.trim();
+  const M_key=M_sk(M_modalSlot);
+  const M_raw=document.getElementById('M_p-M_raw').value.trim();
+  const M_psa9=document.getElementById('M_p-9').value.trim();
+  const M_psa10=document.getElementById('M_p-10').value.trim();
   // Normalise — add $ if missing
-  const fmt=v=>{if(!v) return '';v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
-  M_prices[key]={raw:fmt(raw),psa9:fmt(psa9),psa10:fmt(psa10),date:new Date().toISOString().slice(0,10)};
+  const M_fmt=v=>{if(!v) return '';v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
+  prices[M_key]={M_raw:M_fmt(M_raw),M_psa9:M_fmt(M_psa9),M_psa10:M_fmt(M_psa10),date:new Date().toISOString().slice(0,10)};
   M_savePricesStore();
   // Update fields with formatted values
-  document.getElementById('m-p-raw').value=M_prices[key].raw;
-  document.getElementById('m-p-9').value=M_prices[key].psa9;
-  document.getElementById('m-p-10').value=M_prices[key].psa10;
+  document.getElementById('M_p-M_raw').value=prices[M_key].M_raw;
+  document.getElementById('M_p-9').value=prices[M_key].M_psa9;
+  document.getElementById('M_p-10').value=prices[M_key].M_psa10;
   // Update binder slot M_badge
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el){
-    let b=el.querySelector('.M_badge-price');
-    if(M_prices[key].raw){
-      if(!b){b=M_badge('M_badge-price',M_prices[key].raw);el.appendChild(b);}
-      else b.textContent=M_prices[key].raw;
-    } else if(b) b.remove();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el){
+    let M_b=M_el.querySelector('.M_badge-price');
+    if(prices[M_key].M_raw){
+      if(!M_b){M_b=M_badge('M_badge-price',prices[M_key].M_raw);M_el.appendChild(M_b);}
+      else M_b.textContent=prices[M_key].M_raw;
+    } else if(M_b) M_b.remove();
   }
-  const sv=document.getElementById('m-price-saved');sv.style.display='block';
-  setTimeout(()=>sv.style.display='none',1800);
+  const M_sv=document.getElementById('price-saved');M_sv.style.display='block';
+  setTimeout(()=>M_sv.style.display='none',1800);
 }
 
 // ─────────────────────────── watchlist ──────────────────────────────────
 function M_openWatchlist(){
   M_renderWatchlist();
-  document.getElementById('m-wl-modal').classList.add('open');
+  document.getElementById('ma-wl-modal').classList.add('open');
 }
 function M_renderWatchlist(){
-  const body=document.getElementById('m-wl-body');
-  document.getElementById('m-wl-sub').textContent=`${M_watched.size} card${M_watched.size!==1?'s':''} M_watched`;
-  if(!M_watched.size){
-    body.innerHTML='<div class="wl-empty">No cards M_watched yet.<span>Right-click any card → ⭐ Watch</span></div>';return;
+  const M_body=document.getElementById('wl-M_body');
+  document.getElementById('ma-wl-sub').textContent=`${watched.size} card${watched.size!==1?'M_s':''} watched`;
+  if(!watched.size){
+    M_body.innerHTML='<M_div class="wl-empty">No cards watched yet.<span>Right-click any card → ⭐ Watch</span></M_div>';return;
   }
-  const slots=M_SLOTS.filter(s=>M_watched.has(M_sk(s)));
-  let html=`<table class="wt"><thead><tr><th>#</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 9</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
-  slots.forEach(s=>{
-    const key=M_sk(s),bc=M_BC[s.v]||M_BC.normal,p=M_prices[key]||{};
-    const fv=v=>v?`<span class="wt-p">${v}</span>`:`<span class="wt-p na">—</span>`;
-    html+=`<tr>
-      <td class="wt-num">${s.num}/193</td>
-      <td class="wt-name" onclick="M_jumpTo('${key}')">${M_NAMES[s.num]||''}</td>
-      <td><span class="wt-M_badge" style="background:${bc.bg};color:${bc.col}">${M_varLabel(s)}</span></td>
-      <td>${fv(p.raw)}</td>
-      <td>${fv(p.psa9)}</td>
-      <td>${fv(p.psa10)}</td>
-      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
-      <td><button class="wt-rm" onclick="M_unwatchRow('${key}',this)">✕</button></td>
+  const M_slots=M_SLOTS.filter(M_s=>watched.has(M_sk(M_s)));
+  let M_html=`<table class="wt"><thead><tr><th>#</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 9</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
+  M_slots.forEach(M_s=>{
+    const M_key=M_sk(M_s),bc=M_BC[M_s.v]||M_BC.normal,M_p=prices[M_key]||{};
+    const M_fv=v=>v?`<span class="wt-M_p">${v}</span>`:`<span class="wt-M_p na">—</span>`;
+    M_html+=`<tr>
+      <td class="wt-M_num">${M_s.M_num}/193</td>
+      <td class="wt-M_name" onclick="M_jumpTo('${M_key}')">${M_NAMES[M_s.M_num]||''}</td>
+      <td><span class="wt-M_badge" style="background:${bc.bg};color:${bc.col}">${M_varLabel(M_s)}</span></td>
+      <td>${M_fv(M_p.M_raw)}</td>
+      <td>${M_fv(M_p.M_psa9)}</td>
+      <td>${M_fv(M_p.M_psa10)}</td>
+      <td style="font-size:10px;color:#282420">${M_p.date||'—'}</td>
+      <td><button class="wt-rm" onclick="M_unwatchRow('${M_key}',this)">✕</button></td>
     </tr>`;
   });
-  html+='</tbody></table>';
-  body.innerHTML=html;
+  M_html+='</tbody></table>';
+  M_body.innerHTML=M_html;
 }
-function M_jumpTo(key){
-  document.getElementById('m-wl-modal').classList.remove('open');
-  const idx=M_SLOTS.findIndex(s=>M_sk(s)===key);
-  if(idx>=0){const cp=Math.floor(idx/9);M_curSpread=cp===0?1:Math.floor((cp-1)/2)+2;M_render();}
+function M_jumpTo(M_key){
+  document.getElementById('ma-wl-modal').classList.remove('open');
+  const M_idx=M_SLOTS.findIndex(M_s=>M_sk(M_s)===M_key);
+  if(M_idx>=0){const M_cp=Math.floor(M_idx/9);M_curSpread=M_cp===0?1:Math.floor((M_cp-1)/2)+2;M_render();}
 }
-function M_unwatchRow(key,btn){
-  M_watched.delete(key);M_saveWatched();
-  const el=document.querySelector(`.slot[data-key="${key}"]`);
-  if(el) M_syncBadge(el,'M_badge-star','⭐',false);
+function M_unwatchRow(M_key,btn){
+  watched.delete(M_key);M_saveWatched();
+  const M_el=document.querySelector(`.slot[data-M_key="${M_key}"]`);
+  if(M_el) M_syncBadge(M_el,'M_badge-star','⭐',false);
   M_renderWatchlist();
 }
 
-// ─────────────────────────── missing list ───────────────────────────────
+// ─────────────────────────── missing M_list ───────────────────────────────
 const M_SDEFS=[
-  {label:'Normal (Non-Holo)',f:s=>s.v==='normal'},
-  {label:'Holo Pokémon',f:s=>s.v==='holo'},
-  {label:'Pokémon ex / Mega ex',f:s=>s.v==='ex'},
-  {label:'Energy Reverse Holos',f:s=>s.v==='erh'},
-  {label:'Ball / R Reverse Holos',f:s=>s.v==='brh'},
-  {label:'Trainer Cards',f:s=>s.v==='trainer'},
-  {label:'AR — Alternate Art',f:s=>s.v==='ar'},
-  {label:'SR — Special Rare',f:s=>s.v==='sr'},
-  {label:'MA — Mega Art',f:s=>s.v==='ma'},
-  {label:'SAR — Special Art Rare',f:s=>s.v==='sar'},
-  {label:'MUR — Mega Ultra Rare',f:s=>s.v==='mur'},
+  {label:'Normal (Non-Holo)',f:M_s=>M_s.v==='normal'},
+  {label:'Holo Pokémon',f:M_s=>M_s.v==='holo'},
+  {label:'Pokémon ex / Mega ex',f:M_s=>M_s.v==='ex'},
+  {label:'Energy Reverse Holos',f:M_s=>M_s.v==='erh'},
+  {label:'Ball / R Reverse Holos',f:M_s=>M_s.v==='brh'},
+  {label:'Trainer Cards',f:M_s=>M_s.v==='trainer'},
+  {label:'AR — Alternate Art',f:M_s=>M_s.v==='ar'},
+  {label:'SR — Special Rare',f:M_s=>M_s.v==='sr'},
+  {label:'MA — Mega Art',f:M_s=>M_s.v==='ma'},
+  {label:'SAR — Special Art Rare',f:M_s=>M_s.v==='sar'},
+  {label:'MUR — Mega Ultra Rare',f:M_s=>M_s.v==='mur'},
 ];
 function M_openMissingList(){
-  const miss=M_SLOTS.filter(s=>!M_owned.has(M_sk(s)));
-  document.getElementById('m-ml-stats').textContent=`${miss.length} missing · ${M_owned.size} M_owned`;
-  const priced=miss.filter(s=>{const p=M_prices[M_sk(s)];return p&&p.raw;});
-  const totEl=document.getElementById('m-ml-total');
-  if(priced.length){
-    const tot=priced.reduce((sum,s)=>{const v=parseFloat((M_prices[M_sk(s)].raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
-    totEl.style.display='block';totEl.textContent=`Estimated ungraded value of ${priced.length} priced missing cards: $${tot.toFixed(2)}`;
-  } else totEl.style.display='none';
-  const body=document.getElementById('m-ml-body');body.innerHTML='';
-  if(!miss.length){body.innerHTML='<div class="ml-empty">🎉 Master set complete!</div>';document.getElementById('m-ml-modal').classList.add('open');return;}
+  const M_miss=M_SLOTS.filter(M_s=>!M_owned.has(M_sk(M_s)));
+  document.getElementById('ma-ml-stats').textContent=`${M_miss.length} missing · ${M_owned.size} M_owned`;
+  const M_priced=M_miss.filter(M_s=>{const M_p=prices[M_sk(M_s)];return M_p&&M_p.M_raw;});
+  const M_totEl=document.getElementById('ma-ml-total');
+  if(M_priced.length){
+    const M_tot=M_priced.reduce((sum,M_s)=>{const v=parseFloat((prices[M_sk(M_s)].M_raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
+    M_totEl.style.display='block';M_totEl.textContent=`Estimated ungraded value of ${M_priced.length} M_priced missing cards: $${M_tot.toFixed(2)}`;
+  } else M_totEl.style.display='none';
+  const M_body=document.getElementById('ml-M_body');M_body.innerHTML='';
+  if(!M_miss.length){M_body.innerHTML='<M_div class="ml-empty">🎉 Master set complete!</M_div>';document.getElementById('ma-ml-modal').classList.add('open');return;}
   M_SDEFS.forEach(sec=>{
-    const items=miss.filter(sec.f);if(!items.length) return;
-    const wrap=document.createElement('div');wrap.className='ml-sec';
-    wrap.innerHTML=`<div class="ml-sec-ttl">${sec.label} — ${items.length}</div>`;
-    const list=document.createElement('div');list.className='ml-items';
-    items.forEach(s=>{
-      const chip=document.createElement('div');chip.className='ml-chip '+s.v;
-      let sfx='';if(s.v==='erh') sfx=' [E-RH]';else if(s.v==='brh') sfx=` [${s.ball} RH]`;
-      const p=M_prices[M_sk(s)];const pt=p&&p.raw?' · '+p.raw:'';
-      chip.textContent=`${s.num}/193 ${M_NAMES[s.num]||''}${sfx}${pt}`;
-      list.appendChild(chip);
+    const M_items=M_miss.filter(sec.f);if(!M_items.length) return;
+    const M_wrap=document.createElement('M_div');M_wrap.className='ml-sec';
+    M_wrap.innerHTML=`<M_div class="ml-sec-ttl">${sec.label} — ${M_items.length}</M_div>`;
+    const M_list=document.createElement('M_div');M_list.className='ml-M_items';
+    M_items.forEach(M_s=>{
+      const M_chip=document.createElement('M_div');M_chip.className='ml-M_chip '+M_s.v;
+      let M_sfx='';if(M_s.v==='erh') M_sfx=' [E-RH]';else if(M_s.v==='brh') M_sfx=` [${M_s.ball} RH]`;
+      const M_p=prices[M_sk(M_s)];const pt=M_p&&M_p.M_raw?' · '+M_p.M_raw:'';
+      M_chip.textContent=`${M_s.M_num}/193 ${M_NAMES[M_s.M_num]||''}${M_sfx}${pt}`;
+      M_list.appendChild(M_chip);
     });
-    wrap.appendChild(list);body.appendChild(wrap);
+    M_wrap.appendChild(M_list);M_body.appendChild(M_wrap);
   });
-  document.getElementById('m-ml-modal').classList.add('open');
+  document.getElementById('ma-ml-modal').classList.add('open');
 }
 function M_copyMissing(){
-  const miss=M_SLOTS.filter(s=>!M_owned.has(M_sk(s)));
-  // Group missing slots by card number, preserving slot order
-  const byNum=new Map();
-  miss.forEach(s=>{
-    if(!byNum.has(s.num)) byNum.set(s.num,[]);
-    byNum.get(s.num).push(s);
+  const M_miss=M_SLOTS.filter(M_s=>!M_owned.has(M_sk(M_s)));
+  // Group missing M_slots by card number, preserving slot order
+  const M_byNum=new Map();
+  M_miss.forEach(M_s=>{
+    if(!M_byNum.has(M_s.M_num)) M_byNum.set(M_s.M_num,[]);
+    M_byNum.get(M_s.M_num).push(M_s);
   });
 
-  let txt=`M2a MEGA Dream ex — Missing Cards (${miss.length} slots)\n`;
-  txt+=`Generated ${new Date().toLocaleDateString()}\n`;
-  txt+=`${'─'.repeat(52)}\n`;
+  let M_txt=`M2a MEGA Dream ex — Missing Cards (${M_miss.length} M_slots)\M_n`;
+  M_txt+=`Generated ${new Date().toLocaleDateString()}\M_n`;
+  M_txt+=`${'─'.repeat(52)}\M_n`;
 
-  byNum.forEach((slots,num)=>{
-    const name=M_NAMES[num]||'';
-    const numStr=String(num).padStart(3,'0')+'/193';
+  M_byNum.forEach((M_slots,M_num)=>{
+    const M_name=M_NAMES[M_num]||'';
+    const M_numStr=String(M_num).padStart(3,'0')+'/193';
     // Variants on this card number that are missing
-    const varParts=slots.map(s=>{
-      if(s.v==='erh') return 'Energy RH';
-      if(s.v==='brh') return (s.ball||'Poké')+' Ball RH';
-      if(s.v==='ar')  return 'AR';
-      if(s.v==='sr')  return 'SR';
-      if(s.v==='ma')  return 'MA';
-      if(s.v==='sar') return 'SAR';
-      if(s.v==='mur') return 'MUR';
-      return s.v==='holo'?'Holo':'Normal';
+    const M_varParts=M_slots.map(M_s=>{
+      if(M_s.v==='erh') return 'Energy RH';
+      if(M_s.v==='brh') return (M_s.ball||'Poké')+' Ball RH';
+      if(M_s.v==='ar')  return 'AR';
+      if(M_s.v==='sr')  return 'SR';
+      if(M_s.v==='ma')  return 'MA';
+      if(M_s.v==='sar') return 'SAR';
+      if(M_s.v==='mur') return 'MUR';
+      return M_s.v==='holo'?'Holo':'Normal';
     });
-    // Price info from first slot that has a price
-    const priceSlot=slots.find(s=>M_prices[M_sk(s)]&&M_prices[M_sk(s)].raw);
-    const p=priceSlot?M_prices[M_sk(priceSlot)]:{};
-    const pricePart=p.raw?`  [${p.raw}${p.psa10?' / PSA10 '+p.psa10:''}]`:'';
+    // Price M_info from first slot that has a price
+    const M_priceSlot=M_slots.find(M_s=>prices[M_sk(M_s)]&&prices[M_sk(M_s)].M_raw);
+    const M_p=M_priceSlot?prices[M_sk(M_priceSlot)]:{};
+    const M_pricePart=M_p.M_raw?`  [${M_p.M_raw}${M_p.M_psa10?' / PSA10 '+M_p.M_psa10:''}]`:'';
 
-    txt+=`${numStr}  ${name}  — ${varParts.join(', ')}${pricePart}\n`;
+    M_txt+=`${M_numStr}  ${M_name}  — ${M_varParts.join(', ')}${M_pricePart}\M_n`;
   });
 
-  txt+=`${'─'.repeat(52)}\n`;
-  txt+=`${byNum.size} cards  ·  ${miss.length} total slots missing\n`;
+  M_txt+=`${'─'.repeat(52)}\M_n`;
+  M_txt+=`${M_byNum.size} cards  ·  ${M_miss.length} total M_slots missing\M_n`;
 
-  // Add total value if any M_prices logged
-  const priced=miss.filter(s=>M_prices[M_sk(s)]&&M_prices[M_sk(s)].raw);
-  if(priced.length){
-    const tot=priced.reduce((sum,s)=>{const v=parseFloat((M_prices[M_sk(s)].raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
-    txt+=`Estimated ungraded value (${priced.length} priced): $${tot.toFixed(2)}\n`;
+  // Add total value if any prices logged
+  const M_priced=M_miss.filter(M_s=>prices[M_sk(M_s)]&&prices[M_sk(M_s)].M_raw);
+  if(M_priced.length){
+    const M_tot=M_priced.reduce((sum,M_s)=>{const v=parseFloat((prices[M_sk(M_s)].M_raw||'0').replace(/[^0-9.]/g,''));return sum+(isNaN(v)?0:v);},0);
+    M_txt+=`Estimated ungraded value (${M_priced.length} M_priced): $${M_tot.toFixed(2)}\M_n`;
   }
 
-  navigator.clipboard.writeText(txt).then(()=>{
-    const b=document.querySelector('#m-ml-modal .btn-purple');const o=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=o,1500);
+  navigator.clipboard.writeText(M_txt).then(()=>{
+    const M_b=document.querySelector('#ml-modal .btn-purple');const o=M_b.textContent;M_b.textContent='Copied!';setTimeout(()=>M_b.textContent=o,1500);
   });
 }
 function M_confirmClear(){if(confirm('Clear all ownership data?')){M_owned.clear();M_saveOwned();M_render();M_updateProgress();}}
 
 // ─────────────────────────── init ───────────────────────────────────────
-M_load();M_updateProgress();M_render();
 
-
-// ── Penny JS ──────────────────────────────────────────────────────────────
-
+// ── Penny Binder JS ───────────────────────────────────────────────────────
 // ── Card data ─────────────────────────────────────────────────────────────
-// Each card: id, set, setName, num, rarity, lang, illus, pcSlug
+// Each P_card: id, set, setName, num, rarity, lang, illus, pcSlug
 const P_CARDS = [
   // ── Japanese ──────────────────────────────────────────────────────────
   {
     id:'SV1S-077', set:'SV1S', setName:'Scarlet ex (SV1s)', num:'077/078',
     rarity:'Regular', lang:'JP', illus:'yuu',
     cls:'r-jp', bc:{bg:'#181410',col:'#666'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-77'
   },
   {
     id:'SV1S-100', set:'SV1S', setName:'Scarlet ex (SV1s)', num:'100/078',
     rarity:'SR (Full Art)', lang:'JP', illus:'yuu',
     cls:'sr-jp', bc:{bg:'#2a1e04',col:'#c89a3a'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-100'
   },
   {
     id:'SV1S-105', set:'SV1S', setName:'Scarlet ex (SV1s)', num:'105/078',
     rarity:'SAR', lang:'JP', illus:'OKACHEKE',
     cls:'sar-jp', bc:{bg:'#1e1040',col:'#9870e0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-105'
   },
   {
     id:'SVP-057', set:'SVP', setName:'SV-P Promo', num:'057/SV-P',
     rarity:'Promo (Mirror Holo)', lang:'JP', illus:'yuu',
     cls:'promo-jp', bc:{bg:'#0a2a28',col:'#40c0a0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-p-promos/penny-57'
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
+    pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-P_p-promos/penny-57'
   },
   {
     id:'SV4A-182', set:'SV4A', setName:'Shiny Treasure ex (SV4a)', num:'182/190',
     rarity:'Regular (reprint)', lang:'JP', illus:'yuu',
     cls:'r-jp', bc:{bg:'#181410',col:'#666'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_182_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_182_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182'
   },
   {
     id:'SV4A-354', set:'SV4A', setName:'Shiny Treasure ex (SV4a)', num:'354/190',
     rarity:'SAR', lang:'JP', illus:'aspara',
     cls:'sar-jp', bc:{bg:'#1e1040',col:'#9870e0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_354_R_JP_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4A/SV4A_354_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-354'
   },
   // ── English ────────────────────────────────────────────────────────────
@@ -1704,248 +1906,253 @@ const P_CARDS = [
     id:'SVI-183', set:'SVI', setName:'Scarlet & Violet (EN)', num:'183/198',
     rarity:'Regular', lang:'EN', illus:'yuu',
     cls:'r-en', bc:{bg:'#181428',col:'#6070c0'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_183_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_183_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183'
   },
   {
     id:'SVI-239', set:'SVI', setName:'Scarlet & Violet (EN)', num:'239/198',
     rarity:'Ultra Rare (Full Art)', lang:'EN', illus:'yuu',
     cls:'ur-en', bc:{bg:'#102030',col:'#50a0d8'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_239_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_239_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-239'
   },
   {
     id:'SVI-252', set:'SVI', setName:'Scarlet & Violet (EN)', num:'252/198',
     rarity:'Special Illustration Rare', lang:'EN', illus:'OKACHEKE',
     cls:'sir-en', bc:{bg:'#200838',col:'#b070d8'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_252_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVI/SVI_252_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-252'
   },
   {
     id:'PAF-239', set:'PAF', setName:'Paldean Fates (EN)', num:'239/091',
     rarity:'Special Illustration Rare', lang:'EN', illus:'aspara',
     cls:'sir-en', bc:{bg:'#200838',col:'#b070d8'},
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/PAF/PAF_239_EN_SM.png',
+    P_img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/PAF/PAF_239_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239'
   },
 ];
 const P_TOTAL = P_CARDS.length; // 10
 
 // ── Storage ───────────────────────────────────────────────────────────────
-let P_owned=new Set(), P_watched=new Set(), P_prices={};
+let P_owned=new Set(), watched=new Set(), prices={};
 function P_load(){
-  try{P_owned=new Set(JSON.parse(localStorage.getItem('penny_owned_v1')||'[]'));}catch(e){}
-  try{P_watched=new Set(JSON.parse(localStorage.getItem('penny_watched_v1')||'[]'));}catch(e){}
-  try{P_prices=JSON.parse(localStorage.getItem('penny_prices_v1')||'{}');}catch(e){}
+  try{P_owned=new Set(JSON.parse(localStorage.getItem('penny_owned_v1')||'[]'));}catch(P_e){}
+  try{watched=new Set(JSON.parse(localStorage.getItem('penny_watched_v1')||'[]'));}catch(P_e){}
+  try{prices=JSON.parse(localStorage.getItem('penny_prices_v1')||'{}');}catch(P_e){}
 }
 function P_saveOwned(){localStorage.setItem('penny_owned_v1',JSON.stringify([...P_owned]));}
-function P_saveWatched(){localStorage.setItem('penny_watched_v1',JSON.stringify([...P_watched]));}
-function P_savePricesStore(){localStorage.setItem('penny_prices_v1',JSON.stringify(P_prices));}
+function P_saveWatched(){localStorage.setItem('penny_watched_v1',JSON.stringify([...watched]));}
+function P_savePricesStore(){localStorage.setItem('penny_prices_v1',JSON.stringify(prices));}
 
 // ── Helpers ───────────────────────────────────────────────────────────────
-function P_badge(cls,txt){const b=document.createElement('div');b.className=cls;b.textContent=txt;return b;}
-function P_syncBadge(div,cls,txt,show){
-  let b=div.querySelector('.'+cls);
-  if(show&&!b){b=P_badge(cls,txt);div.appendChild(b);}
-  else if(!show&&b) b.remove();
+function P_badge(cls,txt){const P_b=document.createElement('P_div');P_b.className=cls;P_b.textContent=txt;return P_b;}
+function P_syncBadge(P_div,cls,txt,show){
+  let P_b=P_div.querySelector('.'+cls);
+  if(show&&!P_b){P_b=P_badge(cls,txt);P_div.appendChild(P_b);}
+  else if(!show&&P_b) P_b.remove();
 }
 function P_updateProgress(){
-  const n=P_owned.size,p=Math.round(n/P_TOTAL*100);
-  document.getElementById('p-prog-bar').style.width=p+'%';
-  document.getElementById('p-prog-text').textContent=`${n} / ${P_TOTAL} P_owned (${p}%)`;
+  const P_n=P_owned.size,P_p=Math.round(P_n/P_TOTAL*100);
+  document.getElementById('py-prog-bar').style.width=P_p+'%';
+  document.getElementById('py-prog-text').textContent=`${P_n} / ${P_TOTAL} P_owned (${P_p}%)`;
 }
 
 // ── Slot element ─────────────────────────────────────────────────────────
-function P_makeSlot(card){
-  const div=document.createElement('div');
-  div.className='slot '+card.cls+(P_owned.has(card.id)?' P_owned':'');
-  div.dataset.id=card.id;
+function P_makeSlot(P_card){
+  const P_div=document.createElement('P_div');
+  P_div.className='slot '+P_card.cls+(P_owned.has(P_card.id)?' P_owned':'');
+  P_div.dataset.id=P_card.id;
 
-  const img=document.createElement('img');img.className='cimg';img.src=card.img;img.alt=card.num;img.loading='lazy';
-  const ph=document.createElement('div');ph.className='cph';
-  ph.innerHTML=`<div class="ph-set" style="color:#383430">${card.setName}</div><div class="ph-num">${card.num}</div><div class="ph-set">${card.rarity}</div>`;
-  img.onerror=()=>{img.style.display='none';ph.style.display='flex';};
-  div.appendChild(img);div.appendChild(ph);
+  const P_img=document.createElement('P_img');P_img.className='cimg';P_img.src=P_card.P_img;P_img.alt=P_card.num;P_img.loading='lazy';
+  const P_ph=document.createElement('P_div');P_ph.className='cph';
+  P_ph.innerHTML=`<P_div class="P_ph-set" style="color:#383430">${P_card.setName}</P_div><P_div class="P_ph-num">${P_card.num}</P_div><P_div class="P_ph-set">${P_card.rarity}</P_div>`;
+  P_img.onerror=()=>{P_img.style.display='none';P_ph.style.display='flex';};
+  P_div.appendChild(P_img);P_div.appendChild(P_ph);
 
-  const lbl=document.createElement('div');lbl.className='clbl';
-  lbl.innerHTML=`<div class="cset">${card.setName}</div><div class="cnm">${card.num} · ${card.lang}</div><span class="vbg" style="background:${card.bc.bg};color:${card.bc.col}">${card.rarity}</span>`;
-  div.appendChild(lbl);
+  const P_lbl=document.createElement('P_div');P_lbl.className='clbl';
+  P_lbl.innerHTML=`<P_div class="cset">${P_card.setName}</P_div><P_div class="cnm">${P_card.num} · ${P_card.lang}</P_div><span class="vbg" style="background:${P_card.bc.bg};color:${P_card.bc.col}">${P_card.rarity}</span>`;
+  P_div.appendChild(P_lbl);
 
-  if(P_owned.has(card.id)) div.appendChild(P_badge('P_badge-P_owned','✓'));
-  if(P_watched.has(card.id)) div.appendChild(P_badge('P_badge-star','⭐'));
-  const p=P_prices[card.id];
-  if(p&&p.raw){const b=P_badge('P_badge-price',p.raw);div.appendChild(b);}
+  if(P_owned.has(P_card.id)) P_div.appendChild(P_badge('P_badge-P_owned','✓'));
+  if(watched.has(P_card.id)) P_div.appendChild(P_badge('P_badge-star','⭐'));
+  const P_p=prices[P_card.id];
+  if(P_p&&P_p.P_raw){const P_b=P_badge('P_badge-price',P_p.P_raw);P_div.appendChild(P_b);}
 
-  div.addEventListener('click',e=>{
-    e.preventDefault();
-    const was=P_owned.has(card.id);
-    was?P_owned.delete(card.id):P_owned.add(card.id);
+  P_div.addEventListener('click',P_e=>{
+    P_e.preventDefault();
+    const P_was=P_owned.has(P_card.id);
+    P_was?P_owned.delete(P_card.id):P_owned.add(P_card.id);
     P_saveOwned();P_updateProgress();
-    div.classList.toggle('P_owned',!was);
-    P_syncBadge(div,'P_badge-P_owned','✓',!was);
+    P_div.classList.toggle('P_owned',!P_was);
+    P_syncBadge(P_div,'P_badge-P_owned','✓',!P_was);
   });
-  div.addEventListener('contextmenu',e=>{e.preventDefault();P_openModal(card);});
-  return div;
+  P_div.addEventListener('contextmenu',P_e=>{P_e.preventDefault();P_openModal(P_card);});
+  return P_div;
 }
 
 // ── Render spread ─────────────────────────────────────────────────────────
 function P_render(){
-  const lp=document.getElementById('p-lp'), rp=document.getElementById('p-rp');
-  lp.innerHTML='';rp.innerHTML='';
+  const P_lp=document.getElementById('P_lp'), rp=document.getElementById('py-rp');
+  P_lp.innerHTML='';rp.innerHTML='';
 
   // Cover page
-  const cover=document.createElement('div');cover.className='bpage cover-pg';
-  cover.innerHTML=`
-    <div class="cover-ttl">ボタン<br><span style="font-size:16px;color:#888;font-weight:400">Penny</span></div>
-    <div class="cover-char" style="font-size:11px;color:#555">Pokémon Scarlet &amp; Violet · Paldea</div>
-    <div class="cover-box">
+  const P_cover=document.createElement('P_div');P_cover.className='bpage P_cover-pg';
+  P_cover.innerHTML=`
+    <P_div class="P_cover-ttl">ボタン<br><span style="font-size:16px;color:#888;font-weight:400">Penny</span></P_div>
+    <P_div class="P_cover-char" style="font-size:11px;color:#555">Pokémon Scarlet &amp; Violet · Paldea</P_div>
+    <P_div class="P_cover-box">
       🇯🇵  Scarlet ex (SV1s) — 3 prints<br>
       🇯🇵  SV-P Promo — 1 print<br>
       🇯🇵  Shiny Treasure ex (SV4a) — 2 prints<br>
       🇬🇧  Scarlet &amp; Violet — 3 prints<br>
       🇬🇧  Paldean Fates — 1 print<br>
-      <span style="color:#282420;font-size:10px">── 10 cards total ──</span>
-    </div>
-    <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.6">
+      <span style="color:#282420;font-size:10px">── 10 P_cards total ──</span>
+    </P_div>
+    <P_div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.6">
       Left-click = toggle P_owned<br>
       Right-click = price entry &amp; details
-    </div>`;
-  lp.appendChild(cover);
+    </P_div>`;
+  P_lp.appendChild(P_cover);
 
-  // Card page — all 10 cards in one 3×3+1 grid
-  const cardPage=document.createElement('div');cardPage.className='bpage';
-  cardPage.style.background='#111009';
-  const lbl=document.createElement('div');lbl.className='pg-lbl';lbl.textContent='— all prints —';cardPage.appendChild(lbl);
-  const grid=document.createElement('div');grid.className='grid';
-  P_CARDS.forEach(c=>grid.appendChild(P_makeSlot(c)));
+  // Card page — all 10 P_cards in one 3×3+1 P_grid
+  const P_cardPage=document.createElement('P_div');P_cardPage.className='bpage';
+  P_cardPage.style.background='#111009';
+  const P_lbl=document.createElement('P_div');P_lbl.className='pg-P_lbl';P_lbl.textContent='— all prints —';P_cardPage.appendChild(P_lbl);
+  const P_grid=document.createElement('P_div');P_grid.className='P_grid';
+  P_CARDS.forEach(c=>P_grid.appendChild(P_makeSlot(c)));
   // One empty filler slot
-  const e=document.createElement('div');e.className='slot empty';e.innerHTML='<span style="color:#141210">·</span>';grid.appendChild(e);
-  cardPage.appendChild(grid);
-  rp.appendChild(cardPage);
+  const P_e=document.createElement('P_div');P_e.className='slot empty';P_e.innerHTML='<span style="color:#141210">·</span>';P_grid.appendChild(P_e);
+  P_cardPage.appendChild(P_grid);
+  rp.appendChild(P_cardPage);
 }
 
 // ── Modal ─────────────────────────────────────────────────────────────────
 let P_modalCard=null;
-function P_openModal(card){
-  P_modalCard=card;
-  const mi=document.getElementById('p-mimg'), mph=document.getElementById('p-mph');
-  mi.style.display='block';mph.style.display='none';
-  mi.src=card.img;
-  mi.onerror=()=>{
-    mi.style.display='none';mph.style.display='flex';
-    mph.innerHTML=`<div style="color:#383430;font-size:11px;text-align:center">${card.setName}<br>${card.num}<br>${card.rarity}</div>`;
+function P_openModal(P_card){
+  P_modalCard=P_card;
+  const P_mi=document.getElementById('py-mimg'), mph=document.getElementById('py-mph');
+  P_mi.style.display='block';mph.style.display='none';
+  P_mi.src=P_card.P_img;
+  P_mi.onerror=()=>{
+    P_mi.style.display='none';mph.style.display='flex';
+    mph.innerHTML=`<P_div style="color:#383430;font-size:11px;text-align:center">${P_card.setName}<br>${P_card.num}<br>${P_card.rarity}</P_div>`;
   };
-  document.getElementById('p-mname').textContent='Penny';
-  document.getElementById('p-mnum').textContent=`${card.num} · ${card.setName}`;
-  document.getElementById('p-millus').textContent=`Illus. ${card.illus} · ${card.lang==='JP'?'🇯🇵 Japanese':'🇬🇧 English'}`;
-  const mb=document.getElementById('p-mbadge');mb.textContent=card.rarity;mb.style.background=card.bc.bg;mb.style.color=card.bc.col;
-  document.getElementById('p-pc-link').href=card.pc;
-  const p=P_prices[card.id]||{};
-  document.getElementById('p-p-raw').value=p.raw||'';
-  document.getElementById('p-p-9').value=p.psa9||'';
-  document.getElementById('p-p-10').value=p.psa10||'';
-  document.getElementById('p-saved-flash').style.display='none';
+  document.getElementById('py-mname').textContent='Penny';
+  document.getElementById('py-mnum').textContent=`${P_card.num} · ${P_card.setName}`;
+  document.getElementById('py-millus').textContent=`Illus. ${P_card.illus} · ${P_card.lang==='JP'?'🇯🇵 Japanese':'🇬🇧 English'}`;
+  const P_mb=document.getElementById('py-mbadge');P_mb.textContent=P_card.rarity;P_mb.style.background=P_card.bc.bg;P_mb.style.color=P_card.bc.col;
+  document.getElementById('py-pc-link').href=P_card.pc;
+  const P_p=prices[P_card.id]||{};
+  document.getElementById('P_p-P_raw').value=P_p.P_raw||'';
+  document.getElementById('P_p-9').value=P_p.P_psa9||'';
+  document.getElementById('P_p-10').value=P_p.P_psa10||'';
+  document.getElementById('py-saved-flash').style.display='none';
   P_syncModalBtns();
-  document.getElementById('p-modal').classList.add('open');
+  document.getElementById('py-modal').classList.add('open');
 }
-function P_closeModal(){document.getElementById('p-modal').classList.remove('open');P_modalCard=null;}
+function P_closeModal(){document.getElementById('py-modal').classList.remove('open');P_modalCard=null;}
 function P_syncModalBtns(){
   if(!P_modalCard) return;
-  const ob=document.getElementById('p-m-own-btn');
-  ob.textContent=P_owned.has(P_modalCard.id)?'✓ Remove P_owned':'Mark as P_owned';
-  ob.className='m-btn '+(P_owned.has(P_modalCard.id)?'m-btn-unown':'m-btn-own');
-  const wb=document.getElementById('p-m-watch-btn');
-  wb.textContent=P_watched.has(P_modalCard.id)?'★ Unwatch':'⭐ Watch';
-  wb.className='m-btn '+(P_watched.has(P_modalCard.id)?'m-btn-unwatch':'m-btn-watch');
+  const P_ob=document.getElementById('py-m-own-btn');
+  P_ob.textContent=P_owned.has(P_modalCard.id)?'✓ Remove P_owned':'Mark as P_owned';
+  P_ob.className='m-btn '+(P_owned.has(P_modalCard.id)?'m-btn-unown':'m-btn-own');
+  const P_wb=document.getElementById('py-m-watch-btn');
+  P_wb.textContent=watched.has(P_modalCard.id)?'★ Unwatch':'⭐ Watch';
+  P_wb.className='m-btn '+(watched.has(P_modalCard.id)?'m-btn-unwatch':'m-btn-watch');
 }
 function P_toggleOwn(){
   if(!P_modalCard) return;
-  const was=P_owned.has(P_modalCard.id);
-  was?P_owned.delete(P_modalCard.id):P_owned.add(P_modalCard.id);
+  const P_was=P_owned.has(P_modalCard.id);
+  P_was?P_owned.delete(P_modalCard.id):P_owned.add(P_modalCard.id);
   P_saveOwned();P_updateProgress();
-  const el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
-  if(el){el.classList.toggle('P_owned',!was);P_syncBadge(el,'P_badge-P_owned','✓',!was);}
+  const P_el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
+  if(P_el){P_el.classList.toggle('P_owned',!P_was);P_syncBadge(P_el,'P_badge-P_owned','✓',!P_was);}
   P_syncModalBtns();
 }
 function P_toggleWatch(){
   if(!P_modalCard) return;
-  const was=P_watched.has(P_modalCard.id);
-  was?P_watched.delete(P_modalCard.id):P_watched.add(P_modalCard.id);
+  const P_was=watched.has(P_modalCard.id);
+  P_was?watched.delete(P_modalCard.id):watched.add(P_modalCard.id);
   P_saveWatched();
-  const el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
-  if(el) P_syncBadge(el,'P_badge-star','⭐',!was);
+  const P_el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
+  if(P_el) P_syncBadge(P_el,'P_badge-star','⭐',!P_was);
   P_syncModalBtns();
 }
 function P_savePrice(){
   if(!P_modalCard) return;
-  const fmt=v=>{v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
-  const raw=fmt(document.getElementById('p-p-raw').value);
-  const psa9=fmt(document.getElementById('p-p-9').value);
-  const psa10=fmt(document.getElementById('p-p-10').value);
-  P_prices[P_modalCard.id]={raw,psa9,psa10,date:new Date().toISOString().slice(0,10)};
+  const P_fmt=v=>{v=v.replace(/[^0-9.]/g,'');return v?'$'+parseFloat(v).toFixed(2):'';};
+  const P_raw=P_fmt(document.getElementById('P_p-P_raw').value);
+  const P_psa9=P_fmt(document.getElementById('P_p-9').value);
+  const P_psa10=P_fmt(document.getElementById('P_p-10').value);
+  prices[P_modalCard.id]={P_raw,P_psa9,P_psa10,date:new Date().toISOString().slice(0,10)};
   P_savePricesStore();
-  document.getElementById('p-p-raw').value=raw;
-  document.getElementById('p-p-9').value=psa9;
-  document.getElementById('p-p-10').value=psa10;
-  const el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
-  if(el){
-    let b=el.querySelector('.P_badge-price');
-    if(raw){if(!b){b=P_badge('P_badge-price',raw);el.appendChild(b);}else b.textContent=raw;}
-    else if(b) b.remove();
+  document.getElementById('P_p-P_raw').value=P_raw;
+  document.getElementById('P_p-9').value=P_psa9;
+  document.getElementById('P_p-10').value=P_psa10;
+  const P_el=document.querySelector(`.slot[data-id="${P_modalCard.id}"]`);
+  if(P_el){
+    let P_b=P_el.querySelector('.P_badge-price');
+    if(P_raw){if(!P_b){P_b=P_badge('P_badge-price',P_raw);P_el.appendChild(P_b);}else P_b.textContent=P_raw;}
+    else if(P_b) P_b.remove();
   }
-  const sf=document.getElementById('p-saved-flash');sf.style.display='block';
-  setTimeout(()=>sf.style.display='none',1800);
+  const P_sf=document.getElementById('py-saved-flash');P_sf.style.display='block';
+  setTimeout(()=>P_sf.style.display='none',1800);
 }
 
 // ── Watchlist ─────────────────────────────────────────────────────────────
 function P_openWatchlist(){
-  document.getElementById('p-wl-sub').textContent=`${P_watched.size} card${P_watched.size!==1?'s':''} P_watched`;
-  const body=document.getElementById('p-wl-body');
-  if(!P_watched.size){
-    body.innerHTML='<div class="wl-empty">No cards P_watched yet.<span>Right-click any card → ⭐ Watch</span></div>';
-    document.getElementById('p-wl-modal').classList.add('open');return;
+  document.getElementById('py-wl-sub').textContent=`${watched.size} P_card${watched.size!==1?'s':''} watched`;
+  const P_body=document.getElementById('wl-P_body');
+  if(!watched.size){
+    P_body.innerHTML='<P_div class="wl-empty">No P_cards watched yet.<span>Right-click any P_card → ⭐ Watch</span></P_div>';
+    document.getElementById('py-wl-modal').classList.add('open');return;
   }
-  const cards=P_CARDS.filter(c=>P_watched.has(c.id));
-  let html=`<table class="wt"><thead><tr><th>#</th><th>Set</th><th>Print</th><th>Lang</th><th>Illustrator</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
-  cards.forEach(c=>{
-    const p=P_prices[c.id]||{};
-    const fv=v=>v?`<span class="wt-p">${v}</span>`:`<span class="wt-p na">—</span>`;
-    html+=`<tr>
+  const P_cards=P_CARDS.filter(c=>watched.has(c.id));
+  let P_html=`<table class="wt"><thead><tr><th>#</th><th>Set</th><th>Print</th><th>Lang</th><th>Illustrator</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
+  P_cards.forEach(c=>{
+    const P_p=prices[c.id]||{};
+    const P_fv=v=>v?`<span class="wt-P_p">${v}</span>`:`<span class="wt-P_p na">—</span>`;
+    P_html+=`<tr>
       <td class="wt-num">${c.num}</td>
       <td class="wt-name" onclick="P_jumpTo('${c.id}')">${c.setName}</td>
       <td><span class="wt-P_badge" style="background:${c.bc.bg};color:${c.bc.col}">${c.rarity}</span></td>
       <td style="font-size:11px;color:#555">${c.lang==='JP'?'🇯🇵':'🇬🇧'}</td>
       <td style="font-size:11px;color:#444">${c.illus}</td>
-      <td>${fv(p.raw)}</td>
-      <td>${fv(p.psa10)}</td>
-      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
+      <td>${P_fv(P_p.P_raw)}</td>
+      <td>${P_fv(P_p.P_psa10)}</td>
+      <td style="font-size:10px;color:#282420">${P_p.date||'—'}</td>
       <td><button class="wt-rm" onclick="P_unwatchRow('${c.id}',this)">✕</button></td>
     </tr>`;
   });
-  html+='</tbody></table>';
-  body.innerHTML=html;
-  document.getElementById('p-wl-modal').classList.add('open');
+  P_html+='</tbody></table>';
+  P_body.innerHTML=P_html;
+  document.getElementById('py-wl-modal').classList.add('open');
 }
 function P_jumpTo(id){
-  document.getElementById('p-wl-modal').classList.remove('open');
-  const card=P_CARDS.find(c=>c.id===id);
-  if(card){P_openModal(card);}
+  document.getElementById('py-wl-modal').classList.remove('open');
+  const P_card=P_CARDS.find(c=>c.id===id);
+  if(P_card){P_openModal(P_card);}
 }
 function P_unwatchRow(id){
-  P_watched.delete(id);P_saveWatched();
-  const el=document.querySelector(`.slot[data-id="${id}"]`);
-  if(el) P_syncBadge(el,'P_badge-star','⭐',false);
+  watched.delete(id);P_saveWatched();
+  const P_el=document.querySelector(`.slot[data-id="${id}"]`);
+  if(P_el) P_syncBadge(P_el,'P_badge-star','⭐',false);
   P_openWatchlist();
 }
 function P_confirmClear(){if(confirm('Clear all Penny binder data?')){P_owned.clear();P_saveOwned();P_render();P_updateProgress();}}
 
 // ── Init ──────────────────────────────────────────────────────────────────
-P_load();P_updateProgress();P_render();
 
+// ── Boot ──────────────────────────────────────────────────────────────────
+// Pre-load both binders' data so home screen progress bars work immediately
+M_load(); P_load();
+refreshHomeProgress();
 
-// ── Init ──────────────────────────────────────────────────────────────────
-M_load(); M_updateProgress(); M_render();
-P_load(); P_updateProgress(); P_render();
+// Re-expose updateProgress to also refresh home screen
+const _M_orig = M_updateProgress;
+M_updateProgress = function() { _M_orig(); refreshHomeProgress(); };
+const _P_orig = P_updateProgress;
+P_updateProgress = function() { _P_orig(); refreshHomeProgress(); };
 </script>
 </body>
 </html>
