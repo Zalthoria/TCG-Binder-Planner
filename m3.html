@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TCG Binders">
-<title id="page-title">Penny (ボタン) — All Prints</title>
+<title id="page-title">M3 Nihil Zero Master Set</title>
 <script src="gist-sync.js"></script>
 <style>
 /* ── Reset & base ─────────────────────────────────────────────────────────── */
@@ -314,99 +314,167 @@ table.wt tr:hover td{background:#111}
 // ════════════════════════════════════════════════════════════════════════════
 
 const BINDER = {
-  title:    'Penny (ボタン) — All Prints',
-  subtitle: '10 cards · Sorted JP → EN by artwork',
-  navTitle: 'Penny — All Prints · 10 cards',
-  lsOwned:  'penny_owned_v1',
-  lsWatched:'penny_watched_v1',
-  lsPrices: 'penny_prices_v1',
+  title:    'M3 Nihil Zero — Master Set',
+  subtitle: '117 cards · 80 main + 37 secret · Master Set',
+  navTitle: 'M3 Nihil Zero · 117 cards',
+  lsOwned:  'm3_nihil_zero_owned_v1',
+  lsWatched:'m3_nihil_zero_watched_v1',
+  lsPrices: 'm3_nihil_zero_prices_v1',
   legend: [
-    { label: 'JP Regular',    color: '#aaa' },
-    { label: 'JP SR (FA)',     color: '#c89a3a' },
-    { label: 'JP SAR',        color: '#9870e0' },
-    { label: 'JP Promo',      color: '#40c0a0' },
-    { label: 'EN Regular',    color: '#6070c0' },
-    { label: 'EN Ultra Rare', color: '#50a0d8' },
-    { label: 'EN SIR',        color: '#b070d8' },
+    { label: 'Main Set',    color: '#666'    },
+    { label: 'Secret Rare', color: '#c89a3a' },
+    { label: 'MUR',         color: '#ff9940' },
   ],
 };
 
 const BC = {
-  'r-jp':    { bg: '#181410', col: '#aaa' },
-  'sr-jp':   { bg: '#2a1e04', col: '#c89a3a' },
-  'sar-jp':  { bg: '#1e1040', col: '#9870e0' },
-  'promo-jp':{ bg: '#0a2a28', col: '#40c0a0' },
-  'r-en':    { bg: '#181428', col: '#6070c0' },
-  'ur-en':   { bg: '#102030', col: '#50a0d8' },
-  'sir-en':  { bg: '#200838', col: '#b070d8' },
+  'main':   { bg: '#181410', col: '#666'    },
+  'secret': { bg: '#2a2010', col: '#c89a3a' },
+  'mur':    { bg: '#3a2000', col: '#ff9940' },
 };
 const BC_DEFAULT = { bg: '#181410', col: '#666' };
 
 const SLOTS = [
-  // ── Group 1: yuu Regular ─────────────────────────────────────────────────
-  { id:'SV1S-077', name:'Penny', set:'Scarlet ex', v:'r-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-77' },
-  { id:'SVI-183',  name:'Penny', set:'Scarlet & Violet', v:'r-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183' },
-  // ── Group 2: yuu Full Art ─────────────────────────────────────────────────
-  { id:'SV1S-100', name:'Penny', set:'Scarlet ex', v:'sr-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-100' },
-  { id:'SVI-239',  name:'Penny', set:'Scarlet & Violet', v:'ur-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_239_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-239' },
-  // ── Group 3: OKACHEKE SAR / SIR ──────────────────────────────────────────
-  { id:'SV1S-105', name:'Penny', set:'Scarlet ex', v:'sar-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-105' },
-  { id:'SVI-252',  name:'Penny', set:'Scarlet & Violet', v:'sir-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_252_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-252' },
-  // ── Group 4: yuu Promo (JP only) ─────────────────────────────────────────
-  { id:'SVP-057',  name:'Penny', set:'SV-P Promo', v:'promo-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-p-promos/penny-57' },
-  // ── Group 5: yuu Regular reprint (JP only) ───────────────────────────────
-  { id:'SV4a-182', name:'Penny', set:'Shiny Treasure ex', v:'r-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_182_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182' },
-  // ── Group 6: aspara SAR / SIR ────────────────────────────────────────────
-  { id:'SV4a-354', name:'Penny', set:'Shiny Treasure ex', v:'sar-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_354_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-354' },
-  { id:'PAF-239',  name:'Penny', set:'Paldean Fates', v:'sir-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_239_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239' },
+  {id:'M3-001',name:'M3 #001',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_1_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-1'},
+  {id:'M3-002',name:'M3 #002',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_2_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-2'},
+  {id:'M3-003',name:'M3 #003',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_3_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-3'},
+  {id:'M3-004',name:'M3 #004',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_4_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-4'},
+  {id:'M3-005',name:'M3 #005',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_5_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-5'},
+  {id:'M3-006',name:'M3 #006',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_6_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-6'},
+  {id:'M3-007',name:'M3 #007',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_7_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-7'},
+  {id:'M3-008',name:'M3 #008',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_8_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-8'},
+  {id:'M3-009',name:'M3 #009',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_9_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-9'},
+  {id:'M3-010',name:'M3 #010',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_10_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-10'},
+  {id:'M3-011',name:'M3 #011',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_11_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-11'},
+  {id:'M3-012',name:'M3 #012',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_12_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-12'},
+  {id:'M3-013',name:'M3 #013',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_13_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-13'},
+  {id:'M3-014',name:'M3 #014',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_14_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-14'},
+  {id:'M3-015',name:'M3 #015',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_15_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-15'},
+  {id:'M3-016',name:'M3 #016',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_16_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-16'},
+  {id:'M3-017',name:'M3 #017',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_17_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-17'},
+  {id:'M3-018',name:'M3 #018',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_18_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-18'},
+  {id:'M3-019',name:'M3 #019',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_19_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-19'},
+  {id:'M3-020',name:'M3 #020',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_20_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-20'},
+  {id:'M3-021',name:'M3 #021',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_21_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-21'},
+  {id:'M3-022',name:'M3 #022',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_22_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-22'},
+  {id:'M3-023',name:'M3 #023',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_23_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-23'},
+  {id:'M3-024',name:'M3 #024',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_24_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-24'},
+  {id:'M3-025',name:'M3 #025',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_25_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-25'},
+  {id:'M3-026',name:'M3 #026',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_26_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-26'},
+  {id:'M3-027',name:'M3 #027',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_27_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-27'},
+  {id:'M3-028',name:'M3 #028',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_28_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-28'},
+  {id:'M3-029',name:'M3 #029',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_29_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-29'},
+  {id:'M3-030',name:'M3 #030',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_30_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-30'},
+  {id:'M3-031',name:'M3 #031',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_31_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-31'},
+  {id:'M3-032',name:'M3 #032',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_32_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-32'},
+  {id:'M3-033',name:'M3 #033',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_33_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-33'},
+  {id:'M3-034',name:'M3 #034',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_34_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-34'},
+  {id:'M3-035',name:'M3 #035',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_35_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-35'},
+  {id:'M3-036',name:'M3 #036',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_36_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-36'},
+  {id:'M3-037',name:'M3 #037',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_37_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-37'},
+  {id:'M3-038',name:'M3 #038',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_38_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-38'},
+  {id:'M3-039',name:'M3 #039',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_39_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-39'},
+  {id:'M3-040',name:'M3 #040',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_40_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-40'},
+  {id:'M3-041',name:'M3 #041',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_41_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-41'},
+  {id:'M3-042',name:'M3 #042',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_42_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-42'},
+  {id:'M3-043',name:'M3 #043',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_43_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-43'},
+  {id:'M3-044',name:'M3 #044',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_44_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-44'},
+  {id:'M3-045',name:'M3 #045',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_45_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-45'},
+  {id:'M3-046',name:'M3 #046',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_46_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-46'},
+  {id:'M3-047',name:'M3 #047',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_47_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-47'},
+  {id:'M3-048',name:'M3 #048',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_48_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-48'},
+  {id:'M3-049',name:'M3 #049',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_49_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-49'},
+  {id:'M3-050',name:'M3 #050',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_50_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-50'},
+  {id:'M3-051',name:'M3 #051',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_51_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-51'},
+  {id:'M3-052',name:'M3 #052',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_52_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-52'},
+  {id:'M3-053',name:'M3 #053',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_53_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-53'},
+  {id:'M3-054',name:'M3 #054',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_54_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-54'},
+  {id:'M3-055',name:'M3 #055',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_55_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-55'},
+  {id:'M3-056',name:'M3 #056',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_56_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-56'},
+  {id:'M3-057',name:'M3 #057',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_57_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-57'},
+  {id:'M3-058',name:'M3 #058',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_58_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-58'},
+  {id:'M3-059',name:'M3 #059',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_59_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-59'},
+  {id:'M3-060',name:'M3 #060',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_60_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-60'},
+  {id:'M3-061',name:'M3 #061',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_61_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-61'},
+  {id:'M3-062',name:'M3 #062',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_62_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-62'},
+  {id:'M3-063',name:'M3 #063',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_63_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-63'},
+  {id:'M3-064',name:'M3 #064',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_64_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-64'},
+  {id:'M3-065',name:'M3 #065',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_65_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-65'},
+  {id:'M3-066',name:'M3 #066',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_66_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-66'},
+  {id:'M3-067',name:'M3 #067',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_67_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-67'},
+  {id:'M3-068',name:'M3 #068',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_68_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-68'},
+  {id:'M3-069',name:'M3 #069',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_69_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-69'},
+  {id:'M3-070',name:'M3 #070',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_70_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-70'},
+  {id:'M3-071',name:'M3 #071',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_71_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-71'},
+  {id:'M3-072',name:'M3 #072',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_72_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-72'},
+  {id:'M3-073',name:'M3 #073',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_73_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-73'},
+  {id:'M3-074',name:'M3 #074',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_74_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-74'},
+  {id:'M3-075',name:'M3 #075',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_75_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-75'},
+  {id:'M3-076',name:'M3 #076',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_76_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-76'},
+  {id:'M3-077',name:'M3 #077',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_77_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-77'},
+  {id:'M3-078',name:'M3 #078',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_78_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-78'},
+  {id:'M3-079',name:'M3 #079',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_79_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-79'},
+  {id:'M3-080',name:'M3 #080',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_80_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-80'},
+  {id:'M3-081',name:'M3 #081',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_81_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-81'},
+  {id:'M3-082',name:'M3 #082',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_82_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-82'},
+  {id:'M3-083',name:'M3 #083',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_83_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-83'},
+  {id:'M3-084',name:'M3 #084',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_84_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-84'},
+  {id:'M3-085',name:'M3 #085',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_85_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-85'},
+  {id:'M3-086',name:'M3 #086',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_86_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-86'},
+  {id:'M3-087',name:'M3 #087',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_87_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-87'},
+  {id:'M3-088',name:'M3 #088',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_88_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-88'},
+  {id:'M3-089',name:'M3 #089',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_89_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-89'},
+  {id:'M3-090',name:'M3 #090',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_90_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-90'},
+  {id:'M3-091',name:'M3 #091',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_91_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-91'},
+  {id:'M3-092',name:'M3 #092',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_92_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-92'},
+  {id:'M3-093',name:'M3 #093',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_93_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-93'},
+  {id:'M3-094',name:'M3 #094',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_94_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-94'},
+  {id:'M3-095',name:'M3 #095',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_95_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-95'},
+  {id:'M3-096',name:'M3 #096',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_96_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-96'},
+  {id:'M3-097',name:'M3 #097',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_97_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-97'},
+  {id:'M3-098',name:'M3 #098',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_98_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-98'},
+  {id:'M3-099',name:'M3 #099',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_99_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-99'},
+  {id:'M3-100',name:'M3 #100',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_100_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-100'},
+  {id:'M3-101',name:'M3 #101',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_101_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-101'},
+  {id:'M3-102',name:'M3 #102',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_102_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-102'},
+  {id:'M3-103',name:'M3 #103',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_103_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-103'},
+  {id:'M3-104',name:'M3 #104',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_104_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-104'},
+  {id:'M3-105',name:'M3 #105',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_105_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-105'},
+  {id:'M3-106',name:'M3 #106',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_106_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-106'},
+  {id:'M3-107',name:'M3 #107',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_107_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-107'},
+  {id:'M3-108',name:'M3 #108',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_108_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-108'},
+  {id:'M3-109',name:'M3 #109',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_109_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-109'},
+  {id:'M3-110',name:'M3 #110',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_110_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-110'},
+  {id:'M3-111',name:'M3 #111',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_111_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-111'},
+  {id:'M3-112',name:'M3 #112',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_112_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-112'},
+  {id:'M3-113',name:'M3 #113',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_113_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-113'},
+  {id:'M3-114',name:'M3 #114',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_114_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-114'},
+  {id:'M3-115',name:'M3 #115',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_115_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-115'},
+  {id:'M3-116',name:'M3 #116',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_116_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-116'},
+  {id:'M3-117',name:'M3 #117',v:'mur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M3/M3_117_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-nihil-zero/m3-117'}
 ];
 
-function sk(s) { return s.id; }
+function sk(s)       { return s.id; }
 function varLabel(s) {
-  const labels = {
-    'r-jp':'JP Regular','sr-jp':'JP SR (FA)','sar-jp':'JP SAR','promo-jp':'JP Promo',
-    'r-en':'EN Regular','ur-en':'EN Ultra Rare','sir-en':'EN SIR'
-  };
-  return labels[s.v] || s.v;
+  return {main:'Main',secret:'Secret',mur:'MUR'}[s.v] || s.v;
 }
-function imgUrl(s) { return s.img || ''; }
-function pcUrl(s)  { return s.pc  || '#'; }
+function imgUrl(s)   { return s.img || ''; }
+function pcUrl(s)    { return s.pc  || '#'; }
 
 function makeCover() {
   const d = document.createElement('div');
   d.className = 'bpage cover-pg';
   d.innerHTML = `
-    <div style="font-size:24px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
-      ボタン<br><span style="font-size:14px;font-weight:400;color:#777">Penny — All Prints</span>
+    <div style="font-size:22px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
+      M3<br>
+      <span style="font-size:16px;font-weight:700;color:#ddd">Nihil Zero</span><br>
+      <span style="font-size:11px;font-weight:400;color:#555">ムニキスゼロ</span>
     </div>
-    <div style="font-size:11px;color:#555;text-align:center;margin:-6px 0">Pokémon Scarlet &amp; Violet · Paldea</div>
     <div class="cover-box">
-      Sorted JP → EN by illustrator<br>
-      🇯🇵🇬🇧 yuu Regular · Full Art<br>
-      🇯🇵🇬🇧 OKACHEKE SAR / SIR<br>
-      🇯🇵 yuu Promo · Reprint<br>
-      🇯🇵🇬🇧 aspara SAR / SIR<br>
-      <span style="color:#282420;font-size:10px">── 10 cards total ──</span>
+      📅 January 23, 2026<br>
+      ⭐ Flagship: Mega Zygarde ex<br>
+      🇬🇧 EN: Perfect Order (Mar 2026)<br>
+      <span style="color:#282420;font-size:10px">── 80 main · 37 secret rares · 117 total ──</span>
     </div>
     <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.7">
       Left-click = mark owned · Right-click = price &amp; details
@@ -415,8 +483,9 @@ function makeCover() {
 }
 
 const SDEFS = [
-  { label: 'Japanese Prints', f: s => s.v.endsWith('-jp') },
-  { label: 'English Prints',  f: s => s.v.endsWith('-en') },
+  { label: 'Main Set (80 cards)', f: s => s.v === 'main'   },
+  { label: 'Secret Rares',      f: s => s.v === 'secret' },
+  { label: 'MUR',               f: s => s.v === 'mur'    },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════

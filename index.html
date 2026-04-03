@@ -121,7 +121,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><span class="stat-val" id="stat-total-owned">—</span><span class="stat-lbl">Total Owned</span></div>
-  <div class="stat"><span class="stat-val" id="stat-binders">2</span><span class="stat-lbl">Binders</span></div>
+  <div class="stat"><span class="stat-val" id="stat-binders">4</span><span class="stat-lbl">Binders</span></div>
   <div class="stat"><span class="stat-val" id="stat-priced">—</span><span class="stat-lbl">Cards Priced</span></div>
 </div>
 
@@ -242,6 +242,26 @@ function refreshAll() {
     totalOwned  += owned;
     totalPriced += priced;
   });
+
+  // M3 Nihil Zero
+  try {
+    const owned = new Set(JSON.parse(localStorage.getItem('m3_nihil_zero_owned_v1') || '[]'));
+    const total = 117, pct = Math.round(owned.size / total * 100);
+    document.getElementById('prog-m3').style.width = pct + '%';
+    document.getElementById('prog-m3-text').textContent = owned.size + ' / ' + total + ' owned';
+    document.getElementById('prog-m3-pct').textContent  = pct + '%';
+    totalOwned += owned.size;
+  } catch(e) { document.getElementById('prog-m3-text').textContent = '0 / 117 owned'; }
+
+  // M4 Ninja Spinner
+  try {
+    const owned2 = new Set(JSON.parse(localStorage.getItem('m4_ninja_spinner_owned_v1') || '[]'));
+    const total2 = 120, pct2 = Math.round(owned2.size / total2 * 100);
+    document.getElementById('prog-m4').style.width = pct2 + '%';
+    document.getElementById('prog-m4-text').textContent = owned2.size + ' / ' + total2 + ' owned';
+    document.getElementById('prog-m4-pct').textContent  = pct2 + '%';
+    totalOwned += owned2.size;
+  } catch(e) { document.getElementById('prog-m4-text').textContent = '0 / 120 owned'; }
 
   document.getElementById('stat-total-owned').textContent = totalOwned;
   document.getElementById('stat-priced').textContent      = totalPriced;
