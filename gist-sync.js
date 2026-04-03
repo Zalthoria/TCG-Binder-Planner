@@ -25,44 +25,39 @@
  *
  * Step 3: Enter both in the app
  *   • Open the app in your browser
- *   • Click the ☁ button (bottom-right)
- *   • Paste your Gist ID and token — Save
- *   • Done. Data syncs automatically on every device.
- *
- * ─────────────────────────────────────────────────────────────────────────
- * Nothing else to change. No billing. No accounts. Just GitHub.
+ *   • Click the ☁ button (bottom-right corner)
+ *   • Paste your Gist ID and token — click Save & Connect
+ *   • Done. Data syncs automatically across all your devices.
  */
 
 (function () {
   'use strict';
 
-  // ── Keys that get synced ───────────────────────────────────────────────
   const SYNC_KEYS = [
     'M2a_owned_v1', 'M2a_watched_v1', 'M2a_prices_v2',
     'penny_owned_v1', 'penny_watched_v1', 'penny_prices_v1',
   ];
 
-  // ── Credential storage keys ────────────────────────────────────────────
-  const LS_GIST_ID = 'gistsync_gist_id';
-  const LS_TOKEN   = 'gistsync_token';
-  const LS_LAST    = 'gistsync_last_sync';
-  const LS_SHA     = 'gistsync_sha';    // not used for Gist API but keep for compat
+  const LS_GIST_ID   = 'gistsync_gist_id';
+  const LS_TOKEN     = 'gistsync_token';
+  const LS_LAST      = 'gistsync_last_sync';
+  const SS_JUST_PULLED = 'gistsync_just_pulled'; // sessionStorage flag to break reload loop
+  const GIST_FILE    = 'tcg-binders-data.json';
 
-  const GIST_FILE  = 'tcg-binders-data.json';
+  let pushTimer  = null;
+  let isSyncing  = false; // true while any network op is running — blocks push during pull
 
-  // ── State ──────────────────────────────────────────────────────────────
-  let pushTimer = null;
-  let isSyncing = false;
-
-  function getGistId () { return localStorage.getItem(LS_GIST_ID) || ''; }
-  function getToken  () { return localStorage.getItem(LS_TOKEN)   || ''; }
+  function getGistId () { return (localStorage.getItem(LS_GIST_ID) || '').trim(); }
+  function getToken  () { return (localStorage.getItem(LS_TOKEN)   || '').trim(); }
   function isReady   () { return !!(getGistId() && getToken()); }
 
-  // ── localStorage intercept — auto-push on every TCG write ─────────────
+  // ── localStorage intercept ─────────────────────────────────────────────
+  // Fires a debounced push whenever a TCG key is written — but never during
+  // a pull (isSyncing) to avoid push/pull races.
   const _origSet = Storage.prototype.setItem;
   Storage.prototype.setItem = function (key, value) {
     _origSet.call(this, key, value);
-    if (this === localStorage && SYNC_KEYS.includes(key) && isReady()) {
+    if (this === localStorage && SYNC_KEYS.includes(key) && isReady() && !isSyncing) {
       schedulePush();
     }
   };
@@ -74,21 +69,16 @@
 
   // ── Gist API ───────────────────────────────────────────────────────────
   async function gistRequest (method, body) {
-    const id    = getGistId();
-    const token = getToken();
-    if (!id || !token) throw new Error('Not configured');
-
-    const res = await fetch(`https://api.github.com/gists/${id}`, {
+    const res = await fetch(`https://api.github.com/gists/${getGistId()}`, {
       method,
       headers: {
-        Authorization: `token ${token}`,
-        Accept:        'application/vnd.github+json',
-        'Content-Type': 'application/json',
+        Authorization:          `token ${getToken()}`,
+        Accept:                 'application/vnd.github+json',
+        'Content-Type':         'application/json',
         'X-GitHub-Api-Version': '2022-11-28',
       },
       body: body ? JSON.stringify(body) : undefined,
     });
-
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.message || `HTTP ${res.status}`);
@@ -100,48 +90,62 @@
     const gist = await gistRequest('GET');
     const file = gist.files && gist.files[GIST_FILE];
     if (!file) return {};
-    // Content may be truncated for large files — fetch raw_url if needed
     let text = file.content;
     if (file.truncated) {
       const raw = await fetch(file.raw_url);
       text = await raw.text();
     }
-    return JSON.parse(text || '{}');
+    try { return JSON.parse(text || '{}'); } catch { return {}; }
   }
 
   async function writeGist (data) {
     await gistRequest('PATCH', {
-      files: {
-        [GIST_FILE]: { content: JSON.stringify(data, null, 2) },
-      },
+      files: { [GIST_FILE]: { content: JSON.stringify(data, null, 2) } },
     });
     _origSet.call(localStorage, LS_LAST, String(Date.now()));
   }
 
   // ── Pull: Gist → localStorage ──────────────────────────────────────────
   async function pull (manual = false) {
-    if (!isReady()) return;
+    if (!isReady() || isSyncing) return 0;
+    isSyncing = true;
     setStatus('syncing', '☁ Loading…');
     try {
-      const data = await readGist();
-      let n = 0;
+      const remote = await readGist();
+
+      // Compare remote vs local to detect whether anything actually changed
+      let changed = 0;
       SYNC_KEYS.forEach(k => {
-        if (data[k] !== undefined) {
-          _origSet.call(localStorage, k, data[k]);
-          n++;
+        const remoteVal = remote[k];
+        const localVal  = localStorage.getItem(k);
+        if (remoteVal !== undefined && remoteVal !== localVal) {
+          _origSet.call(localStorage, k, remoteVal); // bypass our intercept
+          changed++;
         }
       });
+
+      _origSet.call(localStorage, LS_LAST, String(Date.now()));
       setStatus('ok', '☁ Synced');
       updateLastSyncLabel();
+      isSyncing = false;
+
       if (manual) {
-        showToast(`✓ Pulled from Gist (${n} keys) — reloading…`);
-        setTimeout(() => location.reload(), 1200);
+        if (changed > 0) {
+          showToast(`✓ Pulled ${changed} updated keys — reloading…`);
+          // Mark sessionStorage so next load skips auto-pull (no loop)
+          sessionStorage.setItem(SS_JUST_PULLED, '1');
+          setTimeout(() => location.reload(), 1200);
+        } else {
+          showToast('✓ Already up to date');
+        }
       }
-      return n;
+      return changed;
     } catch (e) {
-      console.error('[GistSync] pull error:', e);
+      console.error('[GistSync] pull error:', e.message);
       setStatus('err', '☁ Error');
       if (manual) showToast('⚠ Pull failed: ' + e.message);
+      isSyncing = false;
+      return 0;
     }
   }
 
@@ -152,16 +156,13 @@
     setStatus('syncing', '☁ Saving…');
     try {
       const data = {};
-      SYNC_KEYS.forEach(k => {
-        const v = localStorage.getItem(k);
-        if (v) data[k] = v;
-      });
+      SYNC_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
       await writeGist(data);
       setStatus('ok', '☁ Synced');
       updateLastSyncLabel();
       if (manual) showToast('✓ Saved to Gist');
     } catch (e) {
-      console.error('[GistSync] push error:', e);
+      console.error('[GistSync] push error:', e.message);
       setStatus('err', '☁ Error');
       if (manual) showToast('⚠ Save failed: ' + e.message);
     }
@@ -173,11 +174,12 @@
 
   function setStatus (state, label) {
     if (!btnEl) return;
-    btnEl.dataset.state = state;
     const lbl = btnEl.querySelector('.gs-label');
     if (lbl) lbl.textContent = label;
-    btnEl.style.color       = { ok:'#4cff80', syncing:'#c89a3a', err:'#ff7060', off:'#555' }[state] || '#555';
-    btnEl.style.borderColor = { ok:'#2a4a2a', syncing:'#4a3a10', err:'#5a2010', off:'#2a2620' }[state] || '#2a2620';
+    const colours = { ok:'#4cff80', syncing:'#c89a3a', err:'#ff7060', off:'#555' };
+    const borders  = { ok:'#2a4a2a', syncing:'#4a3a10', err:'#5a2010', off:'#2a2620' };
+    btnEl.style.color       = colours[state] || colours.off;
+    btnEl.style.borderColor = borders[state] || borders.off;
   }
 
   function updateLastSyncLabel () {
@@ -198,9 +200,8 @@
         box-shadow:0 2px 12px rgba(0,0,0,.5);transition:background .13s;
       }
       #gs-btn:hover{background:#222}
-      #gs-btn .gs-icon{font-size:15px;line-height:1}
-      #gs-btn .gs-label{white-space:nowrap}
-
+      .gs-icon{font-size:15px;line-height:1}
+      .gs-label{white-space:nowrap}
       #gs-modal{
         display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);
         z-index:1100;align-items:flex-start;justify-content:center;
@@ -212,25 +213,19 @@
         padding:22px;max-width:440px;width:100%;margin:auto;
       }
       .gs-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:12px}
-      .gs-field{margin-bottom:12px}
-      .gs-field label{display:block;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:5px}
-      .gs-input{
-        width:100%;background:#0b0a08;border:1px solid #222;border-radius:7px;
-        padding:8px 10px;font-size:12px;color:#ddd;font-family:'Courier New',monospace;
-        outline:none;
-      }
+      .gs-field{margin-bottom:11px}
+      .gs-field label{display:block;font-size:10px;color:#555;text-transform:uppercase;
+        letter-spacing:.05em;font-weight:600;margin-bottom:5px}
+      .gs-input{width:100%;background:#0b0a08;border:1px solid #222;border-radius:7px;
+        padding:8px 10px;font-size:12px;color:#ddd;font-family:'Courier New',monospace;outline:none;}
       .gs-input:focus{border-color:#5a3a10}
       .gs-input::placeholder{color:#2a2826}
-      .gs-status-box{
-        background:#111;border-radius:8px;padding:10px 12px;
-        font-size:11px;margin-bottom:12px;line-height:1.9;
-      }
-      .gs-status-row{display:flex;justify-content:space-between;align-items:center}
-      .gs-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
-      .gs-btn-a{
-        padding:8px 14px;border-radius:7px;font-size:12px;font-weight:600;
-        cursor:pointer;font-family:inherit;border:1px solid;
-      }
+      .gs-status-box{background:#111;border-radius:8px;padding:10px 12px;
+        font-size:11px;margin-bottom:12px;line-height:2;}
+      .gs-sr{display:flex;justify-content:space-between;align-items:center}
+      .gs-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+      .gs-btn-a{padding:8px 14px;border-radius:7px;font-size:12px;font-weight:600;
+        cursor:pointer;font-family:inherit;border:1px solid;}
       .gsa-save  {background:#1e2a10;border-color:#3a5020;color:#80c040}
       .gsa-save:hover{background:#283814}
       .gsa-push  {background:#1e1a38;border-color:#3a3060;color:#8070d0}
@@ -241,60 +236,55 @@
       .gsa-dim:hover{background:#222}
       .gs-hint{font-size:10px;color:#333;margin-top:10px;line-height:1.7}
       .gs-hint a{color:#5060a0;text-decoration:none}.gs-hint a:hover{color:#8090d0}
-      .gs-flash{font-size:11px;display:none;margin-top:5px}
+      .gs-flash{font-size:11px;display:none;margin-top:6px}
     `;
     document.head.appendChild(style);
 
     // Floating button
     btnEl = document.createElement('button');
-    btnEl.id = 'gs-btn';
+    btnEl.id      = 'gs-btn';
     btnEl.onclick = openModal;
     btnEl.innerHTML = `<span class="gs-icon">☁</span><span class="gs-label">Gist Sync</span>`;
     document.body.appendChild(btnEl);
 
     // Modal
     const modal = document.createElement('div');
-    modal.id = 'gs-modal';
+    modal.id      = 'gs-modal';
     modal.onclick = e => { if (e.target === modal) closeModal(); };
     modal.innerHTML = `
       <div id="gs-box">
         <div class="gs-title">☁ GitHub Gist Sync</div>
-
         <div class="gs-field">
           <label>Gist ID</label>
-          <input class="gs-input" id="gs-gist-id" type="text" placeholder="e.g. a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4" spellcheck="false" autocomplete="off">
+          <input class="gs-input" id="gs-gist-id" type="text"
+            placeholder="e.g. a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4"
+            spellcheck="false" autocomplete="off">
         </div>
         <div class="gs-field">
-          <label>Personal Access Token (gist scope)</label>
-          <input class="gs-input" id="gs-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" spellcheck="false" autocomplete="off">
+          <label>Personal Access Token (gist scope only)</label>
+          <input class="gs-input" id="gs-token" type="password"
+            placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+            spellcheck="false" autocomplete="off">
         </div>
-
-        <div class="gs-row" style="margin-bottom:12px">
+        <div class="gs-row">
           <button class="gs-btn-a gsa-save" onclick="window.GistSync.saveCredentials()">Save & Connect</button>
         </div>
-
         <div class="gs-status-box" id="gs-status-box" style="display:none">
-          <div class="gs-status-row"><span style="color:#444">Status</span><span id="gs-status-val" style="color:#555">—</span></div>
-          <div class="gs-status-row"><span style="color:#444">Last sync</span><span id="gs-last-sync" style="color:#444">—</span></div>
+          <div class="gs-sr"><span style="color:#444">Status</span><span id="gs-status-val" style="color:#4cff80">—</span></div>
+          <div class="gs-sr"><span style="color:#444">Last sync</span><span id="gs-last-sync" style="color:#444">—</span></div>
         </div>
-
         <div class="gs-row" id="gs-action-row" style="display:none">
-          <button class="gs-btn-a gsa-push" onclick="window.GistSync.push(true)">Push to Gist</button>
-          <button class="gs-btn-a gsa-pull" onclick="window.GistSync.pull(true)">Pull from Gist</button>
+          <button class="gs-btn-a gsa-push" onclick="window.GistSync.push(true)">Push to Gist ↑</button>
+          <button class="gs-btn-a gsa-pull" onclick="window.GistSync.pull(true)">Pull from Gist ↓</button>
           <button class="gs-btn-a gsa-dim"  onclick="window.GistSync.disconnect()">Disconnect</button>
         </div>
         <div class="gs-flash" id="gs-flash"></div>
-
         <div class="gs-hint">
-          No account needed beyond GitHub. Create a
-          <a href="https://gist.github.com" target="_blank">secret Gist</a>
-          with file <code>tcg-binders-data.json</code> and content <code>{}</code>.<br>
-          Then create a
-          <a href="https://github.com/settings/tokens" target="_blank">Personal Access Token</a>
-          with only the <strong>gist</strong> scope.<br>
-          Full setup guide is in the comments at the top of <code>gist-sync.js</code>.
+          Need a Gist? Go to <a href="https://gist.github.com" target="_blank">gist.github.com</a>
+          → filename: <code>tcg-binders-data.json</code> → content: <code>{}</code> → Create secret gist.<br>
+          Need a token? <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>
+          → Generate new token (classic) → tick <strong>gist</strong> only.
         </div>
-
         <div class="gs-row" style="margin-top:12px">
           <button class="gs-btn-a gsa-dim" onclick="window.GistSync.closeModal()">Close</button>
         </div>
@@ -324,7 +314,6 @@
       box.style.display = 'block';
       row.style.display = 'flex';
       val.textContent   = 'Connected ✓';
-      val.style.color   = '#4cff80';
       updateLastSyncLabel();
     } else {
       box.style.display = 'none';
@@ -341,13 +330,13 @@
         position:fixed;bottom:62px;right:14px;z-index:900;
         background:#1a1814;border:1px solid #2a2620;border-radius:8px;
         padding:7px 13px;font-size:12px;font-family:inherit;
-        box-shadow:0 2px 12px rgba(0,0,0,.5);transition:opacity .3s;
+        box-shadow:0 2px 12px rgba(0,0,0,.5);transition:opacity .4s;pointer-events:none;
       `;
       document.body.appendChild(toastEl);
     }
-    toastEl.textContent    = msg;
-    toastEl.style.opacity  = '1';
-    toastEl.style.color    = msg.startsWith('✓') ? '#4cff80' : '#ff8060';
+    toastEl.textContent   = msg;
+    toastEl.style.opacity = '1';
+    toastEl.style.color   = msg.startsWith('✓') ? '#4cff80' : '#ff8060';
     clearTimeout(toastEl._t);
     toastEl._t = setTimeout(() => { toastEl.style.opacity = '0'; }, 3500);
   }
@@ -357,50 +346,65 @@
     push, pull, openModal, closeModal,
 
     saveCredentials () {
-      const idEl = document.getElementById('gs-gist-id');
-      const tkEl = document.getElementById('gs-token');
-      const id   = (idEl?.value || '').trim();
-      const tok  = (tkEl?.value || '').trim();
+      const id  = (document.getElementById('gs-gist-id')?.value || '').trim();
+      const tok = (document.getElementById('gs-token')?.value   || '').trim();
       if (!id || !tok) { showToast('⚠ Fill in both fields first'); return; }
       _origSet.call(localStorage, LS_GIST_ID, id);
-      _origSet.call(localStorage, LS_TOKEN, tok);
-      // Pull immediately to confirm connection works
-      showToast('Connecting…');
-      pull(false).then(n => {
-        if (n !== undefined) {
-          setStatus('ok', '☁ Synced');
-          refreshModalStatus();
-          showToast(`✓ Connected! Pulled ${n} keys.`);
-          // Reload so the binder picks up pulled data
+      _origSet.call(localStorage, LS_TOKEN,   tok);
+      showToast('Connecting — testing credentials…');
+      // Test by doing a pull; if it works we're good
+      pull(false).then(changed => {
+        refreshModalStatus();
+        setStatus('ok', '☁ Synced');
+        if (changed > 0) {
+          showToast(`✓ Connected! Pulled ${changed} updated keys — reloading…`);
+          sessionStorage.setItem(SS_JUST_PULLED, '1');
           setTimeout(() => { closeModal(); location.reload(); }, 1400);
+        } else {
+          showToast('✓ Connected! Your data is already up to date.');
         }
       });
     },
 
     disconnect () {
+      clearTimeout(pushTimer);
       _origSet.call(localStorage, LS_GIST_ID, '');
-      _origSet.call(localStorage, LS_TOKEN, '');
+      _origSet.call(localStorage, LS_TOKEN,   '');
       setStatus('off', '☁ Gist Sync');
       closeModal();
-      showToast('Disconnected');
+      showToast('Disconnected from Gist');
     },
   };
 
   // ── Init ───────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     injectUI();
-    if (isReady()) {
-      setStatus('ok', '☁ Synced');
-      // Pull on page load to get latest data, then reload the page UI
-      pull(false).then(n => {
-        if (n > 0) {
-          // Data changed — reload so binders re-read from localStorage
-          location.reload();
-        }
-      });
-    } else {
+
+    if (!isReady()) {
       setStatus('off', '☁ Gist Sync');
+      return;
     }
+
+    // ── Break the reload loop ──────────────────────────────────────────
+    // If we just reloaded because of a pull, skip auto-pull this time.
+    if (sessionStorage.getItem(SS_JUST_PULLED)) {
+      sessionStorage.removeItem(SS_JUST_PULLED);
+      setStatus('ok', '☁ Synced');
+      return;
+    }
+
+    // Auto-pull on page load — but only if data on Gist is actually newer
+    setStatus('syncing', '☁ Loading…');
+    pull(false).then(changed => {
+      if (changed > 0) {
+        // Data changed — reload once so the binder re-renders with new data
+        showToast(`☁ Updated ${changed} keys from Gist — reloading…`);
+        sessionStorage.setItem(SS_JUST_PULLED, '1'); // prevents loop on next load
+        setTimeout(() => location.reload(), 800);
+      } else {
+        setStatus('ok', '☁ Synced');
+      }
+    });
   });
 
 })();
