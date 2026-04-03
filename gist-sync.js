@@ -45,6 +45,7 @@
   const GIST_FILE      = 'tcg-binders-data.json';
 
   let pushTimer  = null;
+  let pollTimer  = null;
   let isSyncing  = false; // true while any network op is running — blocks push during pull
 
   function getGistId () { return (localStorage.getItem(LS_GIST_ID) || '').trim(); }
@@ -66,6 +67,73 @@
     clearTimeout(pushTimer);
     pushTimer = setTimeout(() => push(false), 2500);
   }
+
+  // ── Background polling ─────────────────────────────────────────────────
+  // Checks Gist every 30 seconds while page is visible.
+  // Re-renders in place — no full page reload needed.
+  const POLL_MS = 30000;
+
+  function startPolling () {
+    stopPolling();
+    pollTimer = setInterval(pollForChanges, POLL_MS);
+  }
+
+  function stopPolling () {
+    clearInterval(pollTimer);
+    pollTimer = null;
+  }
+
+  async function pollForChanges () {
+    if (!isReady() || isSyncing) return;
+    isSyncing = true;
+    try {
+      const remote = await readGist();
+      let changed = 0;
+      SYNC_KEYS.forEach(k => {
+        const rv = remote[k];
+        const lv = localStorage.getItem(k);
+        if (rv !== undefined && rv !== lv) {
+          _origSet.call(localStorage, k, rv);
+          changed++;
+        }
+      });
+      if (changed > 0) {
+        _origSet.call(localStorage, LS_LAST, String(Date.now()));
+        setStatus('ok', '☁ Synced');
+        updateLastSyncLabel();
+        showToast(`☁ ${changed} update${changed > 1 ? 's' : ''} from Gist`);
+        reRender();
+      }
+    } catch (e) {
+      // Silently ignore background poll errors — don't distract the user
+      console.warn('[GistSync] poll:', e.message);
+    }
+    isSyncing = false;
+  }
+
+  // Re-renders the visible binder without a full page reload.
+  // Calls whichever global render functions the page exposes.
+  function reRender () {
+    try {
+      if (typeof load === 'function')           load();
+      if (typeof render === 'function')         render();
+      if (typeof updateProgress === 'function') updateProgress();
+      if (typeof refreshAll === 'function')     refreshAll(); // index.html home screen
+    } catch (e) {
+      console.warn('[GistSync] reRender:', e);
+    }
+  }
+
+  // Pause polling when tab is hidden, resume + immediate pull when visible again
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopPolling();
+    } else if (isReady()) {
+      pollForChanges(); // immediate catch-up
+      startPolling();
+    }
+  });
+
 
   // ── Gist API ───────────────────────────────────────────────────────────
   async function gistRequest (method, body) {
@@ -361,6 +429,7 @@
           setTimeout(() => { closeModal(); location.reload(); }, 1400);
         } else {
           showToast('✓ Connected! Your data is already up to date.');
+          startPolling();
         }
       });
     },
@@ -393,10 +462,11 @@
     if (recentlyPulled) {
       _origSet.call(localStorage, LS_PULL_RELOAD, '0'); // clear flag
       setStatus('ok', '☁ Synced');
+      startPolling(); // begin background checks every 30 s
       return;
     }
 
-    // Auto-pull on page load — only reloads if Gist actually has newer data
+    // Auto-pull on page load — reload only if Gist has newer data
     setStatus('syncing', '☁ Loading…');
     pull(false).then(changed => {
       if (changed > 0) {
@@ -405,6 +475,7 @@
         setTimeout(() => location.reload(), 800);
       } else {
         setStatus('ok', '☁ Synced');
+        startPolling(); // begin background checks every 30 s
       }
     });
   });
