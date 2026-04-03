@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TCG Binders">
-<title id="page-title">Penny (ボタン) — All Prints</title>
+<title id="page-title">Binder</title>
 <script src="gist-sync.js"></script>
 <style>
 /* ── Reset & base ─────────────────────────────────────────────────────────── */
@@ -314,109 +314,69 @@ table.wt tr:hover td{background:#111}
 // ════════════════════════════════════════════════════════════════════════════
 
 const BINDER = {
-  title:    'Penny (ボタン) — All Prints',
-  subtitle: '10 cards · Sorted JP → EN by artwork',
-  navTitle: 'Penny — All Prints · 10 cards',
-  lsOwned:  'penny_owned_v1',
-  lsWatched:'penny_watched_v1',
-  lsPrices: 'penny_prices_v1',
+  title:    'My Binder',                  // shown in toolbar
+  subtitle: '0 cards · 0 spreads',        // shown below title
+  navTitle: 'My Binder',                  // shown in sticky top nav
+  lsOwned:  'mybinder_owned_v1',          // localStorage key — change per binder
+  lsWatched:'mybinder_watched_v1',
+  lsPrices: 'mybinder_prices_v1',
   legend: [
-    { label: 'JP Regular',    color: '#aaa' },
-    { label: 'JP SR (FA)',     color: '#c89a3a' },
-    { label: 'JP SAR',        color: '#9870e0' },
-    { label: 'JP Promo',      color: '#40c0a0' },
-    { label: 'EN Regular',    color: '#6070c0' },
-    { label: 'EN Ultra Rare', color: '#50a0d8' },
-    { label: 'EN SIR',        color: '#b070d8' },
+    // { label: 'Normal', color: '#555' },
+    // { label: 'Holo',   color: '#c89a3a' },
+    // add more as needed
   ],
 };
 
+// ── BC: border colours keyed by slot.v value ─────────────────────────────
+// Each entry: { bg: '<badge background>', col: '<badge text colour>' }
 const BC = {
-  'r-jp':    { bg: '#181410', col: '#aaa' },
-  'sr-jp':   { bg: '#2a1e04', col: '#c89a3a' },
-  'sar-jp':  { bg: '#1e1040', col: '#9870e0' },
-  'promo-jp':{ bg: '#0a2a28', col: '#40c0a0' },
-  'r-en':    { bg: '#181428', col: '#6070c0' },
-  'ur-en':   { bg: '#102030', col: '#50a0d8' },
-  'sir-en':  { bg: '#200838', col: '#b070d8' },
+  // 'normal': { bg: '#181410', col: '#666' },
+  // 'holo':   { bg: '#2a1e04', col: '#c89a3a' },
 };
+// Fallback colour for unknown variants
 const BC_DEFAULT = { bg: '#181410', col: '#666' };
 
+// ── SLOTS: one object per collectible card/variant ────────────────────────
+// Required fields: id (unique string), v (variant key matching BC above)
+// Optional:        name, img (image URL), pc (PriceCharting URL)
 const SLOTS = [
-  // ── Group 1: yuu Regular ─────────────────────────────────────────────────
-  { id:'SV1S-077', name:'Penny', set:'Scarlet ex', v:'r-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-77' },
-  { id:'SVI-183',  name:'Penny', set:'Scarlet & Violet', v:'r-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183' },
-  // ── Group 2: yuu Full Art ─────────────────────────────────────────────────
-  { id:'SV1S-100', name:'Penny', set:'Scarlet ex', v:'sr-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-100' },
-  { id:'SVI-239',  name:'Penny', set:'Scarlet & Violet', v:'ur-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_239_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-239' },
-  // ── Group 3: OKACHEKE SAR / SIR ──────────────────────────────────────────
-  { id:'SV1S-105', name:'Penny', set:'Scarlet ex', v:'sar-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-105' },
-  { id:'SVI-252',  name:'Penny', set:'Scarlet & Violet', v:'sir-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_252_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-252' },
-  // ── Group 4: yuu Promo (JP only) ─────────────────────────────────────────
-  { id:'SVP-057',  name:'Penny', set:'SV-P Promo', v:'promo-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-p-promos/penny-57' },
-  // ── Group 5: yuu Regular reprint (JP only) ───────────────────────────────
-  { id:'SV4a-182', name:'Penny', set:'Shiny Treasure ex', v:'r-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_182_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182' },
-  // ── Group 6: aspara SAR / SIR ────────────────────────────────────────────
-  { id:'SV4a-354', name:'Penny', set:'Shiny Treasure ex', v:'sar-jp',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_354_R_JP_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-354' },
-  { id:'PAF-239',  name:'Penny', set:'Paldean Fates', v:'sir-en',
-    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_239_R_EN_SM.png',
-    pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239' },
+  // { id: 'card-1', name: 'Pikachu', v: 'holo',
+  //   img: 'https://...SM.png',
+  //   pc:  'https://www.pricecharting.com/...' },
 ];
 
+// ── sk(): unique storage key per slot ────────────────────────────────────
 function sk(s) { return s.id; }
-function varLabel(s) {
-  const labels = {
-    'r-jp':'JP Regular','sr-jp':'JP SR (FA)','sar-jp':'JP SAR','promo-jp':'JP Promo',
-    'r-en':'EN Regular','ur-en':'EN Ultra Rare','sir-en':'EN SIR'
-  };
-  return labels[s.v] || s.v;
-}
-function imgUrl(s) { return s.img || ''; }
-function pcUrl(s)  { return s.pc  || '#'; }
 
+// ── varLabel(): text shown in the slot badge and modal ───────────────────
+function varLabel(s) { return s.v; }
+
+// ── imgUrl(): image URL for a slot (override if you compute it dynamically)
+// If slot.img is set directly, this is not called.
+function imgUrl(s) { return s.img || ''; }
+
+// ── pcUrl(): PriceCharting URL for a slot ────────────────────────────────
+function pcUrl(s) { return s.pc || '#'; }
+
+// ── makeCover(): returns a DOM element for the left cover page ───────────
 function makeCover() {
   const d = document.createElement('div');
   d.className = 'bpage cover-pg';
   d.innerHTML = `
-    <div style="font-size:24px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
-      ボタン<br><span style="font-size:14px;font-weight:400;color:#777">Penny — All Prints</span>
+    <div style="font-size:22px;font-weight:800;color:#c89a3a;text-align:center">
+      ${BINDER.title}
     </div>
-    <div style="font-size:11px;color:#555;text-align:center;margin:-6px 0">Pokémon Scarlet &amp; Violet · Paldea</div>
-    <div class="cover-box">
-      Sorted JP → EN by illustrator<br>
-      🇯🇵🇬🇧 yuu Regular · Full Art<br>
-      🇯🇵🇬🇧 OKACHEKE SAR / SIR<br>
-      🇯🇵 yuu Promo · Reprint<br>
-      🇯🇵🇬🇧 aspara SAR / SIR<br>
-      <span style="color:#282420;font-size:10px">── 10 cards total ──</span>
-    </div>
+    <div class="cover-box">${BINDER.subtitle}</div>
     <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.7">
-      Left-click = mark owned · Right-click = price &amp; details
+      Left-click = mark owned<br>Right-click = price &amp; details
     </div>`;
   return d;
 }
 
+// ── SDEFS: missing-list section definitions ───────────────────────────────
+// Each entry: { label: 'Section name', f: slot => boolean }
 const SDEFS = [
-  { label: 'Japanese Prints', f: s => s.v.endsWith('-jp') },
-  { label: 'English Prints',  f: s => s.v.endsWith('-en') },
+  { label: 'All Cards', f: s => true },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════
