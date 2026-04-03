@@ -38,11 +38,11 @@
     'penny_owned_v1', 'penny_watched_v1', 'penny_prices_v1',
   ];
 
-  const LS_GIST_ID   = 'gistsync_gist_id';
-  const LS_TOKEN     = 'gistsync_token';
-  const LS_LAST      = 'gistsync_last_sync';
-  const SS_JUST_PULLED = 'gistsync_just_pulled'; // sessionStorage flag to break reload loop
-  const GIST_FILE    = 'tcg-binders-data.json';
+  const LS_GIST_ID     = 'gistsync_gist_id';
+  const LS_TOKEN       = 'gistsync_token';
+  const LS_LAST        = 'gistsync_last_sync';
+  const LS_PULL_RELOAD = 'gistsync_pull_reload_at'; // timestamp — replaces sessionStorage flag
+  const GIST_FILE      = 'tcg-binders-data.json';
 
   let pushTimer  = null;
   let isSyncing  = false; // true while any network op is running — blocks push during pull
@@ -132,8 +132,7 @@
       if (manual) {
         if (changed > 0) {
           showToast(`✓ Pulled ${changed} updated keys — reloading…`);
-          // Mark sessionStorage so next load skips auto-pull (no loop)
-          sessionStorage.setItem(SS_JUST_PULLED, '1');
+          _origSet.call(localStorage, LS_PULL_RELOAD, String(Date.now()));
           setTimeout(() => location.reload(), 1200);
         } else {
           showToast('✓ Already up to date');
@@ -358,7 +357,7 @@
         setStatus('ok', '☁ Synced');
         if (changed > 0) {
           showToast(`✓ Connected! Pulled ${changed} updated keys — reloading…`);
-          sessionStorage.setItem(SS_JUST_PULLED, '1');
+          _origSet.call(localStorage, LS_PULL_RELOAD, String(Date.now()));
           setTimeout(() => { closeModal(); location.reload(); }, 1400);
         } else {
           showToast('✓ Connected! Your data is already up to date.');
@@ -385,21 +384,24 @@
       return;
     }
 
-    // ── Break the reload loop ──────────────────────────────────────────
-    // If we just reloaded because of a pull, skip auto-pull this time.
-    if (sessionStorage.getItem(SS_JUST_PULLED)) {
-      sessionStorage.removeItem(SS_JUST_PULLED);
+    // ── Break the reload loop ─────────────────────────────────────────
+    // Use a localStorage timestamp instead of sessionStorage — sessionStorage
+    // is unreliable across location.reload() on Android Chrome.
+    // If we reloaded within the last 20 seconds due to a pull, skip auto-pull.
+    const lastPullReload = parseInt(localStorage.getItem(LS_PULL_RELOAD) || '0');
+    const recentlyPulled = (Date.now() - lastPullReload) < 20000;
+    if (recentlyPulled) {
+      _origSet.call(localStorage, LS_PULL_RELOAD, '0'); // clear flag
       setStatus('ok', '☁ Synced');
       return;
     }
 
-    // Auto-pull on page load — but only if data on Gist is actually newer
+    // Auto-pull on page load — only reloads if Gist actually has newer data
     setStatus('syncing', '☁ Loading…');
     pull(false).then(changed => {
       if (changed > 0) {
-        // Data changed — reload once so the binder re-renders with new data
+        _origSet.call(localStorage, LS_PULL_RELOAD, String(Date.now()));
         showToast(`☁ Updated ${changed} keys from Gist — reloading…`);
-        sessionStorage.setItem(SS_JUST_PULLED, '1'); // prevents loop on next load
         setTimeout(() => location.reload(), 800);
       } else {
         setStatus('ok', '☁ Synced');
