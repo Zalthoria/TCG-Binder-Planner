@@ -71,7 +71,7 @@
   // ── Background polling ─────────────────────────────────────────────────
   // Polls Gist every 30 s. When new data is found, writes it to localStorage
   // and shows a tap-to-reload banner — no surprise interruptions.
-  const POLL_MS = 30000;
+  const POLL_MS = 10000;
 
   function startPolling () {
     stopPolling();
