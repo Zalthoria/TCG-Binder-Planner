@@ -69,8 +69,8 @@
   }
 
   // ── Background polling ─────────────────────────────────────────────────
-  // Checks Gist every 30 seconds while page is visible.
-  // Re-renders in place — no full page reload needed.
+  // Polls Gist every 30 s. When new data is found, writes it to localStorage
+  // and shows a tap-to-reload banner — no surprise interruptions.
   const POLL_MS = 30000;
 
   function startPolling () {
@@ -93,43 +93,57 @@
         const rv = remote[k];
         const lv = localStorage.getItem(k);
         if (rv !== undefined && rv !== lv) {
-          _origSet.call(localStorage, k, rv);
+          _origSet.call(localStorage, k, rv); // write silently, bypassing push intercept
           changed++;
         }
       });
       if (changed > 0) {
         _origSet.call(localStorage, LS_LAST, String(Date.now()));
-        setStatus('ok', '☁ Synced');
         updateLastSyncLabel();
-        showToast(`☁ ${changed} update${changed > 1 ? 's' : ''} from Gist`);
-        reRender();
+        showUpdateBanner(changed); // tell user, let them decide when to reload
       }
     } catch (e) {
-      // Silently ignore background poll errors — don't distract the user
-      console.warn('[GistSync] poll:', e.message);
+      console.warn('[GistSync] poll:', e.message); // silent — background op
     }
     isSyncing = false;
   }
 
-  // Re-renders the visible binder without a full page reload.
-  // Calls whichever global render functions the page exposes.
-  function reRender () {
-    try {
-      if (typeof load === 'function')           load();
-      if (typeof render === 'function')         render();
-      if (typeof updateProgress === 'function') updateProgress();
-      if (typeof refreshAll === 'function')     refreshAll(); // index.html home screen
-    } catch (e) {
-      console.warn('[GistSync] reRender:', e);
+  // Shows a non-intrusive banner: user taps "Reload" when ready.
+  // Data is already in localStorage so even dismissing is safe.
+  function showUpdateBanner (changed) {
+    let b = document.getElementById('gs-update-banner');
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'gs-update-banner';
+      b.style.cssText = [
+        'position:fixed;bottom:62px;right:14px;z-index:900',
+        'background:#1a2810;border:1px solid #3a6020;border-radius:10px',
+        'padding:8px 12px;font-size:12px;font-family:inherit',
+        'display:flex;align-items:center;gap:10px',
+        'box-shadow:0 2px 14px rgba(0,0,0,.5);color:#70c040',
+      ].join(';');
+      document.body.appendChild(b);
     }
+    b.innerHTML =
+      `☁ ${changed} update${changed > 1 ? 's' : ''} from Gist ` +
+      `<button onclick="location.reload()" style="` +
+        `padding:3px 10px;border-radius:6px;border:1px solid #3a6020;` +
+        `background:#243810;color:#80d040;cursor:pointer;` +
+        `font-family:inherit;font-size:12px;font-weight:600` +
+      `">Reload ↺</button>` +
+      `<button onclick="this.parentElement.style.display='none'" style="` +
+        `background:none;border:none;color:#333;cursor:pointer;font-size:16px;padding:0 2px` +
+      `">✕</button>`;
+    b.style.display = 'flex';
+    setStatus('ok', '☁ Update ready');
   }
 
-  // Pause polling when tab is hidden, resume + immediate pull when visible again
+  // Pause polling when tab is hidden, resume + immediate check when visible again
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       stopPolling();
     } else if (isReady()) {
-      pollForChanges(); // immediate catch-up
+      pollForChanges(); // immediate catch-up on tab focus
       startPolling();
     }
   });
