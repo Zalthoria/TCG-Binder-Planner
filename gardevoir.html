@@ -398,11 +398,11 @@ const SLOTS = [
   {id:'PAF-029',num:'29/91',name:'Gardevoir ex (Shiny)',set:'Paldean Fates',v:'svex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_029_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/gardevoir-ex-29'},
   {id:'PAF-217',num:'217/91',name:'Gardevoir ex (S-IR)',set:'Paldean Fates',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_217_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/gardevoir-ex-217'},
   {id:'PAF-233',num:'233/91',name:'Gardevoir ex (S-SIR)',set:'Paldean Fates',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_233_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/gardevoir-ex-233'},
-  {id:'ME-060',num:'60/132',name:'Mega Gardevoir ex',set:'Mega Evolution',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_060_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-60'},
-  {id:'ME-159',num:'159/132',name:'Mega Gardevoir ex (AR)',set:'Mega Evolution',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_159_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-159'},
-  {id:'ME-178',num:'178/132',name:'Mega Gardevoir ex (SAR)',set:'Mega Evolution',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_178_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-178'},
-  {id:'ME-187',num:'187/132',name:'Mega Gardevoir ex (MUR)',set:'Mega Evolution',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_187_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-187'},
-  {id:'AHE-089',num:'89/217',name:'Mega Gardevoir ex',set:'Ascended Heroes',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/AHE/AHE_089_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ascended-heroes/mega-gardevoir-ex-89'},
+  {id:'MEG-060',num:'60/132',name:'Mega Gardevoir ex',set:'Mega Evolution',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEG/MEG_060_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-60'},
+  {id:'MEG-159',num:'159/132',name:'Mega Gardevoir ex (AR)',set:'Mega Evolution',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEG/MEG_159_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-159'},
+  {id:'MEG-178',num:'178/132',name:'Mega Gardevoir ex (SAR)',set:'Mega Evolution',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEG/MEG_178_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-178'},
+  {id:'MEG-187',num:'187/132',name:'Mega Gardevoir ex (MUR)',set:'Mega Evolution',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEG/MEG_187_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-187'},
+  {id:'ASC-089',num:'89/217',name:'Mega Gardevoir ex',set:'Ascended Heroes',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ASC/ASC_089_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ascended-heroes/mega-gardevoir-ex-89'},
   {id:'MEP-032',num:'32',name:'Mega Gardevoir ex (Promo)',set:'Mega Promos',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEP/MEP_032_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-mega-promos/mega-gardevoir-ex-32'}
 ];
 
@@ -447,7 +447,7 @@ const SDEFS = [
   { label: 'SM Era (2017–2019)',          f: s => ['BUS','LOT','UNB','HIF','SMP'].some(p => s.id.startsWith(p)) },
   { label: 'SWSH Era (2020–2022)',        f: s => ['CPA','CRE','CEL','ASR','LOR','SIT','IEX','SWSH'].some(p => s.id.startsWith(p)) },
   { label: 'SV Era (2023–2024)',          f: s => ['SVI','PAF'].some(p => s.id.startsWith(p)) },
-  { label: 'Mega Era (2025–)',            f: s => ['ME-','AHE','MEP'].some(p => s.id.startsWith(p)) },
+  { label: 'Mega Era (2025–)',            f: s => ['MEG-','ASC-','MEP-'].some(p => s.id.startsWith(p)) },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════
