@@ -414,7 +414,68 @@ function varLabel(s) {
   };
   return labels[s.v] || s.v;
 }
+
+// ── PTCG.io fallback image URLs for older sets ────────────────────────────
+// Limitless CDN is tried first (fast, modern sets); PTCG.io covers EX→SWSH era
+const PTCGIO = {
+  'EXR-007': 'https://images.pokemontcg.io/ex1/7.png',
+  'EXS-096': 'https://images.pokemontcg.io/ex2/96.png',
+  'EXE-004': 'https://images.pokemontcg.io/ex7/4.png',
+  'EXD-006': 'https://images.pokemontcg.io/ex11/6.png',
+  'EXF-093': 'https://images.pokemontcg.io/ex14/93.png',
+  'EXP-009': 'https://images.pokemontcg.io/ex15/9.png',
+  'SW-007':  'https://images.pokemontcg.io/dp4/7.png',
+  'SW-131':  'https://images.pokemontcg.io/dp4/131.png',
+  'PL-008':  'https://images.pokemontcg.io/pl1/8.png',
+  'NXD-057': 'https://images.pokemontcg.io/bw4/57.png',
+  'DEX-109': 'https://images.pokemontcg.io/bw5/109.png',
+  'LTR-RC10':'https://images.pokemontcg.io/bw11/RC10.png',
+  'PRC-105': 'https://images.pokemontcg.io/xy5/105.png',
+  'PRC-106': 'https://images.pokemontcg.io/xy5/106.png',
+  'PRC-155': 'https://images.pokemontcg.io/xy5/155.png',
+  'PRC-156': 'https://images.pokemontcg.io/xy5/156.png',
+  'AOR-054': 'https://images.pokemontcg.io/xy7/54.png',
+  'GEN-RC30':'https://images.pokemontcg.io/g1/RC30.png',
+  'GEN-RC31':'https://images.pokemontcg.io/g1/RC31.png',
+  'STS-078': 'https://images.pokemontcg.io/xy11/78.png',
+  'STS-079': 'https://images.pokemontcg.io/xy11/79.png',
+  'STS-111': 'https://images.pokemontcg.io/xy11/111.png',
+  'STS-112': 'https://images.pokemontcg.io/xy11/112.png',
+  'STS-116': 'https://images.pokemontcg.io/xy11/116.png',
+  'BUS-093': 'https://images.pokemontcg.io/sm3/93.png',
+  'BUS-140': 'https://images.pokemontcg.io/sm3/140.png',
+  'BUS-159': 'https://images.pokemontcg.io/sm3/159.png',
+  'LOT-141': 'https://images.pokemontcg.io/sm8/141.png',
+  'UNB-130': 'https://images.pokemontcg.io/sm10/130.png',
+  'UNB-204': 'https://images.pokemontcg.io/sm10/204.png',
+  'UNB-205': 'https://images.pokemontcg.io/sm10/205.png',
+  'UNB-225': 'https://images.pokemontcg.io/sm10/225.png',
+  'HIF-SV75':'https://images.pokemontcg.io/sma/SV75.png',
+  'SMP-408': 'https://images.pokemontcg.io/smp/SM408.png',
+  'CPA-016': 'https://images.pokemontcg.io/swsh35/16.png',
+  'CPA-017': 'https://images.pokemontcg.io/swsh35/17.png',
+  'CPA-070': 'https://images.pokemontcg.io/swsh35/70.png',
+  'CPA-076': 'https://images.pokemontcg.io/swsh35/76.png',
+  'SWSH105': 'https://images.pokemontcg.io/swshp/SWSH105.png',
+  'CRE-061': 'https://images.pokemontcg.io/swsh6/61.png',
+  'CEL-093': 'https://images.pokemontcg.io/cel25/93.png',
+  'ASR-TG05':'https://images.pokemontcg.io/swsh10/TG05.png',
+  'LOR-069': 'https://images.pokemontcg.io/swsh11/69.png',
+  'SIT-069': 'https://images.pokemontcg.io/swsh12/69.png',
+  'SIT-TG05':'https://images.pokemontcg.io/swsh12/TG05.png',
+  'SVI-086': 'https://images.pokemontcg.io/sv1/86.png',
+  'SVI-228': 'https://images.pokemontcg.io/sv1/228.png',
+  'SVI-245': 'https://images.pokemontcg.io/sv1/245.png',
+  'PAF-029': 'https://images.pokemontcg.io/sv4pt5/29.png',
+  'PAF-217': 'https://images.pokemontcg.io/sv4pt5/217.png',
+  'PAF-233': 'https://images.pokemontcg.io/sv4pt5/233.png',
+};
+
+// imgUrl: try Limitless CDN first; img.onerror swaps to PTCG.io fallback
+// The actual swap happens in makeSlot via onerror handler
 function imgUrl(s) { return s.img || ''; }
+function ptcgioUrl(s) { return PTCGIO[s.id] || ''; }
+
 function pcUrl(s)  { return s.pc  || '#'; }
 
 function makeCover() {
@@ -603,7 +664,14 @@ function makeSlot(s) {
   const ph  = document.createElement('div');
   ph.className = 'cph';
   ph.innerHTML = `<div class="ph-n">${s.id}</div><div class="ph-nm">${(s.name||'').substring(0,15)}</div>`;
-  img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+  img.onerror = () => {
+    const fb = ptcgioUrl(s);
+    if (fb && img.src !== fb) {
+      img.src = fb; // try PTCG.io fallback
+    } else {
+      img.style.display = 'none'; ph.style.display = 'flex'; // show placeholder
+    }
+  };
   div.appendChild(img); div.appendChild(ph);
 
   const lbl = document.createElement('div'); lbl.className = 'clbl';
@@ -646,7 +714,15 @@ function openModal(s) {
   const mi = document.getElementById('mimg'), mph = document.getElementById('mph');
   mi.style.display = 'block'; mph.style.display = 'none';
   mi.src = imgUrl(s);
-  mi.onerror = () => { mi.style.display = 'none'; mph.style.display = 'flex'; mph.innerHTML = `<div style="color:#383430;font-size:11px;text-align:center">${s.id}<br>${varLabel(s)}</div>`; };
+  mi.onerror = () => {
+    const fb = ptcgioUrl(s);
+    if (fb && mi.src !== fb) {
+      mi.src = fb;
+    } else {
+      mi.style.display = 'none'; mph.style.display = 'flex';
+      mph.innerHTML = `<div style="color:#383430;font-size:11px;text-align:center">${s.id}<br>${varLabel(s)}</div>`;
+    }
+  };
   document.getElementById('mname').textContent   = s.name || s.id;
   document.getElementById('mnum').textContent    = `${s.id} · ${varLabel(s)}`;
   document.getElementById('mbadge').textContent  = varLabel(s);
