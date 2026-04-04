@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TCG Binders">
-<title id="page-title">Binder</title>
+<title id="page-title">M2 Inferno X</title>
 <script src="gist-sync.js"></script>
 <style>
 /* ── Reset & base ─────────────────────────────────────────────────────────── */
@@ -314,70 +314,174 @@ table.wt tr:hover td{background:#111}
 // ════════════════════════════════════════════════════════════════════════════
 
 const BINDER = {
-  title:    'My Binder',                  // shown in toolbar
-  subtitle: '0 cards · 0 spreads',        // shown below title
-  navTitle: 'My Binder',                  // shown in sticky top nav
-  lsOwned:  'mybinder_owned_v1',          // localStorage key — change per binder
-  lsWatched:'mybinder_watched_v1',
-  lsPrices: 'mybinder_prices_v1',
-  cols: 3,                              // cards per row: 1-7 (default 3)
+  title:    'M2 Inferno X',
+  subtitle: '116 cards · 80 main + 36 secret · Master Set',
+  navTitle: 'M2 Inferno X · 116 cards',
+  lsOwned:  'm2_inferno_x_owned_v1',
+  lsWatched:'m2_inferno_x_watched_v1',
+  lsPrices: 'm2_inferno_x_prices_v1',
+  cols: 3,
   legend: [
-    // { label: 'Normal', color: '#555' },
-    // { label: 'Holo',   color: '#c89a3a' },
-    // add more as needed
+    { label: 'Main Set',    color: '#666'    },
+    { label: 'Secret Rare', color: '#c89a3a' },
+    { label: 'MUR',         color: '#ff9940' },
   ],
 };
 
-// ── BC: border colours keyed by slot.v value ─────────────────────────────
-// Each entry: { bg: '<badge background>', col: '<badge text colour>' }
 const BC = {
-  // 'normal': { bg: '#181410', col: '#666' },
-  // 'holo':   { bg: '#2a1e04', col: '#c89a3a' },
+  'main':   { bg: '#181410', col: '#666'    },
+  'secret': { bg: '#2a2010', col: '#c89a3a' },
+  'mur':    { bg: '#3a2000', col: '#ff9940' },
 };
-// Fallback colour for unknown variants
 const BC_DEFAULT = { bg: '#181410', col: '#666' };
 
-// ── SLOTS: one object per collectible card/variant ────────────────────────
-// Required fields: id (unique string), v (variant key matching BC above)
-// Optional:        name, img (image URL), pc (PriceCharting URL)
 const SLOTS = [
-  // { id: 'card-1', name: 'Pikachu', v: 'holo',
-  //   img: 'https://...SM.png',
-  //   pc:  'https://www.pricecharting.com/...' },
+  {id:'M2-001',name:'M2 #001',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_1_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-1'},
+  {id:'M2-002',name:'M2 #002',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_2_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-2'},
+  {id:'M2-003',name:'M2 #003',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_3_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-3'},
+  {id:'M2-004',name:'M2 #004',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_4_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-4'},
+  {id:'M2-005',name:'M2 #005',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_5_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-5'},
+  {id:'M2-006',name:'M2 #006',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_6_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-6'},
+  {id:'M2-007',name:'M2 #007',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_7_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-7'},
+  {id:'M2-008',name:'M2 #008',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_8_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-8'},
+  {id:'M2-009',name:'M2 #009',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_9_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-9'},
+  {id:'M2-010',name:'M2 #010',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_10_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-10'},
+  {id:'M2-011',name:'M2 #011',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_11_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-11'},
+  {id:'M2-012',name:'M2 #012',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_12_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-12'},
+  {id:'M2-013',name:'M2 #013',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_13_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-13'},
+  {id:'M2-014',name:'M2 #014',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_14_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-14'},
+  {id:'M2-015',name:'M2 #015',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_15_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-15'},
+  {id:'M2-016',name:'M2 #016',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_16_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-16'},
+  {id:'M2-017',name:'M2 #017',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_17_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-17'},
+  {id:'M2-018',name:'M2 #018',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_18_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-18'},
+  {id:'M2-019',name:'M2 #019',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_19_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-19'},
+  {id:'M2-020',name:'M2 #020',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_20_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-20'},
+  {id:'M2-021',name:'M2 #021',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_21_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-21'},
+  {id:'M2-022',name:'M2 #022',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_22_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-22'},
+  {id:'M2-023',name:'M2 #023',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_23_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-23'},
+  {id:'M2-024',name:'M2 #024',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_24_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-24'},
+  {id:'M2-025',name:'M2 #025',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_25_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-25'},
+  {id:'M2-026',name:'M2 #026',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_26_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-26'},
+  {id:'M2-027',name:'M2 #027',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_27_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-27'},
+  {id:'M2-028',name:'M2 #028',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_28_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-28'},
+  {id:'M2-029',name:'M2 #029',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_29_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-29'},
+  {id:'M2-030',name:'M2 #030',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_30_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-30'},
+  {id:'M2-031',name:'M2 #031',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_31_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-31'},
+  {id:'M2-032',name:'M2 #032',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_32_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-32'},
+  {id:'M2-033',name:'M2 #033',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_33_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-33'},
+  {id:'M2-034',name:'M2 #034',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_34_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-34'},
+  {id:'M2-035',name:'M2 #035',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_35_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-35'},
+  {id:'M2-036',name:'M2 #036',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_36_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-36'},
+  {id:'M2-037',name:'M2 #037',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_37_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-37'},
+  {id:'M2-038',name:'M2 #038',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_38_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-38'},
+  {id:'M2-039',name:'M2 #039',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_39_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-39'},
+  {id:'M2-040',name:'M2 #040',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_40_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-40'},
+  {id:'M2-041',name:'M2 #041',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_41_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-41'},
+  {id:'M2-042',name:'M2 #042',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_42_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-42'},
+  {id:'M2-043',name:'M2 #043',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_43_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-43'},
+  {id:'M2-044',name:'M2 #044',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_44_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-44'},
+  {id:'M2-045',name:'M2 #045',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_45_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-45'},
+  {id:'M2-046',name:'M2 #046',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_46_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-46'},
+  {id:'M2-047',name:'M2 #047',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_47_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-47'},
+  {id:'M2-048',name:'M2 #048',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_48_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-48'},
+  {id:'M2-049',name:'M2 #049',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_49_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-49'},
+  {id:'M2-050',name:'M2 #050',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_50_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-50'},
+  {id:'M2-051',name:'M2 #051',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_51_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-51'},
+  {id:'M2-052',name:'M2 #052',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_52_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-52'},
+  {id:'M2-053',name:'M2 #053',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_53_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-53'},
+  {id:'M2-054',name:'M2 #054',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_54_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-54'},
+  {id:'M2-055',name:'M2 #055',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_55_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-55'},
+  {id:'M2-056',name:'M2 #056',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_56_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-56'},
+  {id:'M2-057',name:'M2 #057',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_57_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-57'},
+  {id:'M2-058',name:'M2 #058',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_58_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-58'},
+  {id:'M2-059',name:'M2 #059',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_59_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-59'},
+  {id:'M2-060',name:'M2 #060',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_60_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-60'},
+  {id:'M2-061',name:'M2 #061',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_61_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-61'},
+  {id:'M2-062',name:'M2 #062',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_62_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-62'},
+  {id:'M2-063',name:'M2 #063',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_63_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-63'},
+  {id:'M2-064',name:'M2 #064',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_64_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-64'},
+  {id:'M2-065',name:'M2 #065',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_65_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-65'},
+  {id:'M2-066',name:'M2 #066',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_66_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-66'},
+  {id:'M2-067',name:'M2 #067',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_67_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-67'},
+  {id:'M2-068',name:'M2 #068',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_68_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-68'},
+  {id:'M2-069',name:'M2 #069',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_69_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-69'},
+  {id:'M2-070',name:'M2 #070',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_70_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-70'},
+  {id:'M2-071',name:'M2 #071',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_71_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-71'},
+  {id:'M2-072',name:'M2 #072',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_72_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-72'},
+  {id:'M2-073',name:'M2 #073',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_73_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-73'},
+  {id:'M2-074',name:'M2 #074',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_74_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-74'},
+  {id:'M2-075',name:'M2 #075',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_75_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-75'},
+  {id:'M2-076',name:'M2 #076',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_76_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-76'},
+  {id:'M2-077',name:'M2 #077',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_77_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-77'},
+  {id:'M2-078',name:'M2 #078',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_78_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-78'},
+  {id:'M2-079',name:'M2 #079',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_79_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-79'},
+  {id:'M2-080',name:'M2 #080',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_80_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-80'},
+  {id:'M2-081',name:'M2 #081',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_81_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-81'},
+  {id:'M2-082',name:'M2 #082',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_82_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-82'},
+  {id:'M2-083',name:'M2 #083',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_83_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-83'},
+  {id:'M2-084',name:'M2 #084',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_84_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-84'},
+  {id:'M2-085',name:'M2 #085',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_85_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-85'},
+  {id:'M2-086',name:'M2 #086',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_86_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-86'},
+  {id:'M2-087',name:'M2 #087',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_87_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-87'},
+  {id:'M2-088',name:'M2 #088',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_88_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-88'},
+  {id:'M2-089',name:'M2 #089',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_89_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-89'},
+  {id:'M2-090',name:'M2 #090',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_90_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-90'},
+  {id:'M2-091',name:'M2 #091',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_91_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-91'},
+  {id:'M2-092',name:'M2 #092',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_92_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-92'},
+  {id:'M2-093',name:'M2 #093',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_93_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-93'},
+  {id:'M2-094',name:'M2 #094',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_94_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-94'},
+  {id:'M2-095',name:'M2 #095',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_95_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-95'},
+  {id:'M2-096',name:'M2 #096',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_96_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-96'},
+  {id:'M2-097',name:'M2 #097',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_97_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-97'},
+  {id:'M2-098',name:'M2 #098',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_98_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-98'},
+  {id:'M2-099',name:'M2 #099',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_99_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-99'},
+  {id:'M2-100',name:'M2 #100',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_100_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-100'},
+  {id:'M2-101',name:'M2 #101',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_101_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-101'},
+  {id:'M2-102',name:'M2 #102',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_102_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-102'},
+  {id:'M2-103',name:'M2 #103',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_103_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-103'},
+  {id:'M2-104',name:'M2 #104',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_104_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-104'},
+  {id:'M2-105',name:'M2 #105',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_105_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-105'},
+  {id:'M2-106',name:'M2 #106',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_106_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-106'},
+  {id:'M2-107',name:'M2 #107',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_107_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-107'},
+  {id:'M2-108',name:'M2 #108',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_108_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-108'},
+  {id:'M2-109',name:'M2 #109',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_109_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-109'},
+  {id:'M2-110',name:'M2 #110',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_110_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-110'},
+  {id:'M2-111',name:'M2 #111',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_111_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-111'},
+  {id:'M2-112',name:'M2 #112',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_112_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-112'},
+  {id:'M2-113',name:'M2 #113',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_113_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-113'},
+  {id:'M2-114',name:'M2 #114',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_114_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-114'},
+  {id:'M2-115',name:'M2 #115',v:'secret',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_115_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-115'},
+  {id:'M2-116',name:'M2 #116',v:'mur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2/M2_116_R_JP_SM.png',pc:'https://www.pricecharting.com/game/pokemon-japanese-inferno-x/m2-116'}
 ];
 
-// ── sk(): unique storage key per slot ────────────────────────────────────
-function sk(s) { return s.id; }
+function sk(s)       { return s.id; }
+function varLabel(s) { return {main:'Main',secret:'Secret',mur:'MUR'}[s.v]||s.v; }
+function imgUrl(s)   { return s.img||''; }
+function pcUrl(s)    { return s.pc||'#'; }
 
-// ── varLabel(): text shown in the slot badge and modal ───────────────────
-function varLabel(s) { return s.v; }
-
-// ── imgUrl(): image URL for a slot (override if you compute it dynamically)
-// If slot.img is set directly, this is not called.
-function imgUrl(s) { return s.img || ''; }
-
-// ── pcUrl(): PriceCharting URL for a slot ────────────────────────────────
-function pcUrl(s) { return s.pc || '#'; }
-
-// ── makeCover(): returns a DOM element for the left cover page ───────────
 function makeCover() {
-  const d = document.createElement('div');
-  d.className = 'bpage cover-pg';
-  d.innerHTML = `
-    <div style="font-size:22px;font-weight:800;color:#c89a3a;text-align:center">
-      ${BINDER.title}
+  const d=document.createElement('div');d.className='bpage cover-pg';
+  d.innerHTML=`
+    <div style="font-size:22px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
+      M2<br><span style="font-size:16px;font-weight:700;color:#ddd">Inferno X</span>
+      <br><span style="font-size:11px;font-weight:400;color:#555">インフェルノX</span>
     </div>
-    <div class="cover-box">${BINDER.subtitle}</div>
+    <div class="cover-box">
+      📅 September 26, 2025<br>
+      ⭐ Flagship: Mega Charizard X ex<br>
+      🇯🇵 JP: Phantasmal Flames (Nov 14, 2025)<br>
+      <span style="color:#282420;font-size:10px">── 80 main · 36 secret · 116 total ──</span>
+    </div>
     <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.7">
-      Left-click = mark owned<br>Right-click = price &amp; details
+      Left-click = mark owned · Right-click = price &amp; details
     </div>`;
   return d;
 }
 
-// ── SDEFS: missing-list section definitions ───────────────────────────────
-// Each entry: { label: 'Section name', f: slot => boolean }
 const SDEFS = [
-  { label: 'All Cards', f: s => true },
+  { label: 'Main Set (80)', f: s=>s.v==='main' },
+  { label: 'Secret Rares', f: s=>s.v==='secret' },
+  { label: 'MUR', f: s=>s.v==='mur' },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════

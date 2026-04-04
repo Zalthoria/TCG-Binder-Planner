@@ -43,7 +43,7 @@ input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;pa
 .cover-box{background:#181410;border:1px solid #2a2418;border-radius:9px;padding:10px 16px;font-size:11px;color:#666;line-height:2;text-align:center}
 .blank-pg{background:#0e0c0a;display:flex;align-items:center;justify-content:center}
 .pg-lbl{font-size:9px;color:#252220;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.grid{display:grid;grid-template-columns:repeat(var(--binder-cols,3),1fr);gap:5px}
 
 /* Slots */
 .slot{background:#0b0a08;border-radius:6px;cursor:pointer;transition:border-color .12s,transform .1s;position:relative;overflow:hidden}
@@ -786,6 +786,7 @@ function copyMissing(){
 function confirmClear(){if(confirm('Clear all ownership data?')){owned.clear();saveOwned();render();updateProgress();}}
 
 // ─────────────────────────── init ───────────────────────────────────────
+document.documentElement.style.setProperty('--binder-cols', 3);
 load();updateProgress();render();
 // ── Sync data between devices ─────────────────────────────────────────────
 const SYNC_KEYS = [

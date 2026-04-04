@@ -121,7 +121,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><span class="stat-val" id="stat-total-owned">—</span><span class="stat-lbl">Total Owned</span></div>
-  <div class="stat"><span class="stat-val" id="stat-binders">4</span><span class="stat-lbl">Binders</span></div>
+  <div class="stat"><span class="stat-val" id="stat-binders">6</span><span class="stat-lbl">Binders</span></div>
   <div class="stat"><span class="stat-val" id="stat-priced">—</span><span class="stat-lbl">Cards Priced</span></div>
 </div>
 
@@ -204,6 +204,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </a>
 
+  <a class="binder-card" href="m2.html">
+    <div class="card-body">
+      <div class="card-icon">🔥</div>
+      <div class="card-info">
+        <div class="card-name">M2 Inferno X — Master Set</div>
+        <div class="card-desc">インフェルノX · Mega Charizard X ex · September 2025</div>
+        <div class="card-meta">116 cards · 80 main + 36 secret rares</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">
+      <div class="prog-track"><div class="prog-fill" id="prog-m2" style="width:0%"></div></div>
+      <div class="prog-label">
+        <span id="prog-m2-text">Loading…</span>
+        <span id="prog-m2-pct">0%</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="binder-card" href="sv2a.html">
+    <div class="card-body">
+      <div class="card-icon">🎴</div>
+      <div class="card-info">
+        <div class="card-name">SV2a Pokémon Card 151</div>
+        <div class="card-desc">Japanese · Mew ex / Mewtwo ex · June 2023</div>
+        <div class="card-meta">207 cards · 165 main + 42 secret rares</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">
+      <div class="prog-track"><div class="prog-fill" id="prog-sv2a" style="width:0%"></div></div>
+      <div class="prog-label">
+        <span id="prog-sv2a-text">Loading…</span>
+        <span id="prog-sv2a-pct">0%</span>
+      </div>
+    </div>
+  </a>
+
 </div>
 
 <!-- Sync modal -->
@@ -253,6 +291,8 @@ const BINDERS = [
   { ownedKey: 'penny_owned_v1',            pricesKey: 'penny_prices_v1',            total: 10,  progId: 'prog-penny', textId: 'prog-penny-text', pctId: 'prog-penny-pct' },
   { ownedKey: 'm3_nihil_zero_owned_v1',    pricesKey: 'm3_nihil_zero_prices_v1',    total: 117, progId: 'prog-m3',    textId: 'prog-m3-text',    pctId: 'prog-m3-pct'    },
   { ownedKey: 'm4_ninja_spinner_owned_v1', pricesKey: 'm4_ninja_spinner_prices_v1', total: 120, progId: 'prog-m4',    textId: 'prog-m4-text',    pctId: 'prog-m4-pct'    },
+  { ownedKey: 'm2_inferno_x_owned_v1',     pricesKey: 'm2_inferno_x_prices_v1',     total: 116, progId: 'prog-m2',    textId: 'prog-m2-text',    pctId: 'prog-m2-pct'    },
+  { ownedKey: 'sv2a_151_owned_v1',         pricesKey: 'sv2a_151_prices_v1',         total: 207, progId: 'prog-sv2a', textId: 'prog-sv2a-text',  pctId: 'prog-sv2a-pct'  },
 ];
 
 const SYNC_KEYS = [
