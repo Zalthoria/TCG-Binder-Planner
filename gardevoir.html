@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#181410">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TCG Binders">
+<title id="page-title">Gardevoir — All Prints</title>
+<script src="gist-sync.js"></script>
+<style>
+/* ── Reset & base ─────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 12px 80px}
+
+/* ── Toolbar ──────────────────────────────────────────────────────────────── */
+.app-title{font-size:16px;font-weight:700;color:#fff}
+.app-sub{font-size:11px;color:#555;margin-top:2px}
+.toolbar{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-top:14px}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+input[type=text]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:6px 10px;font-size:13px;color:#ddd;width:150px;outline:none}
+input[type=text]:focus{border-color:#666}
+.clr{background:none;border:none;color:#555;cursor:pointer;font-size:14px;padding:0 4px}.clr:hover{color:#aaa}
+.nav{display:flex;align-items:center;gap:5px}
+.nb{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:6px 13px;font-size:13px;color:#ccc;cursor:pointer;font-family:inherit}.nb:hover:not(:disabled){background:#2a2820}.nb:disabled{opacity:.3;cursor:default}
+input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:5px 6px;font-size:13px;color:#ddd;width:48px;text-align:center;outline:none;font-family:inherit}
+.pc{font-size:12px;color:#555;white-space:nowrap}
+
+/* ── Action bar ───────────────────────────────────────────────────────────── */
+.action-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.prog-wrap{flex:1;min-width:140px;height:6px;background:#1e1c18;border-radius:999px;overflow:hidden}
+.prog-bar{height:100%;background:#c89a3a;border-radius:999px;transition:width .3s}
+.prog-text{font-size:11px;color:#666;white-space:nowrap}
+.btn{padding:6px 13px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid}
+.btn-gold{background:#1e1c18;border-color:#3a3020;color:#c89a3a}.btn-gold:hover{background:#2a2010}
+.btn-purple{background:#1e1c18;border-color:#2a2040;color:#9070e0}.btn-purple:hover{background:#22183a}
+.btn-dim{background:#1e1c18;border-color:#2a2828;color:#555}.btn-dim:hover{background:#2a2820;color:#aaa}
+.filter-lbl{display:flex;align-items:center;gap:5px;font-size:12px;color:#666;cursor:pointer;user-select:none}.filter-lbl input{accent-color:#c89a3a}
+
+/* ── Legend ───────────────────────────────────────────────────────────────── */
+.legend{width:100%;max-width:1100px;display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px;font-size:11px;color:#555}
+.lv{display:flex;align-items:center;gap:5px}
+.ld{display:inline-block;width:10px;height:10px;border-radius:2px;border:2px solid #555;background:transparent;flex-shrink:0}
+
+/* ── Spread ───────────────────────────────────────────────────────────────── */
+.alert{width:100%;max-width:1100px;font-size:12px;color:#c06040;margin-bottom:6px;display:none}
+.spread-info{font-size:11px;color:#252220;text-align:center;margin-bottom:5px;letter-spacing:.06em}
+.spread{width:100%;max-width:1100px;display:flex;background:#0d0b09;border:2px solid #252018;border-radius:16px;overflow:hidden;box-shadow:0 10px 50px rgba(0,0,0,.7)}
+.spine{width:20px;flex-shrink:0;background:linear-gradient(to right,#080706,#1c1814,#1c1814,#080706)}
+.bpage{flex:1;padding:11px;min-width:0}
+.pg-lbl{font-size:9px;color:#252220;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.blank-pg{flex:1;background:#0e0c0a}
+.hide-owned .slot.owned{display:none}
+
+/* ── Cover page ───────────────────────────────────────────────────────────── */
+.cover-pg{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0f0d0a}
+.cover-box{background:#181410;border:1px solid #2a2418;border-radius:9px;padding:12px 18px;font-size:11px;color:#555;line-height:2.1;text-align:center}
+
+/* ── Grid & slots ─────────────────────────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(var(--binder-cols,3),1fr);gap:6px}
+.slot{background:#0b0a08;border-radius:6px;cursor:pointer;transition:border-color .12s,transform .1s;position:relative;overflow:hidden;border:2px solid #252018}
+.slot:hover{transform:scale(1.04);z-index:5}
+.slot.empty{display:flex;align-items:center;justify-content:center;aspect-ratio:63/110;border:2px dashed #181614;cursor:default;background:transparent}
+.slot.empty:hover{transform:none;border-color:#181614}
+.slot.owned .cimg,.slot.owned .cph{opacity:.38;filter:brightness(.6)}
+.badge-owned{position:absolute;top:3px;right:3px;font-size:12px;font-weight:700;color:#4cff80;text-shadow:0 0 6px rgba(60,255,120,.5);pointer-events:none;z-index:4;line-height:1}
+.badge-star{position:absolute;top:3px;left:3px;font-size:11px;pointer-events:none;z-index:4;line-height:1}
+.badge-price{position:absolute;bottom:23px;left:0;right:0;font-size:8px;font-weight:700;color:#c89a3a;pointer-events:none;z-index:4;text-align:center;background:rgba(11,10,8,.85);padding:1px 0}
+.cimg{width:100%;aspect-ratio:63/88;object-fit:cover;display:block;background:#0d0c0a}
+.cph{width:100%;aspect-ratio:63/88;background:#0d0c0a;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px}
+.ph-n{font-size:10px;color:#2a2826;font-weight:600}
+.ph-nm{font-size:8px;color:#222;text-align:center}
+.clbl{padding:3px 4px 4px;background:#060504}
+.cnum{font-size:8px;color:#2a2826;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cnm{font-size:9px;font-weight:500;color:#888;line-height:1.25;margin:1px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vbg{display:inline-block;font-size:7px;padding:1px 4px;border-radius:999px;font-weight:600;line-height:1.5}
+
+/* ── Card detail modal ────────────────────────────────────────────────────── */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
+.modal.open{display:flex}
+.mbox{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:340px;width:100%;margin:auto;text-align:center}
+.mbox .cimg{border-radius:8px;margin-bottom:10px;max-width:200px}
+.mph{display:none;width:200px;aspect-ratio:63/88;background:#111;border-radius:8px;margin:0 auto 10px;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:8px}
+.mname{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}
+.mnum{font-size:11px;color:#555;margin-bottom:4px}
+.mbadge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600;margin-bottom:14px}
+.price-area{background:#111;border-radius:8px;padding:12px;margin-bottom:12px;text-align:left}
+.price-area-title{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#444;margin-bottom:8px}
+.price-area-title a{font-size:11px;color:#5060a0;text-decoration:none}.price-area-title a:hover{color:#8090d0}
+.price-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.pfield label{display:block;font-size:10px;color:#444;margin-bottom:3px;text-align:center}
+.pfield input{width:100%;background:#0b0a08;border:1px solid #222;border-radius:5px;padding:5px 6px;font-size:12px;color:#c89a3a;text-align:center;outline:none;font-family:inherit}
+.pfield input:focus{border-color:#5a3a10}
+.pfield input::placeholder{color:#252220}
+.save-prices-btn{width:100%;margin-top:8px;padding:7px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;background:#1e2a10;border:1px solid #3a5020;color:#80c040}
+.save-prices-btn:hover{background:#283814}
+.price-saved{font-size:11px;color:#4cff80;text-align:center;margin-top:4px;display:none}
+.m-btns{display:flex;gap:7px;margin-bottom:10px}
+.m-btn{flex:1;padding:8px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:none}
+.m-btn-own{background:#1e3a20;color:#4cff80}.m-btn-own:hover{background:#2a5030}
+.m-btn-unown{background:#3a2010;color:#ff8040}.m-btn-unown:hover{background:#502818}
+.m-btn-watch{background:#22183a;color:#9070e0}.m-btn-watch:hover{background:#2e2050}
+.m-btn-unwatch{background:#2a1220;color:#e07090}.m-btn-unwatch:hover{background:#3a1830}
+.m-btn-close{width:100%;padding:8px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;background:#1a1814;border:1px solid #2a2620;color:#888}.m-btn-close:hover{background:#222}
+
+/* ── Watchlist modal ──────────────────────────────────────────────────────── */
+.wl-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
+.wl-modal.open{display:flex}
+.wl-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.modal-head-left .title{font-size:15px;font-weight:700;color:#fff}
+.modal-head-left .sub{font-size:11px;color:#555;margin-top:2px}
+.modal-head-right{display:flex;gap:6px;flex-wrap:wrap}
+table.wt{width:100%;border-collapse:collapse;font-size:12px}
+table.wt th{text-align:left;padding:6px 8px;color:#383430;font-weight:500;border-bottom:1px solid #1e1c18;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+table.wt td{padding:7px 8px;border-bottom:1px solid #141210;vertical-align:middle}
+table.wt tr:last-child td{border-bottom:none}
+table.wt tr:hover td{background:#111}
+.wt-num{color:#282420;font-size:11px;font-variant-numeric:tabular-nums}
+.wt-name{color:#888;cursor:pointer}.wt-name:hover{color:#ccc}
+.wt-badge{font-size:9px;padding:1px 5px;border-radius:999px;font-weight:600}
+.wt-p{font-weight:600;color:#c89a3a;font-variant-numeric:tabular-nums}.wt-p.na{color:#282420;font-weight:400;font-style:italic}
+.wt-rm{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid #282420;background:#1a1814;color:#444;cursor:pointer;font-family:inherit}.wt-rm:hover{background:#3a1010;border-color:#5a1010;color:#e07070}
+.wl-empty{text-align:center;padding:30px 10px;font-size:13px;color:#333}
+.wl-empty span{display:block;font-size:12px;color:#242220;margin-top:6px}
+
+/* ── Missing list modal ───────────────────────────────────────────────────── */
+.ml-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
+.ml-modal.open{display:flex}
+.ml-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
+.ml-section{margin-bottom:12px}
+.ml-section-title{font-size:10px;color:#383430;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #1e1c18}
+.ml-chip{display:inline-block;font-size:11px;color:#777;background:#111;border:1px solid #1e1c18;border-radius:5px;padding:3px 8px;margin:2px;cursor:pointer}
+.ml-chip:hover{border-color:#333;color:#aaa}
+.ml-total{font-size:11px;color:#4cff80;margin-bottom:10px;padding:6px 10px;background:#0d1a0d;border-radius:6px;border:1px solid #1a3a1a}
+
+/* ── Nav bar (injected by nav_bar.html) ───────────────────────────────────── */
+#app-nav{position:sticky;top:0;z-index:500;background:#100e0c;border-bottom:1px solid #2a2418;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.6)}
+.nav-back{background:#1e1c18;border:1px solid #2a2620;border-radius:7px;padding:6px 12px;font-size:12px;color:#888;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:background .12s,color .12s}
+.nav-back:hover{background:#2a2820;color:#ccc}
+.nav-title{flex:1;font-size:13px;font-weight:600;color:#c89a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.nav-sync{background:#1e1c18;border:1px solid #2a2040;border-radius:7px;padding:6px 10px;font-size:11px;color:#7060c0;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.nav-sync:hover{background:#22183a}
+.sync-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
+.sync-overlay.open{display:flex}
+.sync-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:22px;max-width:480px;width:100%;margin:auto}
+.sync-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.sync-desc{font-size:11px;color:#555;margin-bottom:16px;line-height:1.7}
+.sync-section{margin-bottom:14px}
+.sync-label{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.sync-ta{width:100%;height:80px;background:#0b0a08;border:1px solid #222;border-radius:7px;padding:8px;font-size:11px;color:#aaa;font-family:'Courier New',monospace;resize:vertical;outline:none;display:block}
+.sync-ta:focus{border-color:#5a3a10}
+.sync-row{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap}
+.sync-btn-a{padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid}
+.sa-green{background:#1e2a10;border-color:#3a5020;color:#80c040}.sa-green:hover{background:#283814}
+.sa-purple{background:#1e1a38;border-color:#3a3060;color:#8070d0}.sa-purple:hover{background:#26224a}
+.sa-dim{background:#1a1814;border-color:#2a2620;color:#666}.sa-dim:hover{background:#222}
+.sync-warn{font-size:10px;color:#3a2820;margin-top:5px;line-height:1.5}
+
+/* ── Bottom nav ───────────────────────────────────────────────────────────── */
+#binder-bnav{position:fixed;bottom:0;left:0;right:0;z-index:600;background:#100e0c;border-top:1px solid #2a2418;display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:52px;box-shadow:0 -2px 14px rgba(0,0,0,.6)}
+#binder-bnav .bnav-btn{background:#1e1c18;border:1px solid #333;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:600;color:#ccc;cursor:pointer;font-family:inherit;min-width:90px;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s}
+#binder-bnav .bnav-btn:active{background:#2a2820}
+#binder-bnav .bnav-btn:disabled{opacity:.25;cursor:default}
+#binder-bnav .bnav-info{font-size:12px;color:#555;text-align:center;flex:1;font-variant-numeric:tabular-nums}
+#gs-btn{bottom:60px!important}
+#gs-update-banner{bottom:60px!important}
+</style>
+</head>
+<body>
+
+<!-- ── Nav bar ── -->
+<div id="app-nav">
+  <a href="index.html" class="nav-back">← All Binders</a>
+  <div class="nav-title" id="nav-title"></div>
+  <button class="nav-sync" onclick="openSync()">⇅ Sync</button>
+</div>
+
+<!-- ── Manual sync modal (fallback when Gist not connected) ── -->
+<div class="sync-overlay" id="sync-overlay" onclick="if(event.target===this)closeSyncModal()">
+  <div class="sync-box">
+    <div class="sync-title">⇅ Sync Data Between Devices</div>
+    <div class="sync-desc">Data is saved locally per browser. Export your data on one device, paste it on the other.</div>
+    <div class="sync-section">
+      <div class="sync-label">Export — copy your data</div>
+      <textarea id="export-ta" class="sync-ta" readonly placeholder="Click Export to generate…"></textarea>
+      <div class="sync-row">
+        <button class="sync-btn-a sa-green" onclick="doManualExport()">Export & Copy</button>
+        <span id="export-flash" style="font-size:11px;color:#4cff80;display:none">✓ Copied!</span>
+      </div>
+    </div>
+    <div class="sync-section">
+      <div class="sync-label">Import — paste data from another device</div>
+      <textarea id="import-ta" class="sync-ta" placeholder="Paste exported data here…"></textarea>
+      <div class="sync-row">
+        <button class="sync-btn-a sa-purple" onclick="doManualImport()">Import Data</button>
+        <span id="import-flash" style="font-size:11px;display:none"></span>
+      </div>
+      <div class="sync-warn">⚠ Overwrites current data on this device.</div>
+    </div>
+    <button class="sync-btn-a sa-dim" onclick="closeSyncModal()" style="width:100%;margin-top:4px">Close</button>
+  </div>
+</div>
+
+<!-- ── Toolbar ── -->
+<div class="toolbar">
+  <div>
+    <div class="app-title" id="tb-title"></div>
+    <div class="app-sub" id="tb-sub"></div>
+  </div>
+  <div class="controls">
+    <div style="display:flex;align-items:center;gap:4px">
+      <input type="text" id="si" placeholder="Search…" oninput="findCard(this.value)">
+      <button class="clr" onclick="document.getElementById('si').value='';findCard('')">✕</button>
+    </div>
+    <div class="nav">
+      <button class="nb" id="bprev" onclick="go(-1)">← Prev</button>
+      <span class="pc">Spread</span>
+      <input type="number" id="pgn" min="1" value="1" onchange="goTo(+this.value)">
+      <span class="pc" id="of-lbl">of —</span>
+      <button class="nb" id="bnext" onclick="go(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Action bar ── -->
+<div class="action-bar">
+  <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+  <span class="prog-text" id="prog-text">0 / —</span>
+  <label class="filter-lbl"><input type="checkbox" id="chk-miss" onchange="toggleMissing(this.checked)"> Missing only</label>
+  <button class="btn btn-purple" onclick="openWatchlist()">⭐ Watchlist</button>
+  <button class="btn btn-gold" onclick="openMissingList()">📋 Missing</button>
+  <button class="btn btn-dim" onclick="confirmClear()">Clear all</button>
+</div>
+
+<!-- ── Legend (rendered from BINDER.legend) ── -->
+<div class="legend" id="legend-bar"></div>
+
+<!-- ── Spread ── -->
+<div class="alert" id="alert"></div>
+<div class="spread-info" id="sinfo"></div>
+<div class="spread" id="spread">
+  <div id="lp"></div>
+  <div class="spine"></div>
+  <div id="rp"></div>
+</div>
+
+<!-- ── Card detail modal ── -->
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="mbox">
+    <img class="cimg" id="mimg" src="" alt="">
+    <div class="mph" id="mph"></div>
+    <div class="mname" id="mname"></div>
+    <div class="mnum" id="mnum"></div>
+    <div class="mbadge" id="mbadge"></div>
+    <div class="price-area">
+      <div class="price-area-title">
+        <span>Prices (USD)</span>
+        <a id="pc-link" href="#" target="_blank">Open PriceCharting ↗</a>
+      </div>
+      <div class="price-fields">
+        <div class="pfield"><label>Ungraded</label><input type="text" id="p-raw" placeholder="$0.00"></div>
+        <div class="pfield"><label>PSA 9</label><input type="text" id="p-9" placeholder="$0.00"></div>
+        <div class="pfield"><label>PSA 10</label><input type="text" id="p-10" placeholder="$0.00"></div>
+      </div>
+      <button class="save-prices-btn" onclick="savePriceFromModal()">Save prices</button>
+      <div class="price-saved" id="price-saved">✓ Saved!</div>
+    </div>
+    <div class="m-btns">
+      <button class="m-btn m-btn-own" id="m-own-btn" onclick="toggleOwnModal()">Mark as owned</button>
+      <button class="m-btn m-btn-watch" id="m-watch-btn" onclick="toggleWatchModal()">⭐ Watch</button>
+    </div>
+    <button class="m-btn-close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- ── Watchlist modal ── -->
+<div class="wl-modal" id="wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="wl-box">
+    <div class="modal-head">
+      <div class="modal-head-left"><div class="title">⭐ Watchlist</div><div class="sub" id="wl-sub"></div></div>
+      <div class="modal-head-right"><button class="btn btn-dim" onclick="document.getElementById('wl-modal').classList.remove('open')">Close</button></div>
+    </div>
+    <div id="wl-body"></div>
+  </div>
+</div>
+
+<!-- ── Missing list modal ── -->
+<div class="ml-modal" id="ml-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="ml-box">
+    <div class="modal-head">
+      <div class="modal-head-left"><div class="title">Missing Cards</div><div class="sub" id="ml-stats"></div></div>
+      <div class="modal-head-right">
+        <button class="btn btn-purple" onclick="copyMissing()">Copy as text</button>
+        <button class="btn btn-dim" onclick="document.getElementById('ml-modal').classList.remove('open')">Close</button>
+      </div>
+    </div>
+    <div id="ml-total" class="ml-total" style="display:none"></div>
+    <div id="ml-body"></div>
+  </div>
+</div>
+
+<!-- ── Bottom nav ── -->
+<div id="binder-bnav">
+  <button class="bnav-btn" id="bn-prev" onclick="go(-1)">← Prev</button>
+  <div class="bnav-info" id="bn-info">Page 1</div>
+  <button class="bnav-btn" id="bn-next" onclick="go(1)">Next →</button>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+//  BINDER CONFIG — edit everything in this section for each new binder
+// ════════════════════════════════════════════════════════════════════════════
+
+const BINDER = {
+  title:    'Gardevoir — All Prints',
+  subtitle: '58 cards · EX era → Mega era · All English TCG prints',
+  navTitle: 'Gardevoir · 58 prints',
+  lsOwned:  'gardevoir_owned_v1',
+  lsWatched:'gardevoir_watched_v1',
+  lsPrices: 'gardevoir_prices_v1',
+  cols: 3,
+  legend: [
+    { label: 'Base/Holo',   color: '#666'    },
+    { label: 'EX / GX / V', color: '#5090d8' },
+    { label: 'Tag Team',     color: '#c060d0' },
+    { label: 'SV ex',        color: '#40c090' },
+    { label: 'Mega ex',      color: '#c89a3a' },
+    { label: 'Ultra Rare',   color: '#e05090' },
+    { label: 'Special',      color: '#50a0a0' },
+  ],
+};
+
+const BC = {
+  'base':   { bg: '#181410', col: '#666'    },
+  'ex':     { bg: '#101828', col: '#5090d8' },
+  'gx':     { bg: '#101828', col: '#5090d8' },
+  'v':      { bg: '#101828', col: '#5090d8' },
+  'tag':    { bg: '#200840', col: '#c060d0' },
+  'svex':   { bg: '#082820', col: '#40c090' },
+  'mega':   { bg: '#2a1e04', col: '#c89a3a' },
+  'ultra':  { bg: '#300818', col: '#e05090' },
+  'special':{ bg: '#081828', col: '#50a0a0' },
+};
+const BC_DEFAULT = { bg: '#181410', col: '#666' };
+
+const SLOTS = [
+  {id:'EXR-007',num:'7/109',name:'Gardevoir',set:'EX Ruby & Sapphire',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EXR/EXR_7_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ex-ruby-and-sapphire/gardevoir-7'},
+  {id:'EXS-096',num:'96/100',name:'Gardevoir ex',set:'EX Sandstorm',v:'ex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EXS/EXS_96_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ex-sandstorm/gardevoir-ex-96'},
+  {id:'EXE-004',num:'4/106',name:'Gardevoir',set:'EX Emerald',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EXE/EXE_4_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ex-emerald/gardevoir-4'},
+  {id:'EXD-006',num:'6/113',name:'Gardevoir δ',set:'EX Delta Species',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EXD/EXD_6_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ex-delta-species/gardevoir-6'},
+  {id:'EXF-093',num:'93/101',name:'Gardevoir ex δ',set:'EX Dragon Frontiers',v:'ex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EXF/EXF_93_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ex-dragon-frontiers/gardevoir-ex-93'},
+  {id:'EXP-009',num:'9/108',name:'Gardevoir',set:'EX Power Keepers',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/EXP/EXP_9_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ex-power-keepers/gardevoir-9'},
+  {id:'SW-007',num:'7/132',name:'Gardevoir',set:'Secret Wonders',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SW/SW_7_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-secret-wonders/gardevoir-7'},
+  {id:'SW-131',num:'131/132',name:'Gardevoir Lv.X',set:'Secret Wonders',v:'ex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SW/SW_131_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-secret-wonders/gardevoir-lv-x-131'},
+  {id:'PL-008',num:'8/127',name:'Gardevoir',set:'Platinum',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PL/PL_8_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-platinum/gardevoir-8'},
+  {id:'NXD-057',num:'57/99',name:'Gardevoir',set:'Next Destinies',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/NXD/NXD_57_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-next-destinies/gardevoir-57'},
+  {id:'DEX-109',num:'109/108',name:'Gardevoir',set:'Dark Explorers',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/DEX/DEX_109_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-dark-explorers/gardevoir-109'},
+  {id:'LTR-RC10',num:'RC10/RC25',name:'Gardevoir',set:'Legendary Treasures',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LTR/LTR_RC10_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-legendary-treasures/gardevoir-rc10'},
+  {id:'PRC-105',num:'105/160',name:'Gardevoir EX',set:'Primal Clash',v:'ex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_105_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-primal-clash/gardevoir-ex-105'},
+  {id:'PRC-106',num:'106/160',name:'M Gardevoir EX',set:'Primal Clash',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_106_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-primal-clash/m-gardevoir-ex-106'},
+  {id:'PRC-155',num:'155/160',name:'Gardevoir EX (FA)',set:'Primal Clash',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_155_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-primal-clash/gardevoir-ex-155'},
+  {id:'PRC-156',num:'156/160',name:'M Gardevoir EX (FA)',set:'Primal Clash',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRC/PRC_156_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-primal-clash/m-gardevoir-ex-156'},
+  {id:'AOR-054',num:'54/98',name:'Gardevoir',set:'Ancient Origins',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/AOR/AOR_54_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ancient-origins/gardevoir-54'},
+  {id:'GEN-RC30',num:'RC30/RC32',name:'Gardevoir EX',set:'Generations',v:'ex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/GEN/GEN_RC30_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-generations/gardevoir-ex-rc30'},
+  {id:'GEN-RC31',num:'RC31/RC32',name:'M Gardevoir EX',set:'Generations',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/GEN/GEN_RC31_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-generations/m-gardevoir-ex-rc31'},
+  {id:'STS-078',num:'78/114',name:'Gardevoir EX',set:'Steam Siege',v:'ex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_78_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-steam-siege/gardevoir-ex-78'},
+  {id:'STS-079',num:'79/114',name:'M Gardevoir EX',set:'Steam Siege',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_79_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-steam-siege/m-gardevoir-ex-79'},
+  {id:'STS-111',num:'111/114',name:'Gardevoir EX (FA)',set:'Steam Siege',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_111_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-steam-siege/gardevoir-ex-111'},
+  {id:'STS-112',num:'112/114',name:'M Gardevoir EX (FA)',set:'Steam Siege',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_112_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-steam-siege/m-gardevoir-ex-112'},
+  {id:'STS-116',num:'116/114',name:'Gardevoir EX (SR)',set:'Steam Siege',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/STS/STS_116_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-steam-siege/gardevoir-ex-116'},
+  {id:'BUS-093',num:'93/147',name:'Gardevoir GX',set:'Burning Shadows',v:'gx',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BUS/BUS_93_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-burning-shadows/gardevoir-gx-93'},
+  {id:'BUS-140',num:'140/147',name:'Gardevoir GX (FA)',set:'Burning Shadows',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BUS/BUS_140_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-burning-shadows/gardevoir-gx-140'},
+  {id:'BUS-159',num:'159/147',name:'Gardevoir GX (RR)',set:'Burning Shadows',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/BUS/BUS_159_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-burning-shadows/gardevoir-gx-159'},
+  {id:'LOT-141',num:'141/214',name:'Gardevoir',set:'Lost Thunder',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOT/LOT_141_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-lost-thunder/gardevoir-141'},
+  {id:'UNB-130',num:'130/214',name:'Gardevoir & Sylveon GX',set:'Unbroken Bonds',v:'tag',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/UNB/UNB_130_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-unbroken-bonds/gardevoir-sylveon-gx-130'},
+  {id:'UNB-204',num:'204/214',name:'Gardevoir & Sylveon GX (FA)',set:'Unbroken Bonds',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/UNB/UNB_204_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-unbroken-bonds/gardevoir-sylveon-gx-204'},
+  {id:'UNB-205',num:'205/214',name:'Gardevoir & Sylveon GX (AA)',set:'Unbroken Bonds',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/UNB/UNB_205_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-unbroken-bonds/gardevoir-sylveon-gx-205'},
+  {id:'UNB-225',num:'225/214',name:'Gardevoir & Sylveon GX (RR)',set:'Unbroken Bonds',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/UNB/UNB_225_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-unbroken-bonds/gardevoir-sylveon-gx-225'},
+  {id:'HIF-SV75',num:'SV75/SV94',name:'Gardevoir GX (Shiny)',set:'Hidden Fates',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/HIF/HIF_SV75_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-hidden-fates/gardevoir-gx-sv75'},
+  {id:'SMP-408',num:'408/SM-P',name:'Gardevoir (Promo)',set:'SM Promos',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SMP/SMP_408_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-sm-black-star-promos/gardevoir-sm408'},
+  {id:'CPA-016',num:'16/70',name:'Gardevoir V',set:'Champion's Path',v:'v',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CPA/CPA_16_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-champion's-path/gardevoir-v-16'},
+  {id:'CPA-017',num:'17/70',name:'Gardevoir VMAX',set:'Champion's Path',v:'v',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CPA/CPA_17_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-champion's-path/gardevoir-vmax-17'},
+  {id:'CPA-070',num:'70/70',name:'Gardevoir V (FA)',set:'Champion's Path',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CPA/CPA_70_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-champion's-path/gardevoir-v-70'},
+  {id:'CPA-076',num:'76/70',name:'Gardevoir VMAX (RR)',set:'Champion's Path',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CPA/CPA_76_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-champion's-path/gardevoir-vmax-76'},
+  {id:'SWSH105',num:'SWSH105',name:'Gardevoir V (Promo)',set:'SWSH Promos',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SWP/SWP_SWSH105_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-swsh-black-star-promos/gardevoir-v-swsh105'},
+  {id:'CRE-061',num:'61/198',name:'Gardevoir',set:'Chilling Reign',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CRE/CRE_61_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-chilling-reign/gardevoir-61'},
+  {id:'CEL-093',num:'93/101',name:'Gardevoir ex δ (Classic)',set:'Celebrations',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/CEL/CEL_93_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-celebrations/gardevoir-ex-93'},
+  {id:'ASR-TG05',num:'TG05/TG30',name:'Gardevoir (TG)',set:'Astral Radiance',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ASR/ASR_TG05_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-astral-radiance/gardevoir-tg5'},
+  {id:'LOR-069',num:'69/196',name:'Radiant Gardevoir',set:'Lost Origin',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/LOR/LOR_69_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-lost-origin/radiant-gardevoir-69'},
+  {id:'SIT-069',num:'69/195',name:'Gardevoir',set:'Silver Tempest',v:'base',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_69_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-silver-tempest/gardevoir-69'},
+  {id:'SIT-TG05',num:'TG05/TG30',name:'Gardevoir (TG)',set:'Silver Tempest',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SIT/SIT_TG05_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-silver-tempest/gardevoir-tg5'},
+  {id:'IEX-002',num:'2/3',name:'Gardevoir',set:'Illustration Exhibition',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/IEX/IEX_2_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-illustration-exhibition/gardevoir-2'},
+  {id:'SVI-086',num:'86/198',name:'Gardevoir ex',set:'Scarlet & Violet',v:'svex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_86_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/gardevoir-ex-86'},
+  {id:'SVI-228',num:'228/198',name:'Gardevoir ex (IR)',set:'Scarlet & Violet',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_228_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/gardevoir-ex-228'},
+  {id:'SVI-245',num:'245/198',name:'Gardevoir ex (SIR)',set:'Scarlet & Violet',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_245_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/gardevoir-ex-245'},
+  {id:'PAF-029',num:'29/91',name:'Gardevoir ex (Shiny)',set:'Paldean Fates',v:'svex',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_29_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/gardevoir-ex-29'},
+  {id:'PAF-217',num:'217/91',name:'Gardevoir ex (S-IR)',set:'Paldean Fates',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_217_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/gardevoir-ex-217'},
+  {id:'PAF-233',num:'233/91',name:'Gardevoir ex (S-SIR)',set:'Paldean Fates',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_233_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/gardevoir-ex-233'},
+  {id:'ME-060',num:'60/132',name:'Mega Gardevoir ex',set:'Mega Evolution',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_60_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-60'},
+  {id:'ME-159',num:'159/132',name:'Mega Gardevoir ex (AR)',set:'Mega Evolution',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_159_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-159'},
+  {id:'ME-178',num:'178/132',name:'Mega Gardevoir ex (SAR)',set:'Mega Evolution',v:'ultra',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_178_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-178'},
+  {id:'ME-187',num:'187/132',name:'Mega Gardevoir ex (MUR)',set:'Mega Evolution',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/ME1/ME1_187_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-pokemon-mega-evolution/mega-gardevoir-ex-187'},
+  {id:'AHE-089',num:'89/217',name:'Mega Gardevoir ex',set:'Ascended Heroes',v:'mega',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/AHE/AHE_89_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-ascended-heroes/mega-gardevoir-ex-89'},
+  {id:'MEP-032',num:'32',name:'Mega Gardevoir ex (Promo)',set:'Mega Promos',v:'special',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEP/MEP_32_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-mega-promos/mega-gardevoir-ex-32'}
+];
+
+function sk(s)       { return s.id; }
+function varLabel(s) {
+  const labels = {
+    base:'Base',ex:'EX',gx:'GX',v:'V/VMAX',tag:'Tag Team GX',
+    svex:'ex',mega:'Mega ex',ultra:'Ultra Rare',special:'Special'
+  };
+  return labels[s.v] || s.v;
+}
+function imgUrl(s) { return s.img || ''; }
+function pcUrl(s)  { return s.pc  || '#'; }
+
+function makeCover() {
+  const d = document.createElement('div');
+  d.className = 'bpage cover-pg';
+  d.innerHTML = `
+    <div style="font-size:24px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
+      サーナイト<br>
+      <span style="font-size:16px;font-weight:700;color:#ddd">Gardevoir</span><br>
+      <span style="font-size:11px;font-weight:400;color:#555">All Prints · English TCG</span>
+    </div>
+    <div class="cover-box">
+      All 58 Gardevoir cards ever printed<br>
+      EX era → Mega Evolution era<br>
+      Gardevoir · Gardevoir ex/GX/V<br>
+      M Gardevoir EX · Mega Gardevoir ex<br>
+      <span style="color:#282420;font-size:10px">── 58 prints across all sets ──</span>
+    </div>
+    <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.7">
+      Left-click = mark owned · Right-click = price &amp; details
+    </div>`;
+  return d;
+}
+
+const SDEFS = [
+  { label: 'EX Era (2003–2006)',         f: s => ['EXR','EXS','EXE','EXD','EXF','EXP'].some(p => s.id.startsWith(p)) },
+  { label: 'DP Era (2007–2010)',          f: s => ['SW-','PL-'].some(p => s.id.startsWith(p)) },
+  { label: 'BW Era (2011–2013)',          f: s => ['NXD','DEX','LTR'].some(p => s.id.startsWith(p)) },
+  { label: 'XY Era (2014–2016)',          f: s => ['PRC','AOR','GEN','STS'].some(p => s.id.startsWith(p)) },
+  { label: 'SM Era (2017–2019)',          f: s => ['BUS','LOT','UNB','HIF','SMP'].some(p => s.id.startsWith(p)) },
+  { label: 'SWSH Era (2020–2022)',        f: s => ['CPA','CRE','CEL','ASR','LOR','SIT','IEX','SWSH'].some(p => s.id.startsWith(p)) },
+  { label: 'SV Era (2023–2024)',          f: s => ['SVI','PAF'].some(p => s.id.startsWith(p)) },
+  { label: 'Mega Era (2025–)',            f: s => ['ME-','AHE','MEP'].some(p => s.id.startsWith(p)) },
+];
+
+// ════════════════════════════════════════════════════════════════════════════
+//  TEMPLATE ENGINE — do not edit below this line
+// ════════════════════════════════════════════════════════════════════════════
+
+// Derived constants (computed from SLOTS + BINDER.cols)
+const TOTAL         = SLOTS.length;
+// CARD_PAGES and TOTAL_SPREADS are set after applyConfig() runs (see below)
+
+// ── Apply BINDER config to DOM ────────────────────────────────────────────
+(function applyConfig() {
+  document.getElementById('page-title').textContent = BINDER.title;
+  document.title = BINDER.title;
+  document.getElementById('nav-title').textContent  = BINDER.navTitle;
+  document.getElementById('tb-title').textContent   = BINDER.title;
+  document.getElementById('tb-sub').textContent     = BINDER.subtitle;
+  // Legend
+  const bar = document.getElementById('legend-bar');
+  BINDER.legend.forEach(item => {
+    const span = document.createElement('span');
+    span.className = 'lv';
+    span.innerHTML = `<span class="ld" style="border-color:${item.color}"></span>${item.label}`;
+    bar.appendChild(span);
+  });
+  const suffix = document.createElement('span');
+  suffix.className = 'lv';
+  suffix.style.marginLeft = '4px';
+  suffix.innerHTML = `✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced`;
+  bar.appendChild(suffix);
+  // Apply grid columns
+  const cols = BINDER.cols || 3;
+  document.documentElement.style.setProperty('--binder-cols', cols);
+  // Slots per page = cols * cols (square grid) — update CARD_PAGES
+  window._SLOTS_PER_PAGE = cols * cols;
+})();
+
+// Compute page counts after applyConfig has set _SLOTS_PER_PAGE
+const CARD_PAGES    = Math.ceil(TOTAL / (window._SLOTS_PER_PAGE || 9));
+const TOTAL_SPREADS = CARD_PAGES + 1;
+
+// ── Storage ────────────────────────────────────────────────────────────────
+let owned = new Set(), watched = new Set(), prices = {};
+function load() {
+  try { owned   = new Set(JSON.parse(localStorage.getItem(BINDER.lsOwned)   || '[]')); } catch(e) {}
+  try { watched = new Set(JSON.parse(localStorage.getItem(BINDER.lsWatched) || '[]')); } catch(e) {}
+  try { prices  = JSON.parse(localStorage.getItem(BINDER.lsPrices) || '{}');           } catch(e) {}
+}
+function saveOwned()      { localStorage.setItem(BINDER.lsOwned,   JSON.stringify([...owned])); }
+function saveWatched()    { localStorage.setItem(BINDER.lsWatched, JSON.stringify([...watched])); }
+function savePricesStore(){ localStorage.setItem(BINDER.lsPrices,  JSON.stringify(prices)); }
+
+// ── Progress ───────────────────────────────────────────────────────────────
+function updateProgress() {
+  const n = owned.size, p = TOTAL ? Math.round(n / TOTAL * 100) : 0;
+  document.getElementById('prog-bar').style.width = p + '%';
+  document.getElementById('prog-text').textContent = `${n} / ${TOTAL} (${p}%)`;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+let curSpread = 1, showMissing = false;
+
+function render() {
+  const lp = document.getElementById('lp'), rp = document.getElementById('rp');
+  lp.innerHTML = ''; rp.innerHTML = '';
+  let info;
+  if (curSpread === 1) {
+    lp.appendChild(makeCover());
+    rp.appendChild(makeCardPage(0, 'right', 1));
+    info = 'Cover · Page 1';
+  } else {
+    const ln = 2 * (curSpread - 1), rn = ln + 1;
+    lp.appendChild(ln - 1 < CARD_PAGES ? makeCardPage(ln - 1, 'left', ln)  : blankPage());
+    rp.appendChild(rn - 1 < CARD_PAGES ? makeCardPage(rn - 1, 'right', rn) : blankPage());
+    info = `Page ${ln}${rn <= CARD_PAGES ? ' · Page ' + rn : ''}`;
+  }
+  document.getElementById('sinfo').textContent     = info;
+  document.getElementById('pgn').value             = curSpread;
+  document.getElementById('pgn').max               = TOTAL_SPREADS;
+  document.getElementById('of-lbl').textContent    = 'of ' + TOTAL_SPREADS;
+  document.getElementById('bprev').disabled        = curSpread <= 1;
+  document.getElementById('bnext').disabled        = curSpread >= TOTAL_SPREADS;
+  document.getElementById('bn-prev').disabled      = curSpread <= 1;
+  document.getElementById('bn-next').disabled      = curSpread >= TOTAL_SPREADS;
+  document.getElementById('bn-info').textContent   = `Page ${curSpread} of ${TOTAL_SPREADS}`;
+  document.getElementById('spread').classList.toggle('hide-owned', showMissing);
+}
+
+function blankPage() {
+  const d = document.createElement('div'); d.className = 'bpage blank-pg'; return d;
+}
+
+function makeCardPage(idx0, side, num1) {
+  const wrap = document.createElement('div');
+  wrap.className = 'bpage';
+  wrap.style.background = side === 'left' ? '#13110e' : '#111009';
+  const lbl = document.createElement('div');
+  lbl.className = 'pg-lbl';
+  lbl.textContent = `— page ${num1} —`;
+  wrap.appendChild(lbl);
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  const spp = window._SLOTS_PER_PAGE || 9;
+  const start = idx0 * spp, end = Math.min(start + spp, TOTAL);
+  for (let i = start; i < end; i++) grid.appendChild(makeSlot(SLOTS[i]));
+  // Only pad with empty slots on full pages, not the last partial page
+  if ((end - start) === spp) {
+    for (let i = end - start; i < spp; i++) {
+      const e = document.createElement('div');
+      e.className = 'slot empty';
+      e.innerHTML = '<span style="color:#141210">·</span>';
+      grid.appendChild(e);
+    }
+  }
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function go(d)    { curSpread = Math.max(1, Math.min(TOTAL_SPREADS, curSpread + d)); render(); }
+function goTo(n)  { if (!isNaN(n) && n >= 1 && n <= TOTAL_SPREADS) { curSpread = n; render(); } }
+function toggleMissing(on) { showMissing = on; document.getElementById('spread').classList.toggle('hide-owned', on); }
+
+// ── Find card ──────────────────────────────────────────────────────────────
+function findCard(q) {
+  q = q.trim().toLowerCase();
+  const al = document.getElementById('alert');
+  if (!q) { al.style.display = 'none'; return; }
+  const idx = SLOTS.findIndex(s =>
+    (s.name || '').toLowerCase().includes(q) ||
+    (s.id   || '').toLowerCase().includes(q) ||
+    (s.v    || '').toLowerCase().includes(q)
+  );
+  if (idx >= 0) {
+    al.style.display = 'none';
+    curSpread = idx === 0 ? 1 : Math.floor(idx / 9 / 2) + 2;
+    render();
+  } else {
+    al.style.display = 'block';
+    al.textContent = `"${q}" not found`;
+  }
+}
+
+// ── Slot DOM element ───────────────────────────────────────────────────────
+function makeSlot(s) {
+  const key = sk(s), bc = BC[s.v] || BC_DEFAULT;
+  const div = document.createElement('div');
+  div.className = 'slot' + (owned.has(key) ? ' owned' : '');
+  div.style.borderColor = bc.col + '44';
+  div.dataset.key = key;
+
+  const img = document.createElement('img');
+  img.className = 'cimg'; img.src = imgUrl(s); img.alt = s.name || ''; img.loading = 'lazy';
+  const ph  = document.createElement('div');
+  ph.className = 'cph';
+  ph.innerHTML = `<div class="ph-n">${s.id}</div><div class="ph-nm">${(s.name||'').substring(0,15)}</div>`;
+  img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+  div.appendChild(img); div.appendChild(ph);
+
+  const lbl = document.createElement('div'); lbl.className = 'clbl';
+  lbl.innerHTML = `<div class="cnum">${s.id}</div>` +
+    `<div class="cnm">${s.set || s.name || ''}</div>` +
+    `<span class="vbg" style="background:${bc.bg};color:${bc.col}">${varLabel(s)}</span>`;
+  div.appendChild(lbl);
+
+  if (owned.has(key))   div.appendChild(badge('badge-owned', '✓'));
+  if (watched.has(key)) div.appendChild(badge('badge-star', '⭐'));
+  const p = prices[key];
+  if (p && p.raw) div.appendChild(badge('badge-price', p.raw));
+
+  div.addEventListener('click', e => {
+    e.preventDefault();
+    owned.has(key) ? owned.delete(key) : owned.add(key);
+    saveOwned(); updateProgress();
+    div.classList.toggle('owned');
+    syncBadge(div, 'badge-owned', '✓', owned.has(key));
+  });
+  div.addEventListener('contextmenu', e => { e.preventDefault(); openModal(s); });
+  return div;
+}
+
+function badge(cls, txt) {
+  const b = document.createElement('div'); b.className = cls; b.textContent = txt; return b;
+}
+function syncBadge(div, cls, txt, show) {
+  let b = div.querySelector('.' + cls);
+  if (show && !b) { b = badge(cls, txt); div.appendChild(b); }
+  else if (!show && b) b.remove();
+}
+
+// ── Card detail modal ──────────────────────────────────────────────────────
+let modalSlot = null;
+
+function openModal(s) {
+  modalSlot = s;
+  const key = sk(s), bc = BC[s.v] || BC_DEFAULT;
+  const mi = document.getElementById('mimg'), mph = document.getElementById('mph');
+  mi.style.display = 'block'; mph.style.display = 'none';
+  mi.src = imgUrl(s);
+  mi.onerror = () => { mi.style.display = 'none'; mph.style.display = 'flex'; mph.innerHTML = `<div style="color:#383430;font-size:11px;text-align:center">${s.id}<br>${varLabel(s)}</div>`; };
+  document.getElementById('mname').textContent   = s.name || s.id;
+  document.getElementById('mnum').textContent    = `${s.id} · ${varLabel(s)}`;
+  document.getElementById('mbadge').textContent  = varLabel(s);
+  document.getElementById('mbadge').style.background = bc.bg;
+  document.getElementById('mbadge').style.color      = bc.col;
+  document.getElementById('pc-link').href        = pcUrl(s);
+  const p = prices[key] || {};
+  document.getElementById('p-raw').value = p.raw  || '';
+  document.getElementById('p-9').value   = p.psa9 || '';
+  document.getElementById('p-10').value  = p.psa10|| '';
+  document.getElementById('price-saved').style.display = 'none';
+  syncModalBtns();
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); modalSlot = null; }
+
+function syncModalBtns() {
+  if (!modalSlot) return;
+  const key = sk(modalSlot), isOwned = owned.has(key), isWatched = watched.has(key);
+  const ob = document.getElementById('m-own-btn');
+  ob.textContent = isOwned ? '✓ Remove owned' : 'Mark as owned';
+  ob.className   = 'm-btn ' + (isOwned ? 'm-btn-unown' : 'm-btn-own');
+  const wb = document.getElementById('m-watch-btn');
+  wb.textContent = isWatched ? '★ Unwatch' : '⭐ Watch';
+  wb.className   = 'm-btn ' + (isWatched ? 'm-btn-unwatch' : 'm-btn-watch');
+}
+
+function toggleOwnModal() {
+  if (!modalSlot) return;
+  const key = sk(modalSlot);
+  owned.has(key) ? owned.delete(key) : owned.add(key);
+  saveOwned(); updateProgress();
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+  if (el) { el.classList.toggle('owned', owned.has(key)); syncBadge(el, 'badge-owned', '✓', owned.has(key)); }
+  syncModalBtns();
+}
+
+function toggleWatchModal() {
+  if (!modalSlot) return;
+  const key = sk(modalSlot);
+  watched.has(key) ? watched.delete(key) : watched.add(key);
+  saveWatched();
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+  if (el) syncBadge(el, 'badge-star', '⭐', watched.has(key));
+  syncModalBtns();
+}
+
+function savePriceFromModal() {
+  if (!modalSlot) return;
+  const key = sk(modalSlot);
+  const fmt = v => { v = v.replace(/[^0-9.]/g,''); return v ? '$' + parseFloat(v).toFixed(2) : ''; };
+  const raw  = fmt(document.getElementById('p-raw').value);
+  const psa9 = fmt(document.getElementById('p-9').value);
+  const psa10= fmt(document.getElementById('p-10').value);
+  prices[key] = { raw, psa9, psa10, date: new Date().toISOString().slice(0,10) };
+  savePricesStore();
+  document.getElementById('p-raw').value = raw;
+  document.getElementById('p-9').value   = psa9;
+  document.getElementById('p-10').value  = psa10;
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+  if (el) { let b = el.querySelector('.badge-price'); if (raw) { if (!b) { b = badge('badge-price', raw); el.appendChild(b); } else b.textContent = raw; } else if (b) b.remove(); }
+  const ps = document.getElementById('price-saved');
+  ps.style.display = 'block'; setTimeout(() => ps.style.display = 'none', 1800);
+}
+
+// ── Watchlist ──────────────────────────────────────────────────────────────
+function openWatchlist() {
+  const slots = SLOTS.filter(s => watched.has(sk(s)));
+  document.getElementById('wl-sub').textContent = `${slots.length} card${slots.length !== 1 ? 's' : ''} watched`;
+  renderWatchlist(slots);
+  document.getElementById('wl-modal').classList.add('open');
+}
+
+function renderWatchlist(slots) {
+  const body = document.getElementById('wl-body');
+  if (!slots.length) { body.innerHTML = '<div class="wl-empty">No cards watched yet.<span>Right-click any card → ⭐ Watch</span></div>'; return; }
+  const bc = s => BC[s.v] || BC_DEFAULT;
+  let h = `<table class="wt"><thead><tr><th>ID</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
+  slots.forEach(s => {
+    const key = sk(s), p = prices[key] || {}, b = bc(s);
+    const fv = v => v ? `<span class="wt-p">${v}</span>` : `<span class="wt-p na">—</span>`;
+    h += `<tr>
+      <td class="wt-num">${s.id}</td>
+      <td class="wt-name" onclick="jumpTo('${key}')">${s.name || s.id}</td>
+      <td><span class="wt-badge" style="background:${b.bg};color:${b.col}">${varLabel(s)}</span></td>
+      <td>${fv(p.raw)}</td><td>${fv(p.psa10)}</td>
+      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
+      <td><button class="wt-rm" onclick="unwatchRow('${key}')">✕</button></td>
+    </tr>`;
+  });
+  body.innerHTML = h + '</tbody></table>';
+}
+
+function jumpTo(key) {
+  document.getElementById('wl-modal').classList.remove('open');
+  document.getElementById('ml-modal').classList.remove('open');
+  const idx = SLOTS.findIndex(s => sk(s) === key);
+  if (idx >= 0) { curSpread = idx === 0 ? 1 : Math.floor(idx / 9 / 2) + 2; render(); }
+}
+
+function unwatchRow(key) {
+  watched.delete(key); saveWatched();
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+  if (el) syncBadge(el, 'badge-star', '⭐', false);
+  openWatchlist();
+}
+
+// ── Missing list ───────────────────────────────────────────────────────────
+function openMissingList() {
+  const miss = SLOTS.filter(s => !owned.has(sk(s)));
+  document.getElementById('ml-stats').textContent = `${miss.length} missing of ${TOTAL}`;
+  const tot = miss.reduce((sum, s) => { const p = prices[sk(s)]; return sum + (p && p.raw ? parseFloat(p.raw.replace(/[^0-9.]/g,'')) || 0 : 0); }, 0);
+  const totEl = document.getElementById('ml-total');
+  if (tot > 0) { totEl.style.display = 'block'; totEl.textContent = `Estimated ungraded value (priced cards only): $${tot.toFixed(2)}`; }
+  else totEl.style.display = 'none';
+  const body = document.getElementById('ml-body'); body.innerHTML = '';
+  SDEFS.forEach(def => {
+    const section = miss.filter(def.f);
+    if (!section.length) return;
+    const wrap = document.createElement('div'); wrap.className = 'ml-section';
+    const ttl  = document.createElement('div'); ttl.className = 'ml-section-title'; ttl.textContent = `${def.label} (${section.length})`;
+    wrap.appendChild(ttl);
+    section.forEach(s => {
+      const key = sk(s), p = prices[key];
+      const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
+      const sfx = ` — ${varLabel(s)}`;
+      const chip = document.createElement('span'); chip.className = 'ml-chip';
+      chip.textContent = `${s.id} ${s.name || ''}${sfx}${pt}`;
+      chip.onclick = () => jumpTo(key);
+      wrap.appendChild(chip);
+    });
+    body.appendChild(wrap);
+  });
+  document.getElementById('ml-modal').classList.add('open');
+}
+
+function copyMissing() {
+  const miss = SLOTS.filter(s => !owned.has(sk(s)));
+  let txt = `${BINDER.title} — Missing (${miss.length}/${TOTAL})\nGenerated ${new Date().toLocaleDateString()}\n${'─'.repeat(50)}\n`;
+  miss.forEach(s => {
+    const p = prices[sk(s)];
+    const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
+    txt += `  ${s.id}  ${s.name || ''}  — ${varLabel(s)}${pt}\n`;
+  });
+  navigator.clipboard.writeText(txt).then(() => {
+    const b = document.querySelector('#ml-modal .btn-purple');
+    const o = b.textContent; b.textContent = 'Copied!';
+    setTimeout(() => b.textContent = o, 1500);
+  });
+}
+
+function confirmClear() {
+  if (confirm('Clear all owned, watched and price data for this binder?')) {
+    owned.clear(); watched.clear(); prices = {};
+    saveOwned(); saveWatched(); savePricesStore();
+    render(); updateProgress();
+  }
+}
+
+// ── Manual sync (fallback) ─────────────────────────────────────────────────
+const SYNC_KEYS_LOCAL = [BINDER.lsOwned, BINDER.lsWatched, BINDER.lsPrices];
+function openSync() { document.getElementById('sync-overlay').classList.add('open'); }
+function closeSyncModal() { document.getElementById('sync-overlay').classList.remove('open'); }
+function doManualExport() {
+  const data = {}; SYNC_KEYS_LOCAL.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
+  const json = JSON.stringify(data, null, 2);
+  document.getElementById('export-ta').value = json;
+  navigator.clipboard.writeText(json).then(() => {
+    const f = document.getElementById('export-flash'); f.style.display = 'inline';
+    setTimeout(() => f.style.display = 'none', 2500);
+  }).catch(() => {});
+}
+function doManualImport() {
+  const raw = document.getElementById('import-ta').value.trim();
+  const f = document.getElementById('import-flash');
+  if (!raw) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Paste data first.'; return; }
+  try {
+    const data = JSON.parse(raw); let n = 0;
+    SYNC_KEYS_LOCAL.forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
+    f.style.display='inline'; f.style.color='#4cff80'; f.textContent=`✓ Imported ${n} keys — reloading…`;
+    setTimeout(() => { closeSyncModal(); location.reload(); }, 1200);
+  } catch(e) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Invalid data.'; }
+}
+
+// ── Swipe to turn pages ────────────────────────────────────────────────────
+(function(){
+  const sp = document.getElementById('spread');
+  let tx = null, ty = null;
+  sp.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  sp.addEventListener('touchend', e => {
+    if (tx === null) return;
+    const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    tx = null; ty = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+
+// ── Init ───────────────────────────────────────────────────────────────────
+load(); updateProgress(); render();
+</script>
+</body>
+</html>

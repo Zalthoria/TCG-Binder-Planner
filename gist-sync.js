@@ -40,6 +40,7 @@
     'm4_ninja_spinner_owned_v1', 'm4_ninja_spinner_watched_v1', 'm4_ninja_spinner_prices_v1',
     'm2_inferno_x_owned_v1', 'm2_inferno_x_watched_v1', 'm2_inferno_x_prices_v1',
     'sv2a_151_owned_v1', 'sv2a_151_watched_v1', 'sv2a_151_prices_v1',
+    'gardevoir_owned_v1', 'gardevoir_watched_v1', 'gardevoir_prices_v1',
   ];
 
   const LS_GIST_ID     = 'gistsync_gist_id';

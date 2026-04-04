@@ -121,7 +121,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><span class="stat-val" id="stat-total-owned">—</span><span class="stat-lbl">Total Owned</span></div>
-  <div class="stat"><span class="stat-val" id="stat-binders">6</span><span class="stat-lbl">Binders</span></div>
+  <div class="stat"><span class="stat-val" id="stat-binders">7</span><span class="stat-lbl">Binders</span></div>
   <div class="stat"><span class="stat-val" id="stat-priced">—</span><span class="stat-lbl">Cards Priced</span></div>
 </div>
 
@@ -242,6 +242,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </a>
 
+  <a class="binder-card" href="gardevoir.html">
+    <div class="card-body">
+      <div class="card-icon">🌸</div>
+      <div class="card-info">
+        <div class="card-name">Gardevoir — All Prints</div>
+        <div class="card-desc">サーナイト · All 58 English TCG prints · EX era → Mega era</div>
+        <div class="card-meta">58 cards · Base · EX · GX · V · ex · Mega ex</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">
+      <div class="prog-track"><div class="prog-fill" id="prog-gardevoir" style="width:0%"></div></div>
+      <div class="prog-label">
+        <span id="prog-gardevoir-text">Loading…</span>
+        <span id="prog-gardevoir-pct">0%</span>
+      </div>
+    </div>
+  </a>
+
 </div>
 
 <!-- Sync modal -->
@@ -293,6 +312,7 @@ const BINDERS = [
   { ownedKey: 'm4_ninja_spinner_owned_v1', pricesKey: 'm4_ninja_spinner_prices_v1', total: 120, progId: 'prog-m4',    textId: 'prog-m4-text',    pctId: 'prog-m4-pct'    },
   { ownedKey: 'm2_inferno_x_owned_v1',     pricesKey: 'm2_inferno_x_prices_v1',     total: 116, progId: 'prog-m2',    textId: 'prog-m2-text',    pctId: 'prog-m2-pct'    },
   { ownedKey: 'sv2a_151_owned_v1',         pricesKey: 'sv2a_151_prices_v1',         total: 207, progId: 'prog-sv2a', textId: 'prog-sv2a-text',  pctId: 'prog-sv2a-pct'  },
+  { ownedKey: 'gardevoir_owned_v1',          pricesKey: 'gardevoir_prices_v1',          total: 58,  progId: 'prog-gardevoir', textId: 'prog-gardevoir-text', pctId: 'prog-gardevoir-pct' },
 ];
 
 const SYNC_KEYS = [
