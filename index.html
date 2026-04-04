@@ -166,6 +166,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </a>
 
+  <a class="binder-card" href="m3.html">
+    <div class="card-body">
+      <div class="card-icon">🟢</div>
+      <div class="card-info">
+        <div class="card-name">M3 Nihil Zero — Master Set</div>
+        <div class="card-desc">ムニキスゼロ · Mega Zygarde ex · January 23, 2026</div>
+        <div class="card-meta">117 cards · 80 main + 37 secret rares</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">
+      <div class="prog-track"><div class="prog-fill" id="prog-m3" style="width:0%"></div></div>
+      <div class="prog-label">
+        <span id="prog-m3-text">Loading…</span>
+        <span id="prog-m3-pct">0%</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="binder-card" href="m4.html">
+    <div class="card-body">
+      <div class="card-icon">💧</div>
+      <div class="card-info">
+        <div class="card-name">M4 Ninja Spinner — Master Set</div>
+        <div class="card-desc">ニンジャスピナー · Mega Greninja ex · March 13, 2026</div>
+        <div class="card-meta">120 cards · 83 main + 37 secret rares</div>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="card-footer">
+      <div class="prog-track"><div class="prog-fill" id="prog-m4" style="width:0%"></div></div>
+      <div class="prog-label">
+        <span id="prog-m4-text">Loading…</span>
+        <span id="prog-m4-pct">0%</span>
+      </div>
+    </div>
+  </a>
+
 </div>
 
 <!-- Sync modal -->
@@ -211,8 +249,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 // ── Binder configs ────────────────────────────────────────────────────────
 const BINDERS = [
-  { ownedKey: 'M2a_owned_v1',   pricesKey: 'M2a_prices_v2',   total: 486,  progId: 'prog-m2a',   textId: 'prog-m2a-text',   pctId: 'prog-m2a-pct'   },
-  { ownedKey: 'penny_owned_v1', pricesKey: 'penny_prices_v1', total: 10,   progId: 'prog-penny', textId: 'prog-penny-text', pctId: 'prog-penny-pct' },
+  { ownedKey: 'M2a_owned_v1',              pricesKey: 'M2a_prices_v2',              total: 486, progId: 'prog-m2a',   textId: 'prog-m2a-text',   pctId: 'prog-m2a-pct'   },
+  { ownedKey: 'penny_owned_v1',            pricesKey: 'penny_prices_v1',            total: 10,  progId: 'prog-penny', textId: 'prog-penny-text', pctId: 'prog-penny-pct' },
+  { ownedKey: 'm3_nihil_zero_owned_v1',    pricesKey: 'm3_nihil_zero_prices_v1',    total: 117, progId: 'prog-m3',    textId: 'prog-m3-text',    pctId: 'prog-m3-pct'    },
+  { ownedKey: 'm4_ninja_spinner_owned_v1', pricesKey: 'm4_ninja_spinner_prices_v1', total: 120, progId: 'prog-m4',    textId: 'prog-m4-text',    pctId: 'prog-m4-pct'    },
 ];
 
 const SYNC_KEYS = [
@@ -242,27 +282,6 @@ function refreshAll() {
     totalOwned  += owned;
     totalPriced += priced;
   });
-
-  // M3 Nihil Zero
-  try {
-    const owned = new Set(JSON.parse(localStorage.getItem('m3_nihil_zero_owned_v1') || '[]'));
-    const total = 117, pct = Math.round(owned.size / total * 100);
-    document.getElementById('prog-m3').style.width = pct + '%';
-    document.getElementById('prog-m3-text').textContent = owned.size + ' / ' + total + ' owned';
-    document.getElementById('prog-m3-pct').textContent  = pct + '%';
-    totalOwned += owned.size;
-  } catch(e) { document.getElementById('prog-m3-text').textContent = '0 / 117 owned'; }
-
-  // M4 Ninja Spinner
-  try {
-    const owned2 = new Set(JSON.parse(localStorage.getItem('m4_ninja_spinner_owned_v1') || '[]'));
-    const total2 = 120, pct2 = Math.round(owned2.size / total2 * 100);
-    document.getElementById('prog-m4').style.width = pct2 + '%';
-    document.getElementById('prog-m4-text').textContent = owned2.size + ' / ' + total2 + ' owned';
-    document.getElementById('prog-m4-pct').textContent  = pct2 + '%';
-    totalOwned += owned2.size;
-  } catch(e) { document.getElementById('prog-m4-text').textContent = '0 / 120 owned'; }
-
   document.getElementById('stat-total-owned').textContent = totalOwned;
   document.getElementById('stat-priced').textContent      = totalPriced;
 }
