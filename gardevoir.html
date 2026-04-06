@@ -415,7 +415,8 @@ function varLabel(s) {
   return labels[s.v] || s.v;
 }
 
-function ptcgioUrl(s) { return ''; } // no fallback needed
+function imgUrl(s) { return s.img || ''; }
+function ptcgioUrl(s) { return ''; }
 
 function pcUrl(s)  { return s.pc  || '#'; }
 
