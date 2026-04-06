@@ -61,7 +61,7 @@ input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;pa
 .grid{display:grid;grid-template-columns:repeat(var(--binder-cols,3),1fr);gap:6px}
 .slot{background:#0b0a08;border-radius:6px;cursor:pointer;transition:border-color .12s,transform .1s;position:relative;overflow:hidden;border:2px solid #252018}
 .slot:hover{transform:scale(1.04);z-index:5}
-.slot.empty{display:flex;align-items:center;justify-content:center;aspect-ratio:63/110;border:2px dashed #181614;cursor:default;background:transparent}
+.slot.empty{border:2px dashed #181614;cursor:default;background:transparent;overflow:hidden}
 .slot.empty:hover{transform:none;border-color:#181614}
 .slot.owned .cimg,.slot.owned .cph{opacity:.38;filter:brightness(.6)}
 .badge-owned{position:absolute;top:3px;right:3px;font-size:12px;font-weight:700;color:#4cff80;text-shadow:0 0 6px rgba(60,255,120,.5);pointer-events:none;z-index:4;line-height:1}
@@ -517,7 +517,11 @@ function makeCardPage(idx0, side, num1) {
   for (let i = end - start; i < spp; i++) {
     const e = document.createElement('div');
     e.className = 'slot empty';
-    e.innerHTML = '<span style="color:#141210">·</span>';
+    // Same structure as a card slot so heights match exactly
+    e.innerHTML = '<img style="width:100%;aspect-ratio:63/88;background:#0b0a08;display:block">' +
+      '<div class="clbl"><div class="cnum" style="color:transparent">·</div>' +
+      '<div class="cnm" style="color:transparent">·</div>' +
+      '<span class="vbg">·</span></div>';
     grid.appendChild(e);
   }
   wrap.appendChild(grid);
