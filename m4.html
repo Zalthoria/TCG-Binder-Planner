@@ -48,6 +48,7 @@ input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;pa
 .spread-info{font-size:11px;color:#252220;text-align:center;margin-bottom:5px;letter-spacing:.06em}
 .spread{width:100%;max-width:1100px;display:flex;background:#0d0b09;border:2px solid #252018;border-radius:16px;overflow:hidden;box-shadow:0 10px 50px rgba(0,0,0,.7)}
 .spine{width:20px;flex-shrink:0;background:linear-gradient(to right,#080706,#1c1814,#1c1814,#080706)}
+#lp,#rp{flex:1;min-width:0;overflow:hidden}
 .bpage{flex:1;padding:11px;min-width:0}
 .pg-lbl{font-size:9px;color:#252220;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 .blank-pg{flex:1;background:#0e0c0a}
@@ -589,11 +590,12 @@ function makeCardPage(idx0, side, num1) {
   for (let i = end - start; i < spp; i++) {
     const e = document.createElement('div');
     e.className = 'slot empty';
-    // Same structure as a card slot so heights match exactly
-    e.innerHTML = '<img style="width:100%;aspect-ratio:63/88;background:#0b0a08;display:block">' +
+    // Same height structure as card slots but shows a ✕ mark
+    e.innerHTML = '<div style="width:100%;aspect-ratio:63/88;background:#0b0a08;display:flex;align-items:center;justify-content:center">' +
+      '<span style="font-size:22px;color:#1e1c18;user-select:none">✕</span></div>' +
       '<div class="clbl"><div class="cnum" style="color:transparent">·</div>' +
       '<div class="cnm" style="color:transparent">·</div>' +
-      '<span class="vbg">·</span></div>';
+      '<span class="vbg" style="color:transparent">·</span></div>';
     grid.appendChild(e);
   }
   wrap.appendChild(grid);
