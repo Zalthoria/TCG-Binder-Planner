@@ -498,7 +498,7 @@ const SDEFS = [
 // Derived constants (computed from SLOTS)
 const TOTAL         = SLOTS.length;
 const CARD_PAGES    = Math.ceil(TOTAL / 9);   // 9 slots per page
-const TOTAL_SPREADS = CARD_PAGES + 1;          // +1 for cover spread
+const TOTAL_SPREADS = Math.ceil((CARD_PAGES + 1) / 2);          // +1 for cover spread
 
 // ── Apply BINDER config to DOM ────────────────────────────────────────────
 (function applyConfig() {
@@ -585,15 +585,12 @@ function makeCardPage(idx0, side, num1) {
   grid.className = 'grid';
   const start = idx0 * 9, end = Math.min(start + 9, TOTAL);
   for (let i = start; i < end; i++) grid.appendChild(makeSlot(SLOTS[i]));
-  // Only add empty slot placeholders if this is a full page (not the last partial page)
-  const isFullPage = (end - start) === 9;
-  if (isFullPage) {
-    for (let i = end - start; i < 9; i++) {
-      const e = document.createElement('div');
-      e.className = 'slot empty';
-      e.innerHTML = '<span style="color:#141210">·</span>';
-      grid.appendChild(e);
-    }
+  // Always pad with empty slot outlines to maintain grid shape
+  for (let i = end - start; i < spp; i++) {
+    const e = document.createElement('div');
+    e.className = 'slot empty';
+    e.innerHTML = '<span style="color:#141210">·</span>';
+    grid.appendChild(e);
   }
   wrap.appendChild(grid);
   return wrap;

@@ -417,7 +417,7 @@ const TOTAL         = SLOTS.length;
 
 // Compute page counts after applyConfig has set _SLOTS_PER_PAGE
 const CARD_PAGES    = Math.ceil(TOTAL / (window._SLOTS_PER_PAGE || 9));
-const TOTAL_SPREADS = CARD_PAGES + 1;
+const TOTAL_SPREADS = Math.ceil((CARD_PAGES + 1) / 2);
 
 // ── Storage ────────────────────────────────────────────────────────────────
 let owned = new Set(), watched = new Set(), prices = {};
@@ -483,14 +483,12 @@ function makeCardPage(idx0, side, num1) {
   const spp = window._SLOTS_PER_PAGE || 9;
   const start = idx0 * spp, end = Math.min(start + spp, TOTAL);
   for (let i = start; i < end; i++) grid.appendChild(makeSlot(SLOTS[i]));
-  // Only pad with empty slots on full pages, not the last partial page
-  if ((end - start) === spp) {
-    for (let i = end - start; i < spp; i++) {
-      const e = document.createElement('div');
-      e.className = 'slot empty';
-      e.innerHTML = '<span style="color:#141210">·</span>';
-      grid.appendChild(e);
-    }
+  // Always pad with empty slot outlines to maintain grid shape
+  for (let i = end - start; i < spp; i++) {
+    const e = document.createElement('div');
+    e.className = 'slot empty';
+    e.innerHTML = '<span style="color:#141210">·</span>';
+    grid.appendChild(e);
   }
   wrap.appendChild(grid);
   return wrap;
