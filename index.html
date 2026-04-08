@@ -5,409 +5,578 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#181410">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TCG Binders">
-<title>Pokémon TCG Binders</title>
+<title>TCG Binder Planner</title>
+<script src="gist-sync.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh;padding:0 0 40px}
 
-/* Header */
-.header{
-  background:#100e0c;border-bottom:1px solid #2a2418;
-  padding:14px 16px 12px;
-  box-shadow:0 2px 12px rgba(0,0,0,.5);
-}
-.header-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
-.header-title{font-size:18px;font-weight:800;color:#c89a3a;letter-spacing:-.01em}
-.header-sub{font-size:11px;color:#444}
-.sync-btn{
-  background:#1e1c18;border:1px solid #2a2040;border-radius:7px;
-  padding:7px 12px;font-size:12px;color:#7060c0;cursor:pointer;
-  font-family:inherit;white-space:nowrap;flex-shrink:0;
-}
-.sync-btn:hover{background:#22183a}
+/* ── Top bar ── */
+.topbar{background:#100e0c;border-bottom:1px solid #2a2418;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.6)}
+.topbar-title{font-size:17px;font-weight:800;color:#c89a3a;letter-spacing:.01em}
+.topbar-sub{font-size:11px;color:#444;margin-top:2px}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid;transition:background .12s}
+.btn-gold{background:#1e1c18;border-color:#3a3020;color:#c89a3a}.btn-gold:hover{background:#2a2010}
+.btn-purple{background:#1e1c18;border-color:#2a2040;color:#9070e0}.btn-purple:hover{background:#22183a}
+.btn-green{background:#1a2e10;border-color:#304820;color:#6ccc40}.btn-green:hover{background:#223a14}
+.btn-red{background:#2e1010;border-color:#481818;color:#e06060}.btn-red:hover{background:#3a1414}
+.btn-dim{background:#1a1814;border-color:#2a2620;color:#666}.btn-dim:hover{background:#222;color:#aaa}
 
-/* Stats bar */
-.stats-bar{
-  background:#0d0b09;border-bottom:1px solid #1e1c18;
-  padding:8px 16px;display:flex;gap:20px;flex-wrap:wrap;
-}
-.stat{display:flex;flex-direction:column;gap:2px}
-.stat-val{font-size:15px;font-weight:700;color:#c89a3a}
-.stat-lbl{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:.05em}
+/* ── Stats bar ── */
+.stats-bar{display:flex;gap:0;border-bottom:1px solid #1e1c18;background:#100e0c}
+.stat{flex:1;text-align:center;padding:10px 4px;border-right:1px solid #1e1c18}
+.stat:last-child{border-right:none}
+.stat-val{font-size:18px;font-weight:700;color:#c89a3a;display:block}
+.stat-lbl{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:.06em}
 
-/* Binder list */
-.list-wrap{padding:14px 12px 40px;max-width:700px;margin:0 auto}
-.list-title{font-size:10px;color:#383430;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:10px}
+/* ── Section headers ── */
+.section-head{padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between}
+.section-title{font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.07em}
 
-.binder-card{
-  background:#0f0d0b;border:1px solid #252018;border-radius:12px;
-  margin-bottom:10px;overflow:hidden;
-  transition:border-color .13s,background .13s;
-  text-decoration:none;display:block;color:inherit;
-}
-.binder-card:hover{background:#131109;border-color:#4a3820}
-.binder-card:active{background:#1a1610}
+/* ── Binder grid ── */
+.binder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:0 12px 4px}
 
-.card-body{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:14px}
-.card-icon{font-size:30px;line-height:1;flex-shrink:0;margin-top:2px}
-.card-info{flex:1;min-width:0}
-.card-name{font-size:15px;font-weight:700;color:#ddd;margin-bottom:2px}
-.card-desc{font-size:11px;color:#444;line-height:1.5}
-.card-meta{font-size:10px;color:#333;margin-top:3px}
-.card-arrow{font-size:20px;color:#2a2418;flex-shrink:0;align-self:center}
+/* ── Binder card ── */
+.binder-card{background:#111009;border:1px solid #252018;border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:border-color .15s,transform .1s;position:relative}
+.binder-card:hover{border-color:#3a3020;transform:translateY(-1px)}
+.binder-card.empty-state{border-style:dashed;border-color:#252018;align-items:center;justify-content:center;padding:30px;cursor:pointer;min-height:100px}
+.binder-card.empty-state:hover{border-color:#555}
+.bc-cover{width:100%;height:90px;object-fit:cover;object-position:center top;background:#0d0b09;display:block;flex-shrink:0}
+.bc-cover-placeholder{width:100%;height:90px;background:linear-gradient(135deg,#1a1610 0%,#0d0b09 100%);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.bc-body{padding:10px 12px 6px;flex:1}
+.bc-name{font-size:13px;font-weight:700;color:#ddd;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-desc{font-size:10px;color:#555;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-prog-wrap{height:4px;background:#1a1814;border-radius:999px;overflow:hidden;margin-bottom:3px}
+.bc-prog-bar{height:100%;background:#c89a3a;border-radius:999px;transition:width .4s}
+.bc-prog-label{display:flex;justify-content:space-between;font-size:9px;color:#383430}
+.bc-footer{padding:6px 12px 10px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.bc-meta{font-size:9px;color:#383430}
+.bc-remove{background:none;border:1px solid #2a1818;border-radius:5px;color:#6a3030;cursor:pointer;font-size:10px;padding:2px 7px;font-family:inherit;transition:all .12s;flex-shrink:0}
+.bc-remove:hover{background:#3a1010;border-color:#6a2020;color:#e06060}
 
-.card-footer{padding:0 16px 12px}
-.prog-track{height:4px;background:#1a1814;border-radius:999px;overflow:hidden;margin-bottom:4px}
-.prog-fill{height:100%;background:#c89a3a;border-radius:999px;transition:width .4s ease}
-.prog-label{font-size:10px;color:#383430;display:flex;justify-content:space-between}
+/* ── Catalog modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;overflow-y:auto;padding:24px 12px}
+.modal-overlay.open{display:block}
+.modal-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;max-width:860px;margin:0 auto;overflow:hidden}
+.modal-head{padding:18px 20px 14px;border-bottom:1px solid #1e1c18;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:sticky;top:0;background:#1a1814;z-index:10}
+.modal-head-left .mh-title{font-size:16px;font-weight:700;color:#fff}
+.modal-head-left .mh-sub{font-size:11px;color:#555;margin-top:3px}
+.modal-search{background:#111;border:1px solid #2a2620;border-radius:7px;padding:7px 12px;font-size:13px;color:#ddd;width:220px;outline:none;font-family:inherit}
+.modal-search:focus{border-color:#555}
+.modal-body{padding:0 20px 20px}
 
-/* Sync modal */
-.sync-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;
-  align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto;
-}
+/* ── Era groups in catalog ── */
+.era-group{margin-top:16px}
+.era-title{font-size:10px;font-weight:700;color:#3a3428;text-transform:uppercase;letter-spacing:.08em;padding:8px 0 6px;border-bottom:1px solid #1e1c18;margin-bottom:8px}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.cat-item{background:#111009;border:1px solid #1e1c18;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .12s}
+.cat-item.added{border-color:#2a3a1a}
+.cat-item.no-file{opacity:.7}
+.cat-cover{width:100%;height:52px;object-fit:cover;object-position:center top;background:#0b0a08;display:block}
+.cat-cover-ph{width:100%;height:52px;background:#0d0b08;display:flex;align-items:center;justify-content:center;font-size:20px}
+.cat-body{padding:7px 9px 5px;flex:1}
+.cat-name{font-size:11px;font-weight:600;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.cat-meta{font-size:9px;color:#444}
+.cat-foot{padding:5px 9px 8px;display:flex;gap:5px}
+.cat-btn{flex:1;padding:4px 0;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid;text-align:center;transition:all .12s}
+.cat-add{background:#1a2e10;border-color:#304820;color:#6ccc40}.cat-add:hover{background:#223a14}
+.cat-remove{background:#2e1010;border-color:#481818;color:#e06060}.cat-remove:hover{background:#3a1414}
+.cat-soon{background:#1a1814;border-color:#252220;color:#444;cursor:default}
+
+/* ── Sync overlay ── */
+.sync-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
 .sync-overlay.open{display:flex}
-.sync-box{
-  background:#1a1814;border:1px solid #2a2620;border-radius:14px;
-  padding:22px;max-width:500px;width:100%;margin:auto;
-}
-.sync-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
-.sync-desc{font-size:11px;color:#555;margin-bottom:18px;line-height:1.7}
-.sync-section{margin-bottom:16px}
-.sync-label{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
-.sync-ta{
-  width:100%;height:90px;background:#0b0a08;border:1px solid #222;border-radius:7px;
-  padding:8px;font-size:11px;color:#aaa;font-family:'Courier New',monospace;
-  resize:vertical;outline:none;display:block;
-}
+.sync-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:22px;max-width:480px;width:100%;margin:auto}
+.sync-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.sync-desc{font-size:11px;color:#555;margin-bottom:16px;line-height:1.7}
+.sync-label{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.sync-ta{width:100%;height:80px;background:#0b0a08;border:1px solid #222;border-radius:7px;padding:8px;font-size:11px;color:#aaa;font-family:'Courier New',monospace;resize:vertical;outline:none;display:block}
 .sync-ta:focus{border-color:#5a3a10}
-.sync-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
-.sync-btn-a{
-  padding:8px 15px;border-radius:7px;font-size:12px;cursor:pointer;
-  font-family:inherit;font-weight:600;border:1px solid;
-}
-.sb-green {background:#1e2a10;border-color:#3a5020;color:#80c040}.sb-green:hover{background:#283814}
+.sync-section{margin-bottom:14px}
+.sync-row{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap}
+.sync-btn{padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid}
+.sb-green{background:#1e2a10;border-color:#3a5020;color:#80c040}.sb-green:hover{background:#283814}
 .sb-purple{background:#1e1a38;border-color:#3a3060;color:#8070d0}.sb-purple:hover{background:#26224a}
-.sb-dim   {background:#1a1814;border-color:#2a2620;color:#666}.sb-dim:hover{background:#222}
+.sb-dim{background:#1a1814;border-color:#2a2620;color:#666}.sb-dim:hover{background:#222}
+.sync-warn{font-size:10px;color:#3a2820;margin-top:5px;line-height:1.5}
 .sync-flash{font-size:11px}
-.sync-warn{font-size:10px;color:#3a2820;margin-top:6px;line-height:1.5}
 
-/* PWA banner */
-.install-banner{
-  display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
-  background:#1a2810;border:1px solid #3a6018;border-radius:10px;
-  padding:10px 14px;font-size:12px;color:#70b030;z-index:900;
-  align-items:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.5);white-space:nowrap;
-}
+/* ── Install banner ── */
+.install-banner{position:fixed;bottom:0;left:0;right:0;background:#1a1814;border-top:1px solid #c89a3a44;padding:10px 16px;display:none;align-items:center;justify-content:space-between;gap:10px;z-index:400;font-size:12px;color:#c89a3a}
 .install-banner.show{display:flex}
-.ib-btn{padding:5px 12px;border-radius:6px;background:#243810;border:1px solid #3a6018;color:#70b030;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit}
-.ib-x{background:none;border:none;color:#333;cursor:pointer;font-size:18px;padding:0 2px;line-height:1}
+.ib-btn{padding:5px 12px;border-radius:6px;background:#c89a3a;border:none;color:#000;font-size:11px;font-weight:700;cursor:pointer}
+.ib-x{background:none;border:none;color:#666;cursor:pointer;font-size:16px;padding:0 4px}
 </style>
-<script src="gist-sync.js"></script>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-top">
-    <div>
-      <div class="header-title">🗂️ TCG Binders</div>
-      <div class="header-sub">Pokémon Trading Card Game Collection</div>
-    </div>
-    <button class="sync-btn" onclick="openSync()">⇅ Sync Data</button>
+<!-- Top bar -->
+<div class="topbar">
+  <div>
+    <div class="topbar-title">📚 TCG Binder Planner</div>
+    <div class="topbar-sub" id="topbar-sub">Loading…</div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-purple" onclick="openCatalog()">＋ Add Binder</button>
+    <button class="btn btn-gold" onclick="openSync()">⇅ Sync</button>
   </div>
 </div>
 
-<div class="stats-bar" id="stats-bar">
-  <div class="stat"><span class="stat-val" id="stat-total-owned">—</span><span class="stat-lbl">Total Owned</span></div>
-  <div class="stat"><span class="stat-val" id="stat-binders">7</span><span class="stat-lbl">Binders</span></div>
-  <div class="stat"><span class="stat-val" id="stat-priced">—</span><span class="stat-lbl">Cards Priced</span></div>
+<!-- Stats bar -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-val" id="stat-binders">0</span><span class="stat-lbl">Binders</span></div>
+  <div class="stat"><span class="stat-val" id="stat-owned">0</span><span class="stat-lbl">Owned</span></div>
+  <div class="stat"><span class="stat-val" id="stat-total">0</span><span class="stat-lbl">Total Slots</span></div>
+  <div class="stat"><span class="stat-val" id="stat-pct">0%</span><span class="stat-lbl">Complete</span></div>
 </div>
 
-<div class="list-wrap">
-  <div class="list-title">My Binders</div>
+<!-- My Binders -->
+<div class="section-head">
+  <div class="section-title">My Binders</div>
+</div>
+<div class="binder-grid" id="binder-grid"></div>
 
-  <a class="binder-card" href="m2a.html">
-    <div class="card-body">
-      <div class="card-icon">🗂️</div>
-      <div class="card-info">
-        <div class="card-name">MEGA Dream ex</div>
-        <div class="card-desc">M2a · Japanese High Class Pack · November 2025</div>
-        <div class="card-meta">486 slots · 193 main + 57 secret rares + 236 reverse holos</div>
+<!-- Catalog modal -->
+<div class="modal-overlay" id="catalog-overlay" onclick="if(event.target===this)closeCatalog()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="mh-title">＋ Add a Binder</div>
+        <div class="mh-sub">Select sets to track. Pre-built binders open immediately; others are coming soon.</div>
       </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="card-footer">
-      <div class="prog-track"><div class="prog-fill" id="prog-m2a" style="width:0%"></div></div>
-      <div class="prog-label">
-        <span id="prog-m2a-text">Loading…</span>
-        <span id="prog-m2a-pct">0%</span>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input class="modal-search" id="cat-search" placeholder="Search sets…" oninput="filterCatalog(this.value)">
+        <button class="btn btn-dim" onclick="closeCatalog()">Close</button>
       </div>
     </div>
-  </a>
-
-  <a class="binder-card" href="penny.html">
-    <div class="card-body">
-      <div class="card-icon">⭐</div>
-      <div class="card-info">
-        <div class="card-name">Penny — All Prints</div>
-        <div class="card-desc">ボタン · All Japanese &amp; English prints</div>
-        <div class="card-meta">10 cards · SV1s, SV-P Promo, SV4a, Scarlet &amp; Violet EN, Paldean Fates</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="card-footer">
-      <div class="prog-track"><div class="prog-fill" id="prog-penny" style="width:0%"></div></div>
-      <div class="prog-label">
-        <span id="prog-penny-text">Loading…</span>
-        <span id="prog-penny-pct">0%</span>
-      </div>
-    </div>
-  </a>
-
-  <a class="binder-card" href="m3.html">
-    <div class="card-body">
-      <div class="card-icon">🟢</div>
-      <div class="card-info">
-        <div class="card-name">M3 Nihil Zero — Master Set</div>
-        <div class="card-desc">ムニキスゼロ · Mega Zygarde ex · January 23, 2026</div>
-        <div class="card-meta">117 cards · 80 main + 37 secret rares</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="card-footer">
-      <div class="prog-track"><div class="prog-fill" id="prog-m3" style="width:0%"></div></div>
-      <div class="prog-label">
-        <span id="prog-m3-text">Loading…</span>
-        <span id="prog-m3-pct">0%</span>
-      </div>
-    </div>
-  </a>
-
-  <a class="binder-card" href="m4.html">
-    <div class="card-body">
-      <div class="card-icon">💧</div>
-      <div class="card-info">
-        <div class="card-name">M4 Ninja Spinner — Master Set</div>
-        <div class="card-desc">ニンジャスピナー · Mega Greninja ex · March 13, 2026</div>
-        <div class="card-meta">120 cards · 83 main + 37 secret rares</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="card-footer">
-      <div class="prog-track"><div class="prog-fill" id="prog-m4" style="width:0%"></div></div>
-      <div class="prog-label">
-        <span id="prog-m4-text">Loading…</span>
-        <span id="prog-m4-pct">0%</span>
-      </div>
-    </div>
-  </a>
-
-  <a class="binder-card" href="m2.html">
-    <div class="card-body">
-      <div class="card-icon">🔥</div>
-      <div class="card-info">
-        <div class="card-name">M2 Inferno X — Master Set</div>
-        <div class="card-desc">インフェルノX · Mega Charizard X ex · September 2025</div>
-        <div class="card-meta">116 cards · 80 main + 36 secret rares</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="card-footer">
-      <div class="prog-track"><div class="prog-fill" id="prog-m2" style="width:0%"></div></div>
-      <div class="prog-label">
-        <span id="prog-m2-text">Loading…</span>
-        <span id="prog-m2-pct">0%</span>
-      </div>
-    </div>
-  </a>
-
-  <a class="binder-card" href="mew.html">
-    <div class="card-body">
-      <div class="card-icon">🎴</div>
-      <div class="card-info">
-        <div class="card-name">MEW Pokémon Card 151</div>
-        <div class="card-desc">English · Mew ex / Mewtwo ex · September 2023</div>
-        <div class="card-meta">207 cards · 165 main + 42 secret rares</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="card-footer">
-      <div class="prog-track"><div class="prog-fill" id="prog-sv2a" style="width:0%"></div></div>
-      <div class="prog-label">
-        <span id="prog-sv2a-text">Loading…</span>
-        <span id="prog-sv2a-pct">0%</span>
-      </div>
-    </div>
-  </a>
-
-  <a class="binder-card" href="gardevoir.html">
-    <div class="card-body">
-      <div class="card-icon">🌸</div>
-      <div class="card-info">
-        <div class="card-name">Gardevoir — All Prints</div>
-        <div class="card-desc">サーナイト · All 58 English TCG prints · EX era → Mega era</div>
-        <div class="card-meta">58 cards · Base · EX · GX · V · ex · Mega ex</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="card-footer">
-      <div class="prog-track"><div class="prog-fill" id="prog-gardevoir" style="width:0%"></div></div>
-      <div class="prog-label">
-        <span id="prog-gardevoir-text">Loading…</span>
-        <span id="prog-gardevoir-pct">0%</span>
-      </div>
-    </div>
-  </a>
-
+    <div class="modal-body" id="catalog-body"></div>
+  </div>
 </div>
 
-<!-- Sync modal -->
+<!-- Sync overlay -->
 <div class="sync-overlay" id="sync-overlay" onclick="if(event.target===this)closeSyncModal()">
   <div class="sync-box">
     <div class="sync-title">⇅ Sync Data Between Devices</div>
-    <div class="sync-desc">
-      Your collection data (owned cards, prices, watchlist) is saved <strong style="color:#888">locally in this browser</strong>. 
-      It does not sync automatically between your PC and phone.<br><br>
-      To transfer your data: <strong style="color:#888">Export</strong> on one device → copy the text → open the app on the other device → paste into <strong style="color:#888">Import</strong>.
-    </div>
-
+    <div class="sync-desc">Your collection data is saved locally in this browser. Export on one device → paste on another to transfer.</div>
     <div class="sync-section">
       <div class="sync-label">Export — copy your data</div>
-      <textarea class="sync-ta" id="export-ta" readonly placeholder="Click Export to generate…"></textarea>
+      <textarea id="export-ta" class="sync-ta" readonly placeholder="Click Export to generate…"></textarea>
       <div class="sync-row">
-        <button class="sync-btn-a sb-green" onclick="doExport()">Export & Copy to Clipboard</button>
-        <span class="sync-flash" id="export-flash" style="color:#4cff80;display:none">✓ Copied!</span>
+        <button class="sync-btn sb-green" onclick="doExport()">Export & Copy</button>
+        <span id="export-flash" class="sync-flash" style="color:#4cff80;display:none">✓ Copied!</span>
       </div>
     </div>
-
     <div class="sync-section">
       <div class="sync-label">Import — paste data from another device</div>
-      <textarea class="sync-ta" id="import-ta" placeholder="Paste exported data here, then click Import…"></textarea>
+      <textarea id="import-ta" class="sync-ta" placeholder="Paste exported data here…"></textarea>
       <div class="sync-row">
-        <button class="sync-btn-a sb-purple" onclick="doImport()">Import Data</button>
-        <span class="sync-flash" id="import-flash" style="display:none"></span>
+        <button class="sync-btn sb-purple" onclick="doImport()">Import Data</button>
+        <span id="import-flash" class="sync-flash" style="display:none"></span>
       </div>
-      <div class="sync-warn">⚠ Import will overwrite your current collection data on this device.</div>
+      <div class="sync-warn">⚠ Import overwrites current data on this device.</div>
     </div>
-
-    <button class="sync-btn-a sb-dim" onclick="closeSyncModal()" style="width:100%;margin-top:4px">Close</button>
+    <button class="sync-btn sb-dim" onclick="closeSyncModal()" style="width:100%;margin-top:4px">Close</button>
   </div>
 </div>
 
-<!-- PWA install banner -->
+<!-- Install banner -->
 <div class="install-banner" id="install-banner">
-  📲 Install as app
+  📲 Install TCG Binder Planner as an app
   <button class="ib-btn" id="install-btn">Install</button>
   <button class="ib-x" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
 </div>
 
 <script>
-// ── Binder configs ────────────────────────────────────────────────────────
-const BINDERS = [
-  { ownedKey: 'M2a_owned_v1',              pricesKey: 'M2a_prices_v2',              total: 486, progId: 'prog-m2a',   textId: 'prog-m2a-text',   pctId: 'prog-m2a-pct'   },
-  { ownedKey: 'penny_owned_v1',            pricesKey: 'penny_prices_v1',            total: 10,  progId: 'prog-penny', textId: 'prog-penny-text', pctId: 'prog-penny-pct' },
-  { ownedKey: 'm3_nihil_zero_owned_v1',    pricesKey: 'm3_nihil_zero_prices_v1',    total: 117, progId: 'prog-m3',    textId: 'prog-m3-text',    pctId: 'prog-m3-pct'    },
-  { ownedKey: 'm4_ninja_spinner_owned_v1', pricesKey: 'm4_ninja_spinner_prices_v1', total: 120, progId: 'prog-m4',    textId: 'prog-m4-text',    pctId: 'prog-m4-pct'    },
-  { ownedKey: 'm2_inferno_x_owned_v1',     pricesKey: 'm2_inferno_x_prices_v1',     total: 116, progId: 'prog-m2',    textId: 'prog-m2-text',    pctId: 'prog-m2-pct'    },
-  { ownedKey: 'mew_151_owned_v1',         pricesKey: 'mew_151_prices_v1',         total: 207, progId: 'prog-sv2a', textId: 'prog-sv2a-text',  pctId: 'prog-sv2a-pct'  },
-  { ownedKey: 'gardevoir_owned_v1',          pricesKey: 'gardevoir_prices_v1',          total: 58,  progId: 'prog-gardevoir', textId: 'prog-gardevoir-text', pctId: 'prog-gardevoir-pct' },
+// ══════════════════════════════════════════════════════════════════════════
+//  MASTER CATALOG — all known sets
+//  file: HTML filename if pre-built, null if not yet generated
+//  lsOwned / lsPrices: localStorage keys
+//  cover: URL for cover art (set logo or pack image)
+//  total: master set card count
+// ══════════════════════════════════════════════════════════════════════════
+const CDN  = 'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci';
+const PTCG = 'https://images.pokemontcg.io';
+const TPC  = 'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc'; // JP
+
+const CATALOG = [
+
+  // ── Your existing binders ────────────────────────────────────────────────
+  { id:'gardevoir', era:'Custom',   name:'Gardevoir — All Prints',       desc:'All 57 EN prints across every era',
+    file:'gardevoir.html', lsOwned:'gardevoir_owned_v1',   lsPrices:'gardevoir_prices_v1',   total:57,
+    cover:`${PTCG}/sv1/245.png`,  icon:'🌸' },
+
+  { id:'penny', era:'Custom',       name:'Penny (ボタン) — All Prints',   desc:'JP + EN prints, all 10 cards',
+    file:'penny.html',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:10,
+    cover:`${CDN}/SVI/SVI_183_R_EN_SM.png`,  icon:'👓' },
+
+  // ── Mega Evolution era (JP) ──────────────────────────────────────────────
+  { id:'m2a', era:'JP — Mega Era',  name:'M2a MEGA Dream ex',            desc:'Japanese High Class Pack · Nov 2025',
+    file:'m2a.html',      lsOwned:'M2a_owned_v1',           lsPrices:'M2a_prices_v2',          total:486,
+    cover:`${TPC}/M2a/M2a_193_R_JP_SM.png`,  icon:'✨' },
+
+  { id:'m2',  era:'JP — Mega Era',  name:'M2 Inferno X',                 desc:'インフェルノX · Mega Charizard X ex · Sep 2025',
+    file:'m2.html',       lsOwned:'m2_inferno_x_owned_v1',  lsPrices:'m2_inferno_x_prices_v1', total:116,
+    cover:`${TPC}/M2/M2_116_R_JP_SM.png`,    icon:'🔥' },
+
+  { id:'m3',  era:'JP — Mega Era',  name:'M3 Nihil Zero',                desc:'ムニキスゼロ · Mega Zygarde ex · Jan 2026',
+    file:'m3.html',       lsOwned:'m3_nihil_zero_owned_v1', lsPrices:'m3_nihil_zero_prices_v1', total:117,
+    cover:`${TPC}/M3/M3_117_R_JP_SM.png`,    icon:'🟢' },
+
+  { id:'m4',  era:'JP — Mega Era',  name:'M4 Ninja Spinner',             desc:'ニンジャスピナー · Mega Greninja ex · Mar 2026',
+    file:'m4.html',       lsOwned:'m4_ninja_spinner_owned_v1', lsPrices:'m4_ninja_spinner_prices_v1', total:120,
+    cover:`${TPC}/M4/M4_120_R_JP_SM.png`,    icon:'💧' },
+
+  // ── EN — Mega Evolution era ──────────────────────────────────────────────
+  { id:'mew',  era:'EN — Scarlet & Violet', name:'Pokémon Card 151 (MEW)',       desc:'Scarlet & Violet special set · Sep 2023',
+    file:'mew.html',      lsOwned:'mew_151_owned_v1',       lsPrices:'mew_151_prices_v1',       total:207,
+    cover:`${CDN}/MEW/MEW_205_R_EN_SM.png`,  icon:'🎴' },
+
+  { id:'meg',  era:'EN — Mega Era',  name:'Mega Evolution (MEG)',          desc:'First Mega EN set · Sep 2025',
+    file:null,            lsOwned:'meg_owned_v1',            lsPrices:'meg_prices_v1',           total:188,
+    cover:`${CDN}/MEG/MEG_187_R_EN_SM.png`,  icon:'⚡' },
+
+  { id:'pfl',  era:'EN — Mega Era',  name:'Phantasmal Flames (PFL)',       desc:'Mega Charizard X ex · Nov 2025',
+    file:null,            lsOwned:'pfl_owned_v1',            lsPrices:'pfl_prices_v1',           total:130,
+    cover:`${CDN}/PFL/PFL_130_R_EN_SM.png`,  icon:'🔥' },
+
+  { id:'asc',  era:'EN — Mega Era',  name:'Ascended Heroes (ASC)',         desc:'Biggest set ever · 295 cards · Jan 2026',
+    file:null,            lsOwned:'asc_owned_v1',            lsPrices:'asc_prices_v1',           total:295,
+    cover:`${CDN}/ASC/ASC_295_R_EN_SM.png`,  icon:'🐉' },
+
+  { id:'por',  era:'EN — Mega Era',  name:'Perfect Order (POR)',           desc:'Mega Zygarde ex · Mar 2026',
+    file:null,            lsOwned:'por_owned_v1',            lsPrices:'por_prices_v1',           total:124,
+    cover:`${CDN}/POR/POR_124_R_EN_SM.png`,  icon:'🟢' },
+
+  { id:'cri',  era:'EN — Mega Era',  name:'Chaos Rising (CRI)',            desc:'Mega Greninja ex · May 2026',
+    file:null,            lsOwned:'cri_owned_v1',            lsPrices:'cri_prices_v1',           total:124,
+    cover:`${CDN}/CRI/CRI_122_R_EN_SM.png`,  icon:'💧' },
+
+  // ── EN — Scarlet & Violet ────────────────────────────────────────────────
+  { id:'svi',  era:'EN — Scarlet & Violet', name:'Scarlet & Violet (SVI)',       desc:'Base set · Gardevoir ex · Mar 2023',
+    file:null,            lsOwned:'svi_owned_v1',            lsPrices:'svi_prices_v1',           total:264,
+    cover:`${CDN}/SVI/SVI_245_R_EN_SM.png`,  icon:'🔴' },
+
+  { id:'pal',  era:'EN — Scarlet & Violet', name:'Paldea Evolved (PAL)',          desc:'Jun 2023',
+    file:null,            lsOwned:'pal_owned_v1',            lsPrices:'pal_prices_v1',           total:279,
+    cover:`${PTCG}/pal/logo.png`,             icon:'🌿' },
+
+  { id:'obf',  era:'EN — Scarlet & Violet', name:'Obsidian Flames (OBF)',         desc:'Tera Charizard ex · Aug 2023',
+    file:null,            lsOwned:'obf_owned_v1',            lsPrices:'obf_prices_v1',           total:230,
+    cover:`${PTCG}/obf/logo.png`,             icon:'🔥' },
+
+  { id:'par',  era:'EN — Scarlet & Violet', name:'Paradox Rift (PAR)',            desc:'Ancient/Future Pokémon · Nov 2023',
+    file:null,            lsOwned:'par_owned_v1',            lsPrices:'par_prices_v1',           total:292,
+    cover:`${PTCG}/par/logo.png`,             icon:'⏳' },
+
+  { id:'paf',  era:'EN — Scarlet & Violet', name:'Paldean Fates (PAF)',           desc:'Shiny Vault special · Jan 2024',
+    file:null,            lsOwned:'paf_owned_v1',            lsPrices:'paf_prices_v1',           total:245,
+    cover:`${CDN}/PAF/PAF_233_R_EN_SM.png`,  icon:'✨' },
+
+  { id:'tef',  era:'EN — Scarlet & Violet', name:'Temporal Forces (TEF)',         desc:'Mar 2024',
+    file:null,            lsOwned:'tef_owned_v1',            lsPrices:'tef_prices_v1',           total:218,
+    cover:`${PTCG}/tef/logo.png`,             icon:'⏱' },
+
+  { id:'twm',  era:'EN — Scarlet & Violet', name:'Twilight Masquerade (TWM)',     desc:'May 2024',
+    file:null,            lsOwned:'twm_owned_v1',            lsPrices:'twm_prices_v1',           total:226,
+    cover:`${PTCG}/twm/logo.png`,             icon:'🎭' },
+
+  { id:'sfa',  era:'EN — Scarlet & Violet', name:'Shrouded Fable (SFA)',          desc:'Special set · Aug 2024',
+    file:null,            lsOwned:'sfa_owned_v1',            lsPrices:'sfa_prices_v1',           total:99,
+    cover:`${PTCG}/sfa/logo.png`,             icon:'🦊' },
+
+  { id:'scr',  era:'EN — Scarlet & Violet', name:'Stellar Crown (SCR)',           desc:'Sep 2024',
+    file:null,            lsOwned:'scr_owned_v1',            lsPrices:'scr_prices_v1',           total:175,
+    cover:`${PTCG}/scr/logo.png`,             icon:'⭐' },
+
+  { id:'ssp',  era:'EN — Scarlet & Violet', name:'Surging Sparks (SSP)',          desc:'Pikachu ex · Nov 2024',
+    file:null,            lsOwned:'ssp_owned_v1',            lsPrices:'ssp_prices_v1',           total:252,
+    cover:`${PTCG}/ssp/logo.png`,             icon:'⚡' },
+
+  { id:'pre',  era:'EN — Scarlet & Violet', name:'Prismatic Evolutions (PRE)',    desc:'Eeveelutions special · Jan 2025',
+    file:null,            lsOwned:'pre_owned_v1',            lsPrices:'pre_prices_v1',           total:180,
+    cover:`${CDN}/PRE/PRE_180_R_EN_SM.png`,  icon:'🌈' },
+
+  { id:'jtg',  era:'EN — Scarlet & Violet', name:'Journey Together (JTG)',        desc:'Mar 2025',
+    file:null,            lsOwned:'jtg_owned_v1',            lsPrices:'jtg_prices_v1',           total:190,
+    cover:`${PTCG}/jtg/logo.png`,             icon:'🌄' },
+
+  { id:'dri',  era:'EN — Scarlet & Violet', name:'Destined Rivals (DRI)',         desc:'May 2025',
+    file:null,            lsOwned:'dri_owned_v1',            lsPrices:'dri_prices_v1',           total:244,
+    cover:`${PTCG}/dri/logo.png`,             icon:'⚔️' },
+
+  { id:'blk',  era:'EN — Scarlet & Violet', name:'Black Bolt (BLK)',              desc:'Special set · Jul 2025',
+    file:null,            lsOwned:'blk_owned_v1',            lsPrices:'blk_prices_v1',           total:172,
+    cover:`${PTCG}/blk/logo.png`,             icon:'⚫' },
+
+  { id:'wht',  era:'EN — Scarlet & Violet', name:'White Flare (WHT)',             desc:'Special set · Jul 2025',
+    file:null,            lsOwned:'wht_owned_v1',            lsPrices:'wht_prices_v1',           total:173,
+    cover:`${PTCG}/wht/logo.png`,             icon:'⚪' },
+
+  // ── EN — Sword & Shield ──────────────────────────────────────────────────
+  { id:'crz',  era:'EN — Sword & Shield', name:'Crown Zenith (CRZ)',             desc:'Special set · Jan 2023',
+    file:null,            lsOwned:'crz_owned_v1',            lsPrices:'crz_prices_v1',           total:230,
+    cover:`${PTCG}/swsh12pt5/logo.png`,       icon:'👑' },
+
+  { id:'sit',  era:'EN — Sword & Shield', name:'Silver Tempest (SIT)',            desc:'Nov 2022',
+    file:null,            lsOwned:'sit_owned_v1',            lsPrices:'sit_prices_v1',           total:245,
+    cover:`${PTCG}/swsh12/logo.png`,          icon:'🌪' },
+
+  { id:'lor',  era:'EN — Sword & Shield', name:'Lost Origin (LOR)',               desc:'Radiant Gardevoir · Sep 2022',
+    file:null,            lsOwned:'lor_owned_v1',            lsPrices:'lor_prices_v1',           total:217,
+    cover:`${PTCG}/swsh11/logo.png`,          icon:'⚫' },
+
+  { id:'asr',  era:'EN — Sword & Shield', name:'Astral Radiance (ASR)',           desc:'May 2022',
+    file:null,            lsOwned:'asr_owned_v1',            lsPrices:'asr_prices_v1',           total:246,
+    cover:`${PTCG}/swsh10/logo.png`,          icon:'🌌' },
+
+  { id:'brs',  era:'EN — Sword & Shield', name:'Brilliant Stars (BRS)',           desc:'Feb 2022',
+    file:null,            lsOwned:'brs_owned_v1',            lsPrices:'brs_prices_v1',           total:186,
+    cover:`${PTCG}/swsh9/logo.png`,           icon:'⭐' },
+
+  { id:'fst',  era:'EN — Sword & Shield', name:'Fusion Strike (FST)',             desc:'Nov 2021',
+    file:null,            lsOwned:'fst_owned_v1',            lsPrices:'fst_prices_v1',           total:284,
+    cover:`${PTCG}/swsh8/logo.png`,           icon:'⚗️' },
+
+  { id:'cel',  era:'EN — Sword & Shield', name:'Celebrations (CEL)',              desc:'25th Anniversary special · Oct 2021',
+    file:null,            lsOwned:'cel_owned_v1',            lsPrices:'cel_prices_v1',           total:100,
+    cover:`${CDN}/CEL/CEL_093_R_EN_SM.png`,  icon:'🎉' },
+
+  { id:'evs',  era:'EN — Sword & Shield', name:'Evolving Skies (EVS)',            desc:'Rayquaza, Moonbreon · Aug 2021',
+    file:null,            lsOwned:'evs_owned_v1',            lsPrices:'evs_prices_v1',           total:237,
+    cover:`${PTCG}/swsh7/logo.png`,           icon:'🌌' },
+
+  { id:'cre',  era:'EN — Sword & Shield', name:'Chilling Reign (CRE)',            desc:'Jun 2021',
+    file:null,            lsOwned:'cre_owned_v1',            lsPrices:'cre_prices_v1',           total:233,
+    cover:`${PTCG}/swsh6/logo.png`,           icon:'❄️' },
+
+  { id:'shf',  era:'EN — Sword & Shield', name:'Shining Fates (SHF)',             desc:'Shiny Vault special · Feb 2021',
+    file:null,            lsOwned:'shf_owned_v1',            lsPrices:'shf_prices_v1',           total:195,
+    cover:`${PTCG}/swsh45/logo.png`,          icon:'✨' },
+
+  { id:'cpa',  era:'EN — Sword & Shield', name:"Champion's Path (CPA)",           desc:'Gardevoir V/VMAX special · Sep 2020',
+    file:null,            lsOwned:'cpa_owned_v1',            lsPrices:'cpa_prices_v1',           total:83,
+    cover:`${CDN}/CPA/CPA_070_R_EN_SM.png`,  icon:'🏆' },
+
+  // ── EN — Sun & Moon ──────────────────────────────────────────────────────
+  { id:'cec',  era:'EN — Sun & Moon', name:'Cosmic Eclipse (CEC)',              desc:'Nov 2019',
+    file:null,            lsOwned:'cec_owned_v1',            lsPrices:'cec_prices_v1',           total:272,
+    cover:`${PTCG}/sm12/logo.png`,            icon:'🌌' },
+
+  { id:'hif',  era:'EN — Sun & Moon', name:'Hidden Fates (HIF)',                desc:'Shiny Vault, Shiny Gardevoir · Aug 2019',
+    file:null,            lsOwned:'hif_owned_v1',            lsPrices:'hif_prices_v1',           total:215,
+    cover:`${PTCG}/sma/logo.png`,             icon:'✨' },
+
+  { id:'unb',  era:'EN — Sun & Moon', name:'Unbroken Bonds (UNB)',              desc:'Gardevoir & Sylveon GX · May 2019',
+    file:null,            lsOwned:'unb_owned_v1',            lsPrices:'unb_prices_v1',           total:214,
+    cover:`${PTCG}/sm10/logo.png`,            icon:'💜' },
+
+  { id:'bus',  era:'EN — Sun & Moon', name:'Burning Shadows (BUS)',             desc:'Gardevoir GX · Aug 2017',
+    file:null,            lsOwned:'bus_owned_v1',            lsPrices:'bus_prices_v1',           total:169,
+    cover:`${PTCG}/sm3/logo.png`,             icon:'🔥' },
+
+  // ── EN — XY ──────────────────────────────────────────────────────────────
+  { id:'evo',  era:'EN — XY', name:'Evolutions (EVO)',                   desc:'Base Set tribute · Nov 2016',
+    file:null,            lsOwned:'evo_owned_v1',            lsPrices:'evo_prices_v1',           total:113,
+    cover:`${PTCG}/xy12/logo.png`,            icon:'🃏' },
+
+  { id:'sts',  era:'EN — XY', name:'Steam Siege (STS)',                   desc:'M Gardevoir EX · Aug 2016',
+    file:null,            lsOwned:'sts_owned_v1',            lsPrices:'sts_prices_v1',           total:116,
+    cover:`${PTCG}/xy11/logo.png`,            icon:'⚙️' },
+
+  { id:'prc',  era:'EN — XY', name:'Primal Clash (PRC)',                   desc:'M Gardevoir EX · Feb 2015',
+    file:null,            lsOwned:'prc_owned_v1',            lsPrices:'prc_prices_v1',           total:160,
+    cover:`${PTCG}/xy5/logo.png`,             icon:'🌊' },
+
 ];
 
-const SYNC_KEYS = [
-  'M2a_owned_v1','M2a_watched_v1','M2a_prices_v2',
-  'penny_owned_v1','penny_watched_v1','penny_prices_v1',
-];
+// ── Default binders shown on first visit ───────────────────────────────────
+const DEFAULT_BINDER_IDS = ['gardevoir','penny','m2a','m2','m3','m4','mew'];
 
-// ── Refresh progress bars ─────────────────────────────────────────────────
-function refreshAll() {
-  let totalOwned = 0, totalPriced = 0;
+// ── LocalStorage key for active binder list ────────────────────────────────
+const LS_ACTIVE = 'tcgplanner_active_binders_v1';
 
-  BINDERS.forEach(b => {
+function getActive() {
+  try { return JSON.parse(localStorage.getItem(LS_ACTIVE)) || null; }
+  catch(e) { return null; }
+}
+function setActive(ids) { localStorage.setItem(LS_ACTIVE, JSON.stringify(ids)); }
+
+function ensureDefaults() {
+  if (!getActive()) setActive([...DEFAULT_BINDER_IDS]);
+}
+
+// ── Render binder grid ─────────────────────────────────────────────────────
+function renderGrid() {
+  const ids = getActive() || DEFAULT_BINDER_IDS;
+  const grid = document.getElementById('binder-grid');
+  grid.innerHTML = '';
+
+  let totalOwned = 0, totalCards = 0;
+
+  ids.forEach(id => {
+    const set = CATALOG.find(s => s.id === id);
+    if (!set) return;
+
+    const ownedRaw = localStorage.getItem(set.lsOwned);
+    const pricesRaw = localStorage.getItem(set.lsPrices);
     let owned = 0, priced = 0;
-    try {
-      const arr = JSON.parse(localStorage.getItem(b.ownedKey) || '[]');
-      owned = arr.length;
-    } catch(e) {}
-    try {
-      const obj = JSON.parse(localStorage.getItem(b.pricesKey) || '{}');
-      priced = Object.keys(obj).filter(k => obj[k] && obj[k].raw).length;
-    } catch(e) {}
+    try { owned = JSON.parse(ownedRaw || '[]').length; } catch(e){}
+    try { const p = JSON.parse(pricesRaw || '{}'); priced = Object.values(p).filter(v => v && v.raw).length; } catch(e){}
+    const pct = set.total ? Math.round(owned / set.total * 100) : 0;
+    totalOwned += owned; totalCards += set.total;
 
-    const pct = Math.round(owned / b.total * 100);
-    document.getElementById(b.progId).style.width  = pct + '%';
-    document.getElementById(b.textId).textContent  = `${owned} / ${b.total} owned`;
-    document.getElementById(b.pctId).textContent   = pct + '%';
-    totalOwned  += owned;
-    totalPriced += priced;
+    const card = document.createElement('div');
+    card.className = 'binder-card';
+    if (set.file) {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', e => { if (!e.target.closest('.bc-remove')) window.location = set.file; });
+    }
+
+    const coverHtml = set.cover
+      ? `<img class="bc-cover" src="${set.cover}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        + `<div class="bc-cover-placeholder" style="display:none">${set.icon}</div>`
+      : `<div class="bc-cover-placeholder">${set.icon}</div>`;
+
+    card.innerHTML = `
+      ${coverHtml}
+      <div class="bc-body">
+        <div class="bc-name">${set.name}</div>
+        <div class="bc-desc">${set.desc}</div>
+        <div class="bc-prog-wrap"><div class="bc-prog-bar" style="width:${pct}%"></div></div>
+        <div class="bc-prog-label">
+          <span>${owned} / ${set.total} owned</span>
+          <span>${pct}%</span>
+        </div>
+      </div>
+      <div class="bc-footer">
+        <span class="bc-meta">${set.total} cards${set.file ? '' : ' · Coming soon'}</span>
+        <button class="bc-remove" onclick="removeBinder('${id}')">✕ Remove</button>
+      </div>`;
+    grid.appendChild(card);
   });
-  document.getElementById('stat-total-owned').textContent = totalOwned;
-  document.getElementById('stat-priced').textContent      = totalPriced;
+
+  // Update stats
+  const globalPct = totalCards ? Math.round(totalOwned / totalCards * 100) : 0;
+  document.getElementById('stat-binders').textContent = ids.length;
+  document.getElementById('stat-owned').textContent   = totalOwned.toLocaleString();
+  document.getElementById('stat-total').textContent   = totalCards.toLocaleString();
+  document.getElementById('stat-pct').textContent     = globalPct + '%';
+  document.getElementById('topbar-sub').textContent   = ids.length + ' binder' + (ids.length !== 1 ? 's' : '') + ' · ' + totalOwned + ' cards owned';
 }
 
-// ── Sync ──────────────────────────────────────────────────────────────────
-function openSync() {
-  document.getElementById('export-ta').value = '';
-  document.getElementById('import-ta').value = '';
-  document.getElementById('export-flash').style.display = 'none';
-  document.getElementById('import-flash').style.display = 'none';
-  document.getElementById('sync-overlay').classList.add('open');
+function removeBinder(id) {
+  const ids = getActive() || [];
+  setActive(ids.filter(i => i !== id));
+  renderGrid();
+  renderCatalog();
 }
-function closeSyncModal() {
-  document.getElementById('sync-overlay').classList.remove('open');
+
+// ── Catalog ────────────────────────────────────────────────────────────────
+function openCatalog()  { document.getElementById('catalog-overlay').classList.add('open'); renderCatalog(); }
+function closeCatalog() { document.getElementById('catalog-overlay').classList.remove('open'); }
+
+function renderCatalog(filter = '') {
+  const active = new Set(getActive() || []);
+  const body = document.getElementById('catalog-body');
+  const q = filter.toLowerCase().trim();
+
+  const eras = [...new Set(CATALOG.map(s => s.era))];
+  let html = '';
+
+  eras.forEach(era => {
+    const sets = CATALOG.filter(s => s.era === era && (!q ||
+      s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) || s.id.includes(q)));
+    if (!sets.length) return;
+
+    html += `<div class="era-group"><div class="era-title">${era}</div><div class="catalog-grid">`;
+    sets.forEach(s => {
+      const isAdded = active.has(s.id);
+      const coverHtml = s.cover
+        ? `<img class="cat-cover" src="${s.cover}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="cat-cover-ph" style="display:none">${s.icon}</div>`
+        : `<div class="cat-cover-ph">${s.icon}</div>`;
+      const actionBtn = isAdded
+        ? `<button class="cat-btn cat-remove" onclick="toggleBinder('${s.id}')">✕ Remove</button>`
+        : s.file
+          ? `<button class="cat-btn cat-add" onclick="toggleBinder('${s.id}')">＋ Add</button>`
+          : `<span class="cat-btn cat-soon">Coming Soon</span>`;
+      const openBtn = s.file && isAdded
+        ? `<a class="cat-btn cat-add" href="${s.file}" style="text-decoration:none">Open →</a>` : '';
+
+      html += `<div class="cat-item${isAdded?' added':''}${!s.file?' no-file':''}">
+        ${coverHtml}
+        <div class="cat-body">
+          <div class="cat-name">${s.name}</div>
+          <div class="cat-meta">${s.desc}</div>
+          <div class="cat-meta">${s.total} cards</div>
+        </div>
+        <div class="cat-foot">${actionBtn}${openBtn}</div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+
+  body.innerHTML = html || '<div style="padding:20px;color:#444;text-align:center">No sets match your search.</div>';
 }
+
+function toggleBinder(id) {
+  const ids = getActive() || [];
+  if (ids.includes(id)) {
+    setActive(ids.filter(i => i !== id));
+  } else {
+    setActive([...ids, id]);
+  }
+  renderGrid();
+  renderCatalog(document.getElementById('cat-search').value);
+}
+
+function filterCatalog(q) { renderCatalog(q); }
+
+// ── Sync ───────────────────────────────────────────────────────────────────
+function openSync()       { document.getElementById('sync-overlay').classList.add('open'); }
+function closeSyncModal() { document.getElementById('sync-overlay').classList.remove('open'); }
+
+function getAllSyncKeys() {
+  return CATALOG.flatMap(s => [s.lsOwned, s.lsOwned.replace('owned','watched'), s.lsPrices]).concat([LS_ACTIVE]);
+}
+
 function doExport() {
-  const data = {};
-  SYNC_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
+  const data = {}; getAllSyncKeys().forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
   const json = JSON.stringify(data, null, 2);
   document.getElementById('export-ta').value = json;
   navigator.clipboard.writeText(json).then(() => {
-    const f = document.getElementById('export-flash');
-    f.style.display = 'inline';
+    const f = document.getElementById('export-flash'); f.style.display = 'inline';
     setTimeout(() => f.style.display = 'none', 2500);
-  }).catch(() => {
-    // Clipboard blocked — user can select and copy manually from the textarea
-  });
+  }).catch(()=>{});
 }
+
 function doImport() {
   const raw = document.getElementById('import-ta').value.trim();
   const f = document.getElementById('import-flash');
-  if (!raw) {
-    f.style.display = 'inline'; f.style.color = '#c07040';
-    f.textContent = 'Nothing to import — paste your exported data first.';
-    return;
-  }
+  if (!raw) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Paste data first.'; return; }
   try {
-    const data = JSON.parse(raw);
-    let n = 0;
-    SYNC_KEYS.forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
-    f.style.display = 'inline'; f.style.color = '#4cff80';
-    f.textContent = `✓ Imported ${n} data sets — refreshing…`;
-    setTimeout(() => { closeSyncModal(); refreshAll(); }, 1200);
-  } catch(e) {
-    f.style.display = 'inline'; f.style.color = '#c07040';
-    f.textContent = 'Invalid data — make sure you copied the full export text.';
-  }
+    const data = JSON.parse(raw); let n = 0;
+    getAllSyncKeys().forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
+    f.style.display='inline'; f.style.color='#4cff80'; f.textContent='✓ Imported — reloading…';
+    setTimeout(() => { closeSyncModal(); location.reload(); }, 1200);
+  } catch(e) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Invalid data.'; }
 }
 
-// ── PWA install ───────────────────────────────────────────────────────────
-let _deferredPrompt = null;
+// ── PWA install ────────────────────────────────────────────────────────────
+let deferredPrompt;
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _deferredPrompt = e;
+  e.preventDefault(); deferredPrompt = e;
   document.getElementById('install-banner').classList.add('show');
 });
-document.getElementById('install-btn').addEventListener('click', async () => {
-  if (!_deferredPrompt) return;
-  _deferredPrompt.prompt();
-  await _deferredPrompt.userChoice;
-  _deferredPrompt = null;
+document.getElementById('install-btn').addEventListener('click', () => {
+  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
   document.getElementById('install-banner').classList.remove('show');
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────
-refreshAll();
+// ── Init ───────────────────────────────────────────────────────────────────
+ensureDefaults();
+renderGrid();
 </script>
 </body>
 </html>
