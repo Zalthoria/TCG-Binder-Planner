@@ -43,8 +43,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .binder-card:hover{border-color:#3a3020;transform:translateY(-1px)}
 .binder-card.empty-state{border-style:dashed;border-color:#252018;align-items:center;justify-content:center;padding:30px;cursor:pointer;min-height:100px}
 .binder-card.empty-state:hover{border-color:#555}
-.bc-cover{width:100%;height:90px;object-fit:cover;object-position:center top;background:#0d0b09;display:block;flex-shrink:0}
-.bc-cover-placeholder{width:100%;height:90px;background:linear-gradient(135deg,#1a1610 0%,#0d0b09 100%);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.bc-cover{width:100%;height:80px;object-fit:contain;object-position:center;background:#0d0b09;padding:8px 12px;display:block;flex-shrink:0}
+.bc-cover-placeholder{width:100%;height:80px;background:linear-gradient(135deg,#1a1610 0%,#0d0b09 100%);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
 .bc-body{padding:10px 12px 6px;flex:1}
 .bc-name{font-size:13px;font-weight:700;color:#ddd;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bc-desc{font-size:10px;color:#555;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -74,8 +74,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cat-item{background:#111009;border:1px solid #1e1c18;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .12s}
 .cat-item.added{border-color:#2a3a1a}
 .cat-item.no-file{opacity:.7}
-.cat-cover{width:100%;height:52px;object-fit:cover;object-position:center top;background:#0b0a08;display:block}
-.cat-cover-ph{width:100%;height:52px;background:#0d0b08;display:flex;align-items:center;justify-content:center;font-size:20px}
+.cat-cover{width:100%;height:46px;object-fit:contain;object-position:center;background:#0b0a08;padding:5px 8px;display:block}
+.cat-cover-ph{width:100%;height:46px;background:#0d0b08;display:flex;align-items:center;justify-content:center;font-size:20px}
 .cat-body{padding:7px 9px 5px;flex:1}
 .cat-name{font-size:11px;font-weight:600;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
 .cat-meta{font-size:9px;color:#444}
@@ -205,189 +205,189 @@ const CATALOG = [
   // ── Your existing binders ────────────────────────────────────────────────
   { id:'gardevoir', era:'Custom',   name:'Gardevoir — All Prints',       desc:'All 57 EN prints across every era',
     file:'gardevoir.html', lsOwned:'gardevoir_owned_v1',   lsPrices:'gardevoir_prices_v1',   total:57,
-    cover:`${PTCG}/sv1/245.png`,  icon:'🌸' },
+    cover:`https://s3.limitlesstcg.com/sets/en/MEG_MD.png`,  icon:'🌸' },
 
   { id:'penny', era:'Custom',       name:'Penny (ボタン) — All Prints',   desc:'JP + EN prints, all 10 cards',
     file:'penny.html',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:10,
-    cover:`${CDN}/SVI/SVI_183_R_EN_SM.png`,  icon:'👓' },
+    cover:`https://s3.limitlesstcg.com/sets/en/SVI_MD.png`,  icon:'👓' },
 
   // ── Mega Evolution era (JP) ──────────────────────────────────────────────
   { id:'m2a', era:'JP — Mega Era',  name:'M2a MEGA Dream ex',            desc:'Japanese High Class Pack · Nov 2025',
     file:'m2a.html',      lsOwned:'M2a_owned_v1',           lsPrices:'M2a_prices_v2',          total:486,
-    cover:`${TPC}/M2a/M2a_193_R_JP_SM.png`,  icon:'✨' },
+    cover:`https://s3.limitlesstcg.com/sets/jp/M2a_MD.png`,  icon:'✨' },
 
   { id:'m2',  era:'JP — Mega Era',  name:'M2 Inferno X',                 desc:'インフェルノX · Mega Charizard X ex · Sep 2025',
     file:'m2.html',       lsOwned:'m2_inferno_x_owned_v1',  lsPrices:'m2_inferno_x_prices_v1', total:116,
-    cover:`${TPC}/M2/M2_116_R_JP_SM.png`,    icon:'🔥' },
+    cover:`https://s3.limitlesstcg.com/sets/jp/M2_MD.png`,    icon:'🔥' },
 
   { id:'m3',  era:'JP — Mega Era',  name:'M3 Nihil Zero',                desc:'ムニキスゼロ · Mega Zygarde ex · Jan 2026',
     file:'m3.html',       lsOwned:'m3_nihil_zero_owned_v1', lsPrices:'m3_nihil_zero_prices_v1', total:117,
-    cover:`${TPC}/M3/M3_117_R_JP_SM.png`,    icon:'🟢' },
+    cover:`https://s3.limitlesstcg.com/sets/jp/M3_MD.png`,    icon:'🟢' },
 
   { id:'m4',  era:'JP — Mega Era',  name:'M4 Ninja Spinner',             desc:'ニンジャスピナー · Mega Greninja ex · Mar 2026',
     file:'m4.html',       lsOwned:'m4_ninja_spinner_owned_v1', lsPrices:'m4_ninja_spinner_prices_v1', total:120,
-    cover:`${TPC}/M4/M4_120_R_JP_SM.png`,    icon:'💧' },
+    cover:`https://s3.limitlesstcg.com/sets/jp/M4_MD.png`,    icon:'💧' },
 
   // ── EN — Mega Evolution era ──────────────────────────────────────────────
   { id:'mew',  era:'EN — Scarlet & Violet', name:'Pokémon Card 151 (MEW)',       desc:'Scarlet & Violet special set · Sep 2023',
     file:'mew.html',      lsOwned:'mew_151_owned_v1',       lsPrices:'mew_151_prices_v1',       total:207,
-    cover:`${CDN}/MEW/MEW_205_R_EN_SM.png`,  icon:'🎴' },
+    cover:`https://s3.limitlesstcg.com/sets/en/MEW_MD.png`,  icon:'🎴' },
 
   { id:'meg',  era:'EN — Mega Era',  name:'Mega Evolution (MEG)',          desc:'First Mega EN set · Sep 2025',
     file:null,            lsOwned:'meg_owned_v1',            lsPrices:'meg_prices_v1',           total:188,
-    cover:`${CDN}/MEG/MEG_187_R_EN_SM.png`,  icon:'⚡' },
+    cover:`https://s3.limitlesstcg.com/sets/en/MEG_MD.png`,  icon:'⚡' },
 
   { id:'pfl',  era:'EN — Mega Era',  name:'Phantasmal Flames (PFL)',       desc:'Mega Charizard X ex · Nov 2025',
     file:null,            lsOwned:'pfl_owned_v1',            lsPrices:'pfl_prices_v1',           total:130,
-    cover:`${CDN}/PFL/PFL_130_R_EN_SM.png`,  icon:'🔥' },
+    cover:`https://s3.limitlesstcg.com/sets/en/PFL_MD.png`,  icon:'🔥' },
 
   { id:'asc',  era:'EN — Mega Era',  name:'Ascended Heroes (ASC)',         desc:'Biggest set ever · 295 cards · Jan 2026',
     file:null,            lsOwned:'asc_owned_v1',            lsPrices:'asc_prices_v1',           total:295,
-    cover:`${CDN}/ASC/ASC_295_R_EN_SM.png`,  icon:'🐉' },
+    cover:`https://s3.limitlesstcg.com/sets/en/ASC_MD.png`,  icon:'🐉' },
 
   { id:'por',  era:'EN — Mega Era',  name:'Perfect Order (POR)',           desc:'Mega Zygarde ex · Mar 2026',
     file:null,            lsOwned:'por_owned_v1',            lsPrices:'por_prices_v1',           total:124,
-    cover:`${CDN}/POR/POR_124_R_EN_SM.png`,  icon:'🟢' },
+    cover:`https://s3.limitlesstcg.com/sets/en/POR_MD.png`,  icon:'🟢' },
 
   { id:'cri',  era:'EN — Mega Era',  name:'Chaos Rising (CRI)',            desc:'Mega Greninja ex · May 2026',
     file:null,            lsOwned:'cri_owned_v1',            lsPrices:'cri_prices_v1',           total:124,
-    cover:`${CDN}/CRI/CRI_122_R_EN_SM.png`,  icon:'💧' },
+    cover:`https://s3.limitlesstcg.com/sets/en/CRI_MD.png`,  icon:'💧' },
 
   // ── EN — Scarlet & Violet ────────────────────────────────────────────────
   { id:'svi',  era:'EN — Scarlet & Violet', name:'Scarlet & Violet (SVI)',       desc:'Base set · Gardevoir ex · Mar 2023',
     file:null,            lsOwned:'svi_owned_v1',            lsPrices:'svi_prices_v1',           total:264,
-    cover:`${CDN}/SVI/SVI_245_R_EN_SM.png`,  icon:'🔴' },
+    cover:`https://s3.limitlesstcg.com/sets/en/SVI_MD.png`,  icon:'🔴' },
 
   { id:'pal',  era:'EN — Scarlet & Violet', name:'Paldea Evolved (PAL)',          desc:'Jun 2023',
     file:null,            lsOwned:'pal_owned_v1',            lsPrices:'pal_prices_v1',           total:279,
-    cover:`${PTCG}/pal/logo.png`,             icon:'🌿' },
+    cover:`https://s3.limitlesstcg.com/sets/en/PAL_MD.png`,             icon:'🌿' },
 
   { id:'obf',  era:'EN — Scarlet & Violet', name:'Obsidian Flames (OBF)',         desc:'Tera Charizard ex · Aug 2023',
     file:null,            lsOwned:'obf_owned_v1',            lsPrices:'obf_prices_v1',           total:230,
-    cover:`${PTCG}/obf/logo.png`,             icon:'🔥' },
+    cover:`https://s3.limitlesstcg.com/sets/en/OBF_MD.png`,             icon:'🔥' },
 
   { id:'par',  era:'EN — Scarlet & Violet', name:'Paradox Rift (PAR)',            desc:'Ancient/Future Pokémon · Nov 2023',
     file:null,            lsOwned:'par_owned_v1',            lsPrices:'par_prices_v1',           total:292,
-    cover:`${PTCG}/par/logo.png`,             icon:'⏳' },
+    cover:`https://s3.limitlesstcg.com/sets/en/PAR_MD.png`,             icon:'⏳' },
 
   { id:'paf',  era:'EN — Scarlet & Violet', name:'Paldean Fates (PAF)',           desc:'Shiny Vault special · Jan 2024',
     file:null,            lsOwned:'paf_owned_v1',            lsPrices:'paf_prices_v1',           total:245,
-    cover:`${CDN}/PAF/PAF_233_R_EN_SM.png`,  icon:'✨' },
+    cover:`https://s3.limitlesstcg.com/sets/en/PAF_MD.png`,  icon:'✨' },
 
   { id:'tef',  era:'EN — Scarlet & Violet', name:'Temporal Forces (TEF)',         desc:'Mar 2024',
     file:null,            lsOwned:'tef_owned_v1',            lsPrices:'tef_prices_v1',           total:218,
-    cover:`${PTCG}/tef/logo.png`,             icon:'⏱' },
+    cover:`https://s3.limitlesstcg.com/sets/en/TEF_MD.png`,             icon:'⏱' },
 
   { id:'twm',  era:'EN — Scarlet & Violet', name:'Twilight Masquerade (TWM)',     desc:'May 2024',
     file:null,            lsOwned:'twm_owned_v1',            lsPrices:'twm_prices_v1',           total:226,
-    cover:`${PTCG}/twm/logo.png`,             icon:'🎭' },
+    cover:`https://s3.limitlesstcg.com/sets/en/TWM_MD.png`,             icon:'🎭' },
 
   { id:'sfa',  era:'EN — Scarlet & Violet', name:'Shrouded Fable (SFA)',          desc:'Special set · Aug 2024',
     file:null,            lsOwned:'sfa_owned_v1',            lsPrices:'sfa_prices_v1',           total:99,
-    cover:`${PTCG}/sfa/logo.png`,             icon:'🦊' },
+    cover:`https://s3.limitlesstcg.com/sets/en/SFA_MD.png`,             icon:'🦊' },
 
   { id:'scr',  era:'EN — Scarlet & Violet', name:'Stellar Crown (SCR)',           desc:'Sep 2024',
     file:null,            lsOwned:'scr_owned_v1',            lsPrices:'scr_prices_v1',           total:175,
-    cover:`${PTCG}/scr/logo.png`,             icon:'⭐' },
+    cover:`https://s3.limitlesstcg.com/sets/en/SCR_MD.png`,             icon:'⭐' },
 
   { id:'ssp',  era:'EN — Scarlet & Violet', name:'Surging Sparks (SSP)',          desc:'Pikachu ex · Nov 2024',
     file:null,            lsOwned:'ssp_owned_v1',            lsPrices:'ssp_prices_v1',           total:252,
-    cover:`${PTCG}/ssp/logo.png`,             icon:'⚡' },
+    cover:`https://s3.limitlesstcg.com/sets/en/SSP_MD.png`,             icon:'⚡' },
 
   { id:'pre',  era:'EN — Scarlet & Violet', name:'Prismatic Evolutions (PRE)',    desc:'Eeveelutions special · Jan 2025',
     file:null,            lsOwned:'pre_owned_v1',            lsPrices:'pre_prices_v1',           total:180,
-    cover:`${CDN}/PRE/PRE_180_R_EN_SM.png`,  icon:'🌈' },
+    cover:`https://s3.limitlesstcg.com/sets/en/PRE_MD.png`,  icon:'🌈' },
 
   { id:'jtg',  era:'EN — Scarlet & Violet', name:'Journey Together (JTG)',        desc:'Mar 2025',
     file:null,            lsOwned:'jtg_owned_v1',            lsPrices:'jtg_prices_v1',           total:190,
-    cover:`${PTCG}/jtg/logo.png`,             icon:'🌄' },
+    cover:`https://s3.limitlesstcg.com/sets/en/JTG_MD.png`,             icon:'🌄' },
 
   { id:'dri',  era:'EN — Scarlet & Violet', name:'Destined Rivals (DRI)',         desc:'May 2025',
     file:null,            lsOwned:'dri_owned_v1',            lsPrices:'dri_prices_v1',           total:244,
-    cover:`${PTCG}/dri/logo.png`,             icon:'⚔️' },
+    cover:`https://s3.limitlesstcg.com/sets/en/DRI_MD.png`,             icon:'⚔️' },
 
   { id:'blk',  era:'EN — Scarlet & Violet', name:'Black Bolt (BLK)',              desc:'Special set · Jul 2025',
     file:null,            lsOwned:'blk_owned_v1',            lsPrices:'blk_prices_v1',           total:172,
-    cover:`${PTCG}/blk/logo.png`,             icon:'⚫' },
+    cover:`https://s3.limitlesstcg.com/sets/en/BLK_MD.png`,             icon:'⚫' },
 
   { id:'wht',  era:'EN — Scarlet & Violet', name:'White Flare (WHT)',             desc:'Special set · Jul 2025',
     file:null,            lsOwned:'wht_owned_v1',            lsPrices:'wht_prices_v1',           total:173,
-    cover:`${PTCG}/wht/logo.png`,             icon:'⚪' },
+    cover:`https://s3.limitlesstcg.com/sets/en/WHT_MD.png`,             icon:'⚪' },
 
   // ── EN — Sword & Shield ──────────────────────────────────────────────────
   { id:'crz',  era:'EN — Sword & Shield', name:'Crown Zenith (CRZ)',             desc:'Special set · Jan 2023',
     file:null,            lsOwned:'crz_owned_v1',            lsPrices:'crz_prices_v1',           total:230,
-    cover:`${PTCG}/swsh12pt5/logo.png`,       icon:'👑' },
+    cover:`https://s3.limitlesstcg.com/sets/en/CRZ_MD.png`,       icon:'👑' },
 
   { id:'sit',  era:'EN — Sword & Shield', name:'Silver Tempest (SIT)',            desc:'Nov 2022',
     file:null,            lsOwned:'sit_owned_v1',            lsPrices:'sit_prices_v1',           total:245,
-    cover:`${PTCG}/swsh12/logo.png`,          icon:'🌪' },
+    cover:`https://s3.limitlesstcg.com/sets/en/SIT_MD.png`,          icon:'🌪' },
 
   { id:'lor',  era:'EN — Sword & Shield', name:'Lost Origin (LOR)',               desc:'Radiant Gardevoir · Sep 2022',
     file:null,            lsOwned:'lor_owned_v1',            lsPrices:'lor_prices_v1',           total:217,
-    cover:`${PTCG}/swsh11/logo.png`,          icon:'⚫' },
+    cover:`https://s3.limitlesstcg.com/sets/en/LOR_MD.png`,          icon:'⚫' },
 
   { id:'asr',  era:'EN — Sword & Shield', name:'Astral Radiance (ASR)',           desc:'May 2022',
     file:null,            lsOwned:'asr_owned_v1',            lsPrices:'asr_prices_v1',           total:246,
-    cover:`${PTCG}/swsh10/logo.png`,          icon:'🌌' },
+    cover:`https://s3.limitlesstcg.com/sets/en/ASR_MD.png`,          icon:'🌌' },
 
   { id:'brs',  era:'EN — Sword & Shield', name:'Brilliant Stars (BRS)',           desc:'Feb 2022',
     file:null,            lsOwned:'brs_owned_v1',            lsPrices:'brs_prices_v1',           total:186,
-    cover:`${PTCG}/swsh9/logo.png`,           icon:'⭐' },
+    cover:`https://s3.limitlesstcg.com/sets/en/BRS_MD.png`,           icon:'⭐' },
 
   { id:'fst',  era:'EN — Sword & Shield', name:'Fusion Strike (FST)',             desc:'Nov 2021',
     file:null,            lsOwned:'fst_owned_v1',            lsPrices:'fst_prices_v1',           total:284,
-    cover:`${PTCG}/swsh8/logo.png`,           icon:'⚗️' },
+    cover:`https://s3.limitlesstcg.com/sets/en/FST_MD.png`,           icon:'⚗️' },
 
   { id:'cel',  era:'EN — Sword & Shield', name:'Celebrations (CEL)',              desc:'25th Anniversary special · Oct 2021',
     file:null,            lsOwned:'cel_owned_v1',            lsPrices:'cel_prices_v1',           total:100,
-    cover:`${CDN}/CEL/CEL_093_R_EN_SM.png`,  icon:'🎉' },
+    cover:`https://s3.limitlesstcg.com/sets/en/CEL_MD.png`,  icon:'🎉' },
 
   { id:'evs',  era:'EN — Sword & Shield', name:'Evolving Skies (EVS)',            desc:'Rayquaza, Moonbreon · Aug 2021',
     file:null,            lsOwned:'evs_owned_v1',            lsPrices:'evs_prices_v1',           total:237,
-    cover:`${PTCG}/swsh7/logo.png`,           icon:'🌌' },
+    cover:`https://s3.limitlesstcg.com/sets/en/EVS_MD.png`,           icon:'🌌' },
 
   { id:'cre',  era:'EN — Sword & Shield', name:'Chilling Reign (CRE)',            desc:'Jun 2021',
     file:null,            lsOwned:'cre_owned_v1',            lsPrices:'cre_prices_v1',           total:233,
-    cover:`${PTCG}/swsh6/logo.png`,           icon:'❄️' },
+    cover:`https://s3.limitlesstcg.com/sets/en/CRE_MD.png`,           icon:'❄️' },
 
   { id:'shf',  era:'EN — Sword & Shield', name:'Shining Fates (SHF)',             desc:'Shiny Vault special · Feb 2021',
     file:null,            lsOwned:'shf_owned_v1',            lsPrices:'shf_prices_v1',           total:195,
-    cover:`${PTCG}/swsh45/logo.png`,          icon:'✨' },
+    cover:`https://s3.limitlesstcg.com/sets/en/SHF_MD.png`,          icon:'✨' },
 
   { id:'cpa',  era:'EN — Sword & Shield', name:"Champion's Path (CPA)",           desc:'Gardevoir V/VMAX special · Sep 2020',
     file:null,            lsOwned:'cpa_owned_v1',            lsPrices:'cpa_prices_v1',           total:83,
-    cover:`${CDN}/CPA/CPA_070_R_EN_SM.png`,  icon:'🏆' },
+    cover:`https://s3.limitlesstcg.com/sets/en/CPA_MD.png`,  icon:'🏆' },
 
   // ── EN — Sun & Moon ──────────────────────────────────────────────────────
   { id:'cec',  era:'EN — Sun & Moon', name:'Cosmic Eclipse (CEC)',              desc:'Nov 2019',
     file:null,            lsOwned:'cec_owned_v1',            lsPrices:'cec_prices_v1',           total:272,
-    cover:`${PTCG}/sm12/logo.png`,            icon:'🌌' },
+    cover:`https://s3.limitlesstcg.com/sets/en/CEC_MD.png`,            icon:'🌌' },
 
   { id:'hif',  era:'EN — Sun & Moon', name:'Hidden Fates (HIF)',                desc:'Shiny Vault, Shiny Gardevoir · Aug 2019',
     file:null,            lsOwned:'hif_owned_v1',            lsPrices:'hif_prices_v1',           total:215,
-    cover:`${PTCG}/sma/logo.png`,             icon:'✨' },
+    cover:`https://s3.limitlesstcg.com/sets/en/HIF_MD.png`,             icon:'✨' },
 
   { id:'unb',  era:'EN — Sun & Moon', name:'Unbroken Bonds (UNB)',              desc:'Gardevoir & Sylveon GX · May 2019',
     file:null,            lsOwned:'unb_owned_v1',            lsPrices:'unb_prices_v1',           total:214,
-    cover:`${PTCG}/sm10/logo.png`,            icon:'💜' },
+    cover:`https://s3.limitlesstcg.com/sets/en/UNB_MD.png`,            icon:'💜' },
 
   { id:'bus',  era:'EN — Sun & Moon', name:'Burning Shadows (BUS)',             desc:'Gardevoir GX · Aug 2017',
     file:null,            lsOwned:'bus_owned_v1',            lsPrices:'bus_prices_v1',           total:169,
-    cover:`${PTCG}/sm3/logo.png`,             icon:'🔥' },
+    cover:`https://s3.limitlesstcg.com/sets/en/BUS_MD.png`,             icon:'🔥' },
 
   // ── EN — XY ──────────────────────────────────────────────────────────────
   { id:'evo',  era:'EN — XY', name:'Evolutions (EVO)',                   desc:'Base Set tribute · Nov 2016',
     file:null,            lsOwned:'evo_owned_v1',            lsPrices:'evo_prices_v1',           total:113,
-    cover:`${PTCG}/xy12/logo.png`,            icon:'🃏' },
+    cover:`https://s3.limitlesstcg.com/sets/en/EVO_MD.png`,            icon:'🃏' },
 
   { id:'sts',  era:'EN — XY', name:'Steam Siege (STS)',                   desc:'M Gardevoir EX · Aug 2016',
     file:null,            lsOwned:'sts_owned_v1',            lsPrices:'sts_prices_v1',           total:116,
-    cover:`${PTCG}/xy11/logo.png`,            icon:'⚙️' },
+    cover:`https://s3.limitlesstcg.com/sets/en/STS_MD.png`,            icon:'⚙️' },
 
   { id:'prc',  era:'EN — XY', name:'Primal Clash (PRC)',                   desc:'M Gardevoir EX · Feb 2015',
     file:null,            lsOwned:'prc_owned_v1',            lsPrices:'prc_prices_v1',           total:160,
-    cover:`${PTCG}/xy5/logo.png`,             icon:'🌊' },
+    cover:`https://s3.limitlesstcg.com/sets/en/PRC_MD.png`,             icon:'🌊' },
 
 ];
 
