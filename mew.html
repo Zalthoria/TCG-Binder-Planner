@@ -167,11 +167,30 @@ table.wt tr:hover td{background:#111}
 #binder-bnav .bnav-info{font-size:12px;color:#555;text-align:center;flex:1;font-variant-numeric:tabular-nums}
 #gs-btn{bottom:60px!important}
 #gs-update-banner{bottom:60px!important}
-.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
-.layout-lbl{font-size:11px;color:#444;white-space:nowrap}
-.layout-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
-.layout-btn:hover{border-color:#555;color:#aaa}
-.layout-btn.active{border-color:#c89a3a;background:#2a2010;color:#c89a3a}
+/* ── Elegant layout picker ───────────────────────────────────────────────── */
+.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;margin-bottom:6px;position:relative;z-index:50}
+.layout-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
+.layout-trigger{display:flex;align-items:center;gap:7px;padding:5px 12px;background:#1a1814;border:1px solid #2e2a24;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;color:#c89a3a;font-size:12px;font-weight:600;user-select:none}
+.layout-trigger:hover{border-color:#c89a3a55;background:#222018}
+.layout-trigger.open{border-color:#c89a3a88;background:#221e10}
+.lt-grid{display:grid;gap:2px;flex-shrink:0}
+.lt-grid .ltg-dot{width:5px;height:5px;border-radius:1px;background:#c89a3a;display:block}
+.lt-arrow{font-size:9px;color:#555;margin-left:2px;transition:transform .15s}
+.layout-trigger.open .lt-arrow{transform:rotate(180deg)}
+.lt-label{font-size:12px;font-weight:700;letter-spacing:.02em}
+.layout-panel{position:absolute;top:calc(100% + 4px);left:0;background:#1a1814;border:1px solid #2e2a24;border-radius:10px;padding:10px;display:none;grid-template-columns:repeat(3,1fr);gap:6px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:200}
+.layout-panel.open{display:grid}
+.lp-opt{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 6px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:all .12s;background:transparent}
+.lp-opt:hover{background:#22201a;border-color:#3a3428}
+.lp-opt.active{background:#2a2010;border-color:#c89a3a}
+.lp-mini{display:grid;gap:2px}
+.lp-mini-dot{width:5px;height:5px;border-radius:1px;background:#444;display:block}
+.lp-opt.active .lp-mini-dot{background:#c89a3a}
+.lp-opt:hover:not(.active) .lp-mini-dot{background:#666}
+.lp-name{font-size:10px;font-weight:700;color:#555;letter-spacing:.04em}
+.lp-opt.active .lp-name{color:#c89a3a}
+.lp-opt:hover:not(.active) .lp-name{color:#888}
+
 
 /* ── Section jump bar ────────────────────────────────────────────────────── */
 .section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
@@ -594,9 +613,11 @@ function makeCover() {
 }
 
 const SDEFS = [
-  { label: 'Main Set (165)', f: s=>s.v==='main' },
-  { label: 'Secret Rares', f: s=>s.v==='secret' },
-  { label: 'MUR', f: s=>s.v==='mur' },
+  { label: '#001–051 (Bulbasaur→Dugtrio)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=1&&n<=51; } },
+  { label: '#052–105 (Meowth→Marowak)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=52&&n<=105; } },
+  { label: '#106–151 (Hitmonlee→Mew)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=106&&n<=151; } },
+  { label: '#166–183 (SR — Pokémon ex)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=166&&n<=183; } },
+  { label: '#184–207 (SR — Alt Arts)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=184&&n<=207; } },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -630,13 +651,14 @@ const TOTAL = SLOTS.length;
   // Initial layout applied by applyLayout() below
 })();
 
-// ── Layout & Section system ────────────────────────────────────────────────
+
+// ── Elegant Layout Picker ─────────────────────────────────────────────────
 const LS_LAYOUT = (BINDER.lsOwned || 'binder').replace(/owned.*/, 'layout_v1');
 
 const LAYOUT_PRESETS = [
-  {cols:2,rows:2,label:'2×2'},{cols:3,rows:2,label:'3×2'},{cols:2,rows:3,label:'2×3'},
-  {cols:3,rows:3,label:'3×3'},{cols:4,rows:3,label:'4×3'},{cols:3,rows:4,label:'3×4'},
-  {cols:4,rows:4,label:'4×4'},{cols:5,rows:4,label:'4×5'},{cols:5,rows:5,label:'5×5'},
+  {cols:2,rows:2,label:'2×2'}, {cols:3,rows:2,label:'3×2'}, {cols:2,rows:3,label:'2×3'},
+  {cols:3,rows:3,label:'3×3'}, {cols:4,rows:3,label:'4×3'}, {cols:3,rows:4,label:'3×4'},
+  {cols:4,rows:4,label:'4×4'}, {cols:5,rows:4,label:'4×5'}, {cols:5,rows:5,label:'5×5'},
 ];
 
 let currentCols = BINDER.cols || 3;
@@ -646,38 +668,113 @@ function getSPP()          { return currentCols * currentRows; }
 function getCardPages()    { return Math.ceil(TOTAL / getSPP()); }
 function getTotalSpreads() { return Math.ceil((getCardPages() + 1) / 2); }
 
+function _makeMiniGrid(cols, rows) {
+  const g = document.createElement('div');
+  g.className = 'lp-mini';
+  g.style.gridTemplateColumns = `repeat(${cols}, 5px)`;
+  for (let i = 0; i < cols * rows; i++) {
+    const d = document.createElement('div');
+    d.className = 'lp-mini-dot';
+    g.appendChild(d);
+  }
+  return g;
+}
+
+function _makeTriggerGrid(cols, rows) {
+  const g = document.createElement('div');
+  g.className = 'lt-grid';
+  g.style.gridTemplateColumns = `repeat(${cols}, 5px)`;
+  const max = Math.min(cols * rows, 9); // limit dots shown in trigger
+  for (let i = 0; i < max; i++) {
+    const d = document.createElement('div');
+    d.className = 'ltg-dot';
+    g.appendChild(d);
+  }
+  return g;
+}
+
 function applyLayout(cols, rows, save) {
   currentCols = cols; currentRows = rows;
   window._SLOTS_PER_PAGE = getSPP();
   document.documentElement.style.setProperty('--binder-cols', cols);
   if (save) localStorage.setItem(LS_LAYOUT, JSON.stringify({cols, rows}));
-  document.querySelectorAll('.layout-btn').forEach(b =>
-    b.classList.toggle('active', +b.dataset.cols===cols && +b.dataset.rows===rows)
-  );
+  // Update trigger label + grid dots
+  const trig = document.getElementById('layout-trigger');
+  if (trig) {
+    const lbl = trig.querySelector('.lt-label');
+    if (lbl) lbl.textContent = cols + '×' + rows;
+    const old = trig.querySelector('.lt-grid');
+    if (old) trig.replaceChild(_makeTriggerGrid(cols, rows), old);
+  }
+  // Update active state in panel
+  document.querySelectorAll('.lp-opt').forEach(el => {
+    el.classList.toggle('active', +el.dataset.cols===cols && +el.dataset.rows===rows);
+  });
 }
 
 function loadLayout() {
   try {
     const saved = JSON.parse(localStorage.getItem(LS_LAYOUT));
-    if (saved && saved.cols && saved.rows) { currentCols=saved.cols; currentRows=saved.rows; }
+    if (saved && saved.cols && saved.rows) { currentCols = saved.cols; currentRows = saved.rows; }
     else { currentCols = currentRows = BINDER.cols || 3; }
   } catch(e) { currentCols = currentRows = BINDER.cols || 3; }
   applyLayout(currentCols, currentRows, false);
 }
 
 function buildLayoutPicker() {
-  const wrap = document.getElementById('layout-btns');
-  if (!wrap) return;
-  wrap.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap';
+  const bar = document.querySelector('.layout-bar');
+  if (!bar) return;
+  // Clear old content except the label
+  while (bar.children.length > 1) bar.removeChild(bar.lastChild);
+
+  // Build trigger button
+  const trig = document.createElement('button');
+  trig.id = 'layout-trigger';
+  trig.className = 'layout-trigger';
+  trig.appendChild(_makeTriggerGrid(currentCols, currentRows));
+  const lbl = document.createElement('span'); lbl.className = 'lt-label';
+  lbl.textContent = currentCols + '×' + currentRows;
+  trig.appendChild(lbl);
+  const arr = document.createElement('span'); arr.className = 'lt-arrow'; arr.textContent = '▾';
+  trig.appendChild(arr);
+
+  // Build floating panel
+  const panel = document.createElement('div');
+  panel.className = 'layout-panel';
+  panel.id = 'layout-panel';
+
   LAYOUT_PRESETS.forEach(p => {
-    const b = document.createElement('button');
-    b.className = 'layout-btn'; b.textContent = p.label;
-    b.dataset.cols = p.cols; b.dataset.rows = p.rows;
-    if (p.cols===currentCols && p.rows===currentRows) b.classList.add('active');
-    b.onclick = () => { applyLayout(p.cols, p.rows, true); curSpread=1; render(); };
-    wrap.appendChild(b);
+    const opt = document.createElement('div');
+    opt.className = 'lp-opt' + (p.cols===currentCols && p.rows===currentRows ? ' active' : '');
+    opt.dataset.cols = p.cols; opt.dataset.rows = p.rows;
+    opt.appendChild(_makeMiniGrid(p.cols, p.rows));
+    const nm = document.createElement('div'); nm.className = 'lp-name'; nm.textContent = p.label;
+    opt.appendChild(nm);
+    opt.onclick = (e) => {
+      e.stopPropagation();
+      applyLayout(p.cols, p.rows, true);
+      curSpread = 1; render();
+      trig.classList.remove('open'); panel.classList.remove('open');
+    };
+    panel.appendChild(opt);
+  });
+
+  trig.onclick = (e) => {
+    e.stopPropagation();
+    const isOpen = panel.classList.contains('open');
+    trig.classList.toggle('open', !isOpen);
+    panel.classList.toggle('open', !isOpen);
+  };
+
+  bar.appendChild(trig);
+  bar.appendChild(panel);
+
+  // Close panel when clicking elsewhere
+  document.addEventListener('click', () => {
+    trig.classList.remove('open'); panel.classList.remove('open');
   });
 }
+
 
 function buildSectionBar() {
   const bar = document.getElementById('section-bar');

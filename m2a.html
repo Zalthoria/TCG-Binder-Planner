@@ -211,11 +211,30 @@ table.wt tr:hover td{background:#111}
 .sync-flash{font-size:11px}
 .sync-warn{font-size:10px;color:#3a2820;margin-top:5px}
 
-.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
-.layout-lbl{font-size:11px;color:#444;white-space:nowrap}
-.layout-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
-.layout-btn:hover{border-color:#555;color:#aaa}
-.layout-btn.active{border-color:#c89a3a;background:#2a2010;color:#c89a3a}
+/* ── Elegant layout picker ───────────────────────────────────────────────── */
+.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;margin-bottom:6px;position:relative;z-index:50}
+.layout-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
+.layout-trigger{display:flex;align-items:center;gap:7px;padding:5px 12px;background:#1a1814;border:1px solid #2e2a24;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;color:#c89a3a;font-size:12px;font-weight:600;user-select:none}
+.layout-trigger:hover{border-color:#c89a3a55;background:#222018}
+.layout-trigger.open{border-color:#c89a3a88;background:#221e10}
+.lt-grid{display:grid;gap:2px;flex-shrink:0}
+.lt-grid .ltg-dot{width:5px;height:5px;border-radius:1px;background:#c89a3a;display:block}
+.lt-arrow{font-size:9px;color:#555;margin-left:2px;transition:transform .15s}
+.layout-trigger.open .lt-arrow{transform:rotate(180deg)}
+.lt-label{font-size:12px;font-weight:700;letter-spacing:.02em}
+.layout-panel{position:absolute;top:calc(100% + 4px);left:0;background:#1a1814;border:1px solid #2e2a24;border-radius:10px;padding:10px;display:none;grid-template-columns:repeat(3,1fr);gap:6px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:200}
+.layout-panel.open{display:grid}
+.lp-opt{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 6px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:all .12s;background:transparent}
+.lp-opt:hover{background:#22201a;border-color:#3a3428}
+.lp-opt.active{background:#2a2010;border-color:#c89a3a}
+.lp-mini{display:grid;gap:2px}
+.lp-mini-dot{width:5px;height:5px;border-radius:1px;background:#444;display:block}
+.lp-opt.active .lp-mini-dot{background:#c89a3a}
+.lp-opt:hover:not(.active) .lp-mini-dot{background:#666}
+.lp-name{font-size:10px;font-weight:700;color:#555;letter-spacing:.04em}
+.lp-opt.active .lp-name{color:#c89a3a}
+.lp-opt:hover:not(.active) .lp-name{color:#888}
+
 
 /* ── Section jump bar ────────────────────────────────────────────────────── */
 .section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
@@ -857,137 +876,4 @@ function buildLayoutPicker(){
     wrap.appendChild(b);
   });
 }
-function buildSectionBar(){
-  const bar=document.getElementById('section-bar');
-  if(!bar)return;
-  const sections=[
-    {label:'Main',f:s=>s.v!=='rh'&&+s.num<=193},
-    {label:'Secret Rares',f:s=>s.v!=='rh'&&+s.num>193},
-    {label:'Reverse Holos',f:s=>s.v==='rh'},
-  ];
-  const hasMulti=sections.filter(sec=>SLOTS.some(sec.f)).length>1;
-  if(!hasMulti)return;
-  bar.style.display='flex';
-  while(bar.children.length>1)bar.removeChild(bar.lastChild);
-  let activeChip=null;
-  sections.forEach(sec=>{
-    const firstIdx=SLOTS.findIndex(sec.f);
-    if(firstIdx<0)return;
-    const count=SLOTS.filter(sec.f).length;
-    const chip=document.createElement('button');chip.className='section-chip';
-    chip.textContent=sec.label+' ('+count+')';
-    chip.onclick=()=>{
-      if(activeChip)activeChip.classList.remove('active');
-      chip.classList.add('active');activeChip=chip;
-      const spp=getSPP();
-      curSpread=firstIdx<spp?1:Math.ceil(Math.floor(firstIdx/spp)/2)+1;
-      curSpread=Math.max(1,Math.min(TOTAL_SPREADS,curSpread));
-      render();
-    };
-    bar.appendChild(chip);
-  });
-}
 
-loadLayout();buildLayoutPicker();buildSectionBar();load();updateProgress();render();
-// ── Sync data between devices ─────────────────────────────────────────────
-const SYNC_KEYS = [
-  'M2a_owned_v1','M2a_watched_v1','M2a_prices_v2',
-  'penny_owned_v1','penny_watched_v1','penny_prices_v1',
-];
-
-function openSync() {
-  document.getElementById('export-ta').value = '';
-  document.getElementById('import-ta').value = '';
-  document.getElementById('export-flash').style.display = 'none';
-  document.getElementById('import-flash').style.display = 'none';
-  document.getElementById('sync-overlay').classList.add('open');
-}
-function closeSyncModal() {
-  document.getElementById('sync-overlay').classList.remove('open');
-}
-function doExport() {
-  const data = {};
-  SYNC_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
-  const json = JSON.stringify(data, null, 2);
-  document.getElementById('export-ta').value = json;
-  navigator.clipboard.writeText(json).then(() => {
-    const f = document.getElementById('export-flash');
-    f.style.display = 'inline'; setTimeout(() => f.style.display = 'none', 2000);
-  }).catch(() => {}); // clipboard blocked in some browsers - user can copy manually
-}
-function doImport() {
-  const raw = document.getElementById('import-ta').value.trim();
-  const f = document.getElementById('import-flash');
-  if (!raw) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Paste data first.'; return; }
-  try {
-    const data = JSON.parse(raw);
-    let n = 0;
-    SYNC_KEYS.forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
-    f.style.display='inline'; f.style.color='#4cff80';
-    f.textContent = `✓ Imported ${n} keys — reload to apply.`;
-    setTimeout(() => location.reload(), 1500);
-  } catch(e) {
-    f.style.display='inline'; f.style.color='#c07040'; f.textContent='Invalid data.';
-  }
-}
-
-</script>
-
-<!-- Fixed bottom page nav -->
-<div id="binder-bnav">
-  <button class="bnav-btn" id="bn-prev" onclick="go(-1)">← Prev</button>
-  <div class="bnav-info" id="bn-info">Page 1</div>
-  <button class="bnav-btn" id="bn-next" onclick="go(1)">Next →</button>
-</div>
-
-<script>
-(function () {
-  /* ── Sync bottom nav labels with the binder's own render() output ── */
-  function syncNav () {
-    var pgn   = document.getElementById('pgn');
-    var ofLbl = document.getElementById('of-lbl');
-    var bprev = document.getElementById('bprev');
-    var bnext = document.getElementById('bnext');
-    var info  = document.getElementById('bn-info');
-    var prev  = document.getElementById('bn-prev');
-    var next  = document.getElementById('bn-next');
-    if (!pgn || !info) return;
-    var cur   = pgn.value   || '1';
-    var total = (ofLbl ? ofLbl.textContent : 'of ?').replace('of ', '').trim();
-    info.textContent  = 'Page ' + cur + ' of ' + total;
-    if (prev) prev.disabled = bprev ? bprev.disabled : false;
-    if (next) next.disabled = bnext ? bnext.disabled : false;
-  }
-
-  /* Watch spread-info — render() always updates it so we piggyback on that */
-  var sinfo = document.getElementById('sinfo');
-  if (sinfo) {
-    new MutationObserver(syncNav)
-      .observe(sinfo, { childList: true, subtree: true, characterData: true });
-  }
-  /* Also sync once on load (after render() has run) */
-  window.addEventListener('load', syncNav);
-
-  /* ── Swipe to turn pages ── */
-  var spread = document.getElementById('spread');
-  if (spread) {
-    var tx = null, ty = null;
-    spread.addEventListener('touchstart', function (e) {
-      tx = e.touches[0].clientX;
-      ty = e.touches[0].clientY;
-    }, { passive: true });
-    spread.addEventListener('touchend', function (e) {
-      if (tx === null) return;
-      var dx = e.changedTouches[0].clientX - tx;
-      var dy = e.changedTouches[0].clientY - ty;
-      tx = null; ty = null;
-      /* Horizontal swipe must be dominant and at least 50px */
-      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        if (typeof go === 'function') go(dx < 0 ? 1 : -1);
-      }
-    }, { passive: true });
-  }
-})();
-</script>
-</body>
-</html>
