@@ -167,6 +167,18 @@ table.wt tr:hover td{background:#111}
 #binder-bnav .bnav-info{font-size:12px;color:#555;text-align:center;flex:1;font-variant-numeric:tabular-nums}
 #gs-btn{bottom:60px!important}
 #gs-update-banner{bottom:60px!important}
+.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.layout-lbl{font-size:11px;color:#444;white-space:nowrap}
+.layout-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
+.layout-btn:hover{border-color:#555;color:#aaa}
+.layout-btn.active{border-color:#c89a3a;background:#2a2010;color:#c89a3a}
+
+/* ── Section jump bar ────────────────────────────────────────────────────── */
+.section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+.section-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
+.section-chip{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
+.section-chip:hover{border-color:#555;color:#aaa;background:#222}
+.section-chip.active{border-color:#9070e0;background:#1e1040;color:#9070e0}
 </style>
 </head>
 <body>
@@ -233,6 +245,17 @@ table.wt tr:hover td{background:#111}
   <button class="btn btn-purple" onclick="openWatchlist()">⭐ Watchlist</button>
   <button class="btn btn-gold" onclick="openMissingList()">📋 Missing</button>
   <button class="btn btn-dim" onclick="confirmClear()">Clear all</button>
+</div>
+
+<!-- ── Layout picker ── -->
+<div class="layout-bar">
+  <span class="layout-lbl">Layout:</span>
+  <div id="layout-btns"></div>
+</div>
+
+<!-- ── Section jump bar ── -->
+<div class="section-bar" id="section-bar" style="display:none">
+  <span class="section-lbl">Jump to:</span>
 </div>
 
 <!-- ── Legend (rendered from BINDER.legend) ── -->
@@ -580,9 +603,9 @@ const SDEFS = [
 //  TEMPLATE ENGINE — do not edit below this line
 // ════════════════════════════════════════════════════════════════════════════
 
-// Derived constants (computed from SLOTS + BINDER.cols)
-const TOTAL         = SLOTS.length;
-// CARD_PAGES and TOTAL_SPREADS are set after applyConfig() runs (see below)
+// Derived constants
+const TOTAL = SLOTS.length;
+// CARD_PAGES and TOTAL_SPREADS are computed dynamically in getLayout()
 
 // ── Apply BINDER config to DOM ────────────────────────────────────────────
 (function applyConfig() {
@@ -604,16 +627,83 @@ const TOTAL         = SLOTS.length;
   suffix.style.marginLeft = '4px';
   suffix.innerHTML = `✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced`;
   bar.appendChild(suffix);
-  // Apply grid columns
-  const cols = BINDER.cols || 3;
-  document.documentElement.style.setProperty('--binder-cols', cols);
-  // Slots per page = cols * cols (square grid) — update CARD_PAGES
-  window._SLOTS_PER_PAGE = cols * cols;
+  // Initial layout applied by applyLayout() below
 })();
 
-// Compute page counts after applyConfig has set _SLOTS_PER_PAGE
-const CARD_PAGES    = Math.ceil(TOTAL / (window._SLOTS_PER_PAGE || 9));
-const TOTAL_SPREADS = Math.ceil((CARD_PAGES + 1) / 2);
+// ── Layout & Section system ────────────────────────────────────────────────
+const LS_LAYOUT = (BINDER.lsOwned || 'binder').replace(/owned.*/, 'layout_v1');
+
+const LAYOUT_PRESETS = [
+  {cols:2,rows:2,label:'2×2'},{cols:3,rows:2,label:'3×2'},{cols:2,rows:3,label:'2×3'},
+  {cols:3,rows:3,label:'3×3'},{cols:4,rows:3,label:'4×3'},{cols:3,rows:4,label:'3×4'},
+  {cols:4,rows:4,label:'4×4'},{cols:5,rows:4,label:'4×5'},{cols:5,rows:5,label:'5×5'},
+];
+
+let currentCols = BINDER.cols || 3;
+let currentRows = BINDER.cols || 3;
+
+function getSPP()          { return currentCols * currentRows; }
+function getCardPages()    { return Math.ceil(TOTAL / getSPP()); }
+function getTotalSpreads() { return Math.ceil((getCardPages() + 1) / 2); }
+
+function applyLayout(cols, rows, save) {
+  currentCols = cols; currentRows = rows;
+  window._SLOTS_PER_PAGE = getSPP();
+  document.documentElement.style.setProperty('--binder-cols', cols);
+  if (save) localStorage.setItem(LS_LAYOUT, JSON.stringify({cols, rows}));
+  document.querySelectorAll('.layout-btn').forEach(b =>
+    b.classList.toggle('active', +b.dataset.cols===cols && +b.dataset.rows===rows)
+  );
+}
+
+function loadLayout() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LS_LAYOUT));
+    if (saved && saved.cols && saved.rows) { currentCols=saved.cols; currentRows=saved.rows; }
+    else { currentCols = currentRows = BINDER.cols || 3; }
+  } catch(e) { currentCols = currentRows = BINDER.cols || 3; }
+  applyLayout(currentCols, currentRows, false);
+}
+
+function buildLayoutPicker() {
+  const wrap = document.getElementById('layout-btns');
+  if (!wrap) return;
+  wrap.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap';
+  LAYOUT_PRESETS.forEach(p => {
+    const b = document.createElement('button');
+    b.className = 'layout-btn'; b.textContent = p.label;
+    b.dataset.cols = p.cols; b.dataset.rows = p.rows;
+    if (p.cols===currentCols && p.rows===currentRows) b.classList.add('active');
+    b.onclick = () => { applyLayout(p.cols, p.rows, true); curSpread=1; render(); };
+    wrap.appendChild(b);
+  });
+}
+
+function buildSectionBar() {
+  const bar = document.getElementById('section-bar');
+  if (!bar || !SDEFS || SDEFS.length<=1) return;
+  bar.style.display = 'flex';
+  while (bar.children.length > 1) bar.removeChild(bar.lastChild);
+  let activeChip = null;
+  SDEFS.forEach(def => {
+    const firstIdx = SLOTS.findIndex(s => def.f(s));
+    if (firstIdx < 0) return;
+    const count = SLOTS.filter(def.f).length;
+    const chip = document.createElement('button');
+    chip.className = 'section-chip';
+    chip.textContent = def.label + ' (' + count + ')';
+    chip.onclick = () => {
+      if (activeChip) activeChip.classList.remove('active');
+      chip.classList.add('active'); activeChip = chip;
+      const spp = getSPP();
+      curSpread = firstIdx < spp ? 1 : Math.ceil(Math.floor(firstIdx/spp)/2) + 1;
+      curSpread = Math.max(1, Math.min(getTotalSpreads(), curSpread));
+      render();
+    };
+    bar.appendChild(chip);
+  });
+}
+
 
 // ── Storage ────────────────────────────────────────────────────────────────
 let owned = new Set(), watched = new Set(), prices = {};
@@ -637,6 +727,7 @@ function updateProgress() {
 let curSpread = 1, showMissing = false;
 
 function render() {
+  const TS = getTotalSpreads(), CP = getCardPages();
   const lp = document.getElementById('lp'), rp = document.getElementById('rp');
   lp.innerHTML = ''; rp.innerHTML = '';
   let info;
@@ -646,19 +737,19 @@ function render() {
     info = 'Cover · Page 1';
   } else {
     const ln = 2 * (curSpread - 1), rn = ln + 1;
-    lp.appendChild(ln - 1 < CARD_PAGES ? makeCardPage(ln - 1, 'left', ln)  : blankPage());
-    rp.appendChild(rn - 1 < CARD_PAGES ? makeCardPage(rn - 1, 'right', rn) : blankPage());
-    info = `Page ${ln}${rn <= CARD_PAGES ? ' · Page ' + rn : ''}`;
+    lp.appendChild(ln - 1 < CP ? makeCardPage(ln - 1, 'left', ln)  : blankPage());
+    rp.appendChild(rn - 1 < CP ? makeCardPage(rn - 1, 'right', rn) : blankPage());
+    info = `Page ${ln}${rn <= CP ? ' · Page ' + rn : ''}`;
   }
   document.getElementById('sinfo').textContent     = info;
   document.getElementById('pgn').value             = curSpread;
-  document.getElementById('pgn').max               = TOTAL_SPREADS;
-  document.getElementById('of-lbl').textContent    = 'of ' + TOTAL_SPREADS;
-  document.getElementById('bprev').disabled        = curSpread <= 1;
-  document.getElementById('bnext').disabled        = curSpread >= TOTAL_SPREADS;
+  document.getElementById('pgn').max               = TS;
+  document.getElementById('of-lbl').textContent    = 'of ' + TS;
+  document.getElementById('bprev').disabled = curSpread <= 1;
+  document.getElementById('bnext').disabled        = curSpread >= TS;
   document.getElementById('bn-prev').disabled      = curSpread <= 1;
-  document.getElementById('bn-next').disabled      = curSpread >= TOTAL_SPREADS;
-  document.getElementById('bn-info').textContent   = `Page ${curSpread} of ${TOTAL_SPREADS}`;
+  document.getElementById('bn-next').disabled      = curSpread >= TS;
+  document.getElementById('bn-info').textContent   = `Page ${curSpread} of ${TS}`;
   document.getElementById('spread').classList.toggle('hide-owned', showMissing);
 }
 
@@ -676,7 +767,7 @@ function makeCardPage(idx0, side, num1) {
   wrap.appendChild(lbl);
   const grid = document.createElement('div');
   grid.className = 'grid';
-  const spp = window._SLOTS_PER_PAGE || 9;
+  const spp = getSPP();
   const start = idx0 * spp, end = Math.min(start + spp, TOTAL);
   for (let i = start; i < end; i++) grid.appendChild(makeSlot(SLOTS[i]));
   // Always pad with empty slot outlines to maintain grid shape
@@ -695,8 +786,8 @@ function makeCardPage(idx0, side, num1) {
   return wrap;
 }
 
-function go(d)    { curSpread = Math.max(1, Math.min(TOTAL_SPREADS, curSpread + d)); render(); }
-function goTo(n)  { if (!isNaN(n) && n >= 1 && n <= TOTAL_SPREADS) { curSpread = n; render(); } }
+function go(d)    { curSpread = Math.max(1, Math.min(getTotalSpreads(), curSpread + d)); render(); }
+function goTo(n)  { if (!isNaN(n) && n >= 1 && n <= getTotalSpreads()) { curSpread = n; render(); } }
 function toggleMissing(on) { showMissing = on; document.getElementById('spread').classList.toggle('hide-owned', on); }
 
 // ── Find card ──────────────────────────────────────────────────────────────
@@ -711,7 +802,7 @@ function findCard(q) {
   );
   if (idx >= 0) {
     al.style.display = 'none';
-    curSpread = idx === 0 ? 1 : Math.floor(idx / 9 / 2) + 2;
+    const spp=getSPP(); curSpread = idx < spp ? 1 : Math.ceil(Math.floor(idx/spp)/2)+1; curSpread=Math.max(1,Math.min(getTotalSpreads(),curSpread));
     render();
   } else {
     al.style.display = 'block';
@@ -873,7 +964,7 @@ function jumpTo(key) {
   document.getElementById('wl-modal').classList.remove('open');
   document.getElementById('ml-modal').classList.remove('open');
   const idx = SLOTS.findIndex(s => sk(s) === key);
-  if (idx >= 0) { curSpread = idx === 0 ? 1 : Math.floor(idx / 9 / 2) + 2; render(); }
+  if (idx >= 0) { const spp=getSPP(); curSpread=idx<spp?1:Math.ceil(Math.floor(idx/spp)/2)+1; curSpread=Math.max(1,Math.min(getTotalSpreads(),curSpread)); render(); }
 }
 
 function unwatchRow(key) {
@@ -974,7 +1065,7 @@ function doManualImport() {
 })();
 
 // ── Init ───────────────────────────────────────────────────────────────────
-load(); updateProgress(); render();
+loadLayout(); buildLayoutPicker(); buildSectionBar(); loadLayout(); buildLayoutPicker(); buildSectionBar(); load(); updateProgress(); render();
 </script>
 </body>
 </html>

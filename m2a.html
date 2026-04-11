@@ -211,6 +211,18 @@ table.wt tr:hover td{background:#111}
 .sync-flash{font-size:11px}
 .sync-warn{font-size:10px;color:#3a2820;margin-top:5px}
 
+.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.layout-lbl{font-size:11px;color:#444;white-space:nowrap}
+.layout-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
+.layout-btn:hover{border-color:#555;color:#aaa}
+.layout-btn.active{border-color:#c89a3a;background:#2a2010;color:#c89a3a}
+
+/* ── Section jump bar ────────────────────────────────────────────────────── */
+.section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+.section-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
+.section-chip{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
+.section-chip:hover{border-color:#555;color:#aaa;background:#222}
+.section-chip.active{border-color:#9070e0;background:#1e1040;color:#9070e0}
 </style>
 <script src="gist-sync.js"></script>
 
@@ -241,6 +253,18 @@ table.wt tr:hover td{background:#111}
 #gs-update-banner  { bottom: 60px !important; }
 /* Body padding so last binder card isn't hidden behind nav */
 body { padding-bottom: 62px; }
+.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.layout-lbl{font-size:11px;color:#444;white-space:nowrap}
+.layout-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
+.layout-btn:hover{border-color:#555;color:#aaa}
+.layout-btn.active{border-color:#c89a3a;background:#2a2010;color:#c89a3a}
+
+/* ── Section jump bar ────────────────────────────────────────────────────── */
+.section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+.section-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
+.section-chip{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
+.section-chip:hover{border-color:#555;color:#aaa;background:#222}
+.section-chip.active{border-color:#9070e0;background:#1e1040;color:#9070e0}
 </style>
 </head>
 <body>
@@ -319,6 +343,16 @@ body { padding-bottom: 62px; }
   <span class="lv"><span class="ld" style="border-color:#5DCAA5"></span>SAR</span>
   <span class="lv"><span class="ld" style="border-color:#E24B4A"></span>MUR</span>
   <span class="lv" style="margin-left:4px">✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced</span>
+</div>
+
+<!-- ── Layout picker ── -->
+<div class="layout-bar">
+  <span class="layout-lbl">Layout:</span>
+  <div id="layout-btns"></div>
+</div>
+<!-- ── Section jump bar ── -->
+<div class="section-bar" id="section-bar" style="display:none">
+  <span class="section-lbl">Jump to:</span>
 </div>
 
 <div class="alert" id="alert"></div>
@@ -788,7 +822,73 @@ function confirmClear(){if(confirm('Clear all ownership data?')){owned.clear();s
 
 // ─────────────────────────── init ───────────────────────────────────────
 document.documentElement.style.setProperty('--binder-cols', 3);
-load();updateProgress();render();
+
+// ── Layout & Section system (m2a) ────────────────────────────────────────
+const LS_LAYOUT_M2A = 'M2a_layout_v1';
+const LAYOUT_PRESETS = [
+  {cols:2,rows:2,label:'2×2'},{cols:3,rows:2,label:'3×2'},{cols:2,rows:3,label:'2×3'},
+  {cols:3,rows:3,label:'3×3'},{cols:4,rows:3,label:'4×3'},{cols:3,rows:4,label:'3×4'},
+  {cols:4,rows:4,label:'4×4'},{cols:5,rows:4,label:'4×5'},{cols:5,rows:5,label:'5×5'},
+];
+let currentCols=3, currentRows=3;
+function getSPP(){ return currentCols*currentRows; }
+
+function applyLayout(cols,rows,save){
+  currentCols=cols; currentRows=rows;
+  document.documentElement.style.setProperty('--binder-cols',cols);
+  if(save) localStorage.setItem(LS_LAYOUT_M2A,JSON.stringify({cols,rows}));
+  document.querySelectorAll('.layout-btn').forEach(b=>
+    b.classList.toggle('active',+b.dataset.cols===cols&&+b.dataset.rows===rows)
+  );
+}
+function loadLayout(){
+  try{const s=JSON.parse(localStorage.getItem(LS_LAYOUT_M2A));if(s&&s.cols)applyLayout(s.cols,s.rows,false);else applyLayout(3,3,false);}catch(e){applyLayout(3,3,false);}
+}
+function buildLayoutPicker(){
+  const wrap=document.getElementById('layout-btns');
+  if(!wrap)return;
+  wrap.style.cssText='display:flex;gap:5px;flex-wrap:wrap';
+  LAYOUT_PRESETS.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='layout-btn';b.textContent=p.label;
+    b.dataset.cols=p.cols;b.dataset.rows=p.rows;
+    if(p.cols===currentCols&&p.rows===currentRows)b.classList.add('active');
+    b.onclick=()=>{applyLayout(p.cols,p.rows,true);curSpread=1;render();};
+    wrap.appendChild(b);
+  });
+}
+function buildSectionBar(){
+  const bar=document.getElementById('section-bar');
+  if(!bar)return;
+  const sections=[
+    {label:'Main',f:s=>s.v!=='rh'&&+s.num<=193},
+    {label:'Secret Rares',f:s=>s.v!=='rh'&&+s.num>193},
+    {label:'Reverse Holos',f:s=>s.v==='rh'},
+  ];
+  const hasMulti=sections.filter(sec=>SLOTS.some(sec.f)).length>1;
+  if(!hasMulti)return;
+  bar.style.display='flex';
+  while(bar.children.length>1)bar.removeChild(bar.lastChild);
+  let activeChip=null;
+  sections.forEach(sec=>{
+    const firstIdx=SLOTS.findIndex(sec.f);
+    if(firstIdx<0)return;
+    const count=SLOTS.filter(sec.f).length;
+    const chip=document.createElement('button');chip.className='section-chip';
+    chip.textContent=sec.label+' ('+count+')';
+    chip.onclick=()=>{
+      if(activeChip)activeChip.classList.remove('active');
+      chip.classList.add('active');activeChip=chip;
+      const spp=getSPP();
+      curSpread=firstIdx<spp?1:Math.ceil(Math.floor(firstIdx/spp)/2)+1;
+      curSpread=Math.max(1,Math.min(TOTAL_SPREADS,curSpread));
+      render();
+    };
+    bar.appendChild(chip);
+  });
+}
+
+loadLayout();buildLayoutPicker();buildSectionBar();load();updateProgress();render();
 // ── Sync data between devices ─────────────────────────────────────────────
 const SYNC_KEYS = [
   'M2a_owned_v1','M2a_watched_v1','M2a_prices_v2',
