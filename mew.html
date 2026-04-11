@@ -613,11 +613,11 @@ function makeCover() {
 }
 
 const SDEFS = [
-  { label: '#001–051 (Bulbasaur→Dugtrio)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=1&&n<=51; } },
-  { label: '#052–105 (Meowth→Marowak)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=52&&n<=105; } },
-  { label: '#106–151 (Hitmonlee→Mew)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=106&&n<=151; } },
-  { label: '#166–183 (SR — Pokémon ex)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=166&&n<=183; } },
-  { label: '#184–207 (SR — Alt Arts)', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=184&&n<=207; } },
+  { label: '#001–051 (Bulbasaur→Dugtrio)', f: s => { const n=+s.id.split('-').pop(); return n>=1&&n<=51; } },
+  { label: '#052–105 (Meowth→Marowak)', f: s => { const n=+s.id.split('-').pop(); return n>=52&&n<=105; } },
+  { label: '#106–151 (Hitmonlee→Mew)', f: s => { const n=+s.id.split('-').pop(); return n>=106&&n<=151; } },
+  { label: '#166–183 (SR — Pokémon ex)', f: s => { const n=+s.id.split('-').pop(); return n>=166&&n<=183; } },
+  { label: '#184–207 (SR — Alt Arts)', f: s => { const n=+s.id.split('-').pop(); return n>=184&&n<=207; } },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════

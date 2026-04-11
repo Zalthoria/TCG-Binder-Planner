@@ -527,18 +527,18 @@ function makeCover() {
 }
 
 const SDEFS = [
-  { label: '🌿 Grass', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=1&&n<=12; } },
-  { label: '🔥 Fire', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=13&&n<=17; } },
-  { label: '💧 Water', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=18&&n<=24; } },
-  { label: '⚡ Lightning', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=25&&n<=28; } },
-  { label: '🔮 Psychic', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=29&&n<=35; } },
-  { label: '👊 Fighting', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=36&&n<=46; } },
-  { label: '🌑 Darkness', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=47&&n<=53; } },
-  { label: '⚙️ Metal', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=54&&n<=58; } },
-  { label: '⬜ Colorless', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=59&&n<=66; } },
-  { label: '🃏 Trainer', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=67&&n<=77; } },
-  { label: '⚡ Energy', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=78&&n<=80; } },
-  { label: '✨ Secrets', f: s => { const n=+s.id.replace(/[^0-9]/g,''); return n>=81&&n<=117; } },
+  { label: '🌿 Grass', f: s => { const n=+s.id.split('-').pop(); return n>=1&&n<=12; } },
+  { label: '🔥 Fire', f: s => { const n=+s.id.split('-').pop(); return n>=13&&n<=17; } },
+  { label: '💧 Water', f: s => { const n=+s.id.split('-').pop(); return n>=18&&n<=24; } },
+  { label: '⚡ Lightning', f: s => { const n=+s.id.split('-').pop(); return n>=25&&n<=28; } },
+  { label: '🔮 Psychic', f: s => { const n=+s.id.split('-').pop(); return n>=29&&n<=35; } },
+  { label: '👊 Fighting', f: s => { const n=+s.id.split('-').pop(); return n>=36&&n<=46; } },
+  { label: '🌑 Darkness', f: s => { const n=+s.id.split('-').pop(); return n>=47&&n<=53; } },
+  { label: '⚙️ Metal', f: s => { const n=+s.id.split('-').pop(); return n>=54&&n<=58; } },
+  { label: '⬜ Colorless', f: s => { const n=+s.id.split('-').pop(); return n>=59&&n<=66; } },
+  { label: '🃏 Trainer', f: s => { const n=+s.id.split('-').pop(); return n>=67&&n<=77; } },
+  { label: '⚡ Energy', f: s => { const n=+s.id.split('-').pop(); return n>=78&&n<=80; } },
+  { label: '✨ Secrets', f: s => { const n=+s.id.split('-').pop(); return n>=81&&n<=117; } },
 ];
 
 // ════════════════════════════════════════════════════════════════════════════
