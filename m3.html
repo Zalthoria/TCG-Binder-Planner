@@ -321,6 +321,7 @@ const BINDER = {
   lsOwned:  'm3_nihil_zero_owned_v1',
   lsWatched:'m3_nihil_zero_watched_v1',
   lsPrices: 'm3_nihil_zero_prices_v1',
+  cols: 3,
   legend: [
     { label: 'Main Set',    color: '#666'    },
     { label: 'Secret Rare', color: '#c89a3a' },
@@ -518,6 +519,10 @@ const TOTAL_SPREADS = Math.ceil((CARD_PAGES + 1) / 2);          // +1 for cover 
   suffix.style.marginLeft = '4px';
   suffix.innerHTML = `✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced`;
   bar.appendChild(suffix);
+  // Grid columns
+  const cols = BINDER.cols || 3;
+  document.documentElement.style.setProperty('--binder-cols', cols);
+  window._SLOTS_PER_PAGE = cols * cols;
 })();
 
 // ── Storage ────────────────────────────────────────────────────────────────
@@ -581,7 +586,8 @@ function makeCardPage(idx0, side, num1) {
   wrap.appendChild(lbl);
   const grid = document.createElement('div');
   grid.className = 'grid';
-  const start = idx0 * 9, end = Math.min(start + 9, TOTAL);
+  const spp = window._SLOTS_PER_PAGE || 9;
+  const start = idx0 * spp, end = Math.min(start + spp, TOTAL);
   for (let i = start; i < end; i++) grid.appendChild(makeSlot(SLOTS[i]));
   // Always pad with empty slot outlines to maintain grid shape
   for (let i = end - start; i < spp; i++) {
