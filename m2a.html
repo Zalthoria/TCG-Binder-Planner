@@ -877,3 +877,116 @@ function buildLayoutPicker(){
   });
 }
 
+function buildSectionBar(){
+  const bar=document.getElementById('section-bar');
+  if(!bar)return;
+  bar.style.display='flex';
+  while(bar.children.length>1)bar.removeChild(bar.lastChild);
+  let activeChip=null;
+  const sections=[
+    {label:'🌿 Grass',    lo:1,   hi:17,  rh:false},
+    {label:'🔥 Fire',     lo:18,  hi:31,  rh:false},
+    {label:'💧 Water',    lo:32,  hi:43,  rh:false},
+    {label:'⚡ Lightning', lo:44,  hi:59,  rh:false},
+    {label:'🔮 Psychic',  lo:60,  hi:81,  rh:false},
+    {label:'👊 Fighting', lo:82,  hi:98,  rh:false},
+    {label:'🌑 Darkness', lo:99,  hi:115, rh:false},
+    {label:'⚙️ Metal',    lo:116, hi:123, rh:false},
+    {label:'🐉 Dragon',   lo:124, hi:135, rh:false},
+    {label:'⬜ Colorless',lo:136, hi:145, rh:false},
+    {label:'🃏 Trainer',  lo:146, hi:193, rh:false},
+    {label:'💎 Secrets',  lo:194, hi:250, rh:false},
+    {label:'🔄 Rev. Holos',lo:1, hi:999, rh:true},
+  ];
+  sections.forEach(sec=>{
+    const f=sec.rh?s=>s.v==='rh':s=>s.v!=='rh'&&+s.num>=sec.lo&&+s.num<=sec.hi;
+    const firstIdx=SLOTS.findIndex(f);
+    if(firstIdx<0)return;
+    const count=SLOTS.filter(f).length;
+    const chip=document.createElement('button');
+    chip.className='section-chip';
+    chip.textContent=sec.label+' ('+count+')';
+    chip.onclick=()=>{
+      if(activeChip)activeChip.classList.remove('active');
+      chip.classList.add('active');activeChip=chip;
+      const spp=getSPP();
+      curSpread=firstIdx<spp?1:Math.ceil(Math.floor(firstIdx/spp)/2)+1;
+      curSpread=Math.max(1,Math.min(TOTAL_SPREADS,curSpread));
+      render();
+    };
+    bar.appendChild(chip);
+  });
+}
+
+// ── Swipe to turn page ────────────────────────────────────────────────────
+(function(){
+  let x0=null;
+  const sp=document.getElementById('spread');
+  if(!sp)return;
+  sp.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  sp.addEventListener('touchend',e=>{
+    if(x0===null)return;
+    const dx=e.changedTouches[0].clientX-x0;x0=null;
+    if(Math.abs(dx)>50)go(dx<0?1:-1);
+  },{passive:true});
+})();
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadLayout();buildLayoutPicker();buildSectionBar();load();updateProgress();render();
+function buildSectionBar(){
+  const bar=document.getElementById('section-bar');
+  if(!bar)return;
+  bar.style.display='flex';
+  while(bar.children.length>1)bar.removeChild(bar.lastChild);
+  let activeChip=null;
+  const sections=[
+    {label:'🌿 Grass',    lo:1,   hi:17,  rh:false},
+    {label:'🔥 Fire',     lo:18,  hi:31,  rh:false},
+    {label:'💧 Water',    lo:32,  hi:43,  rh:false},
+    {label:'⚡ Lightning', lo:44,  hi:59,  rh:false},
+    {label:'🔮 Psychic',  lo:60,  hi:81,  rh:false},
+    {label:'👊 Fighting', lo:82,  hi:98,  rh:false},
+    {label:'🌑 Darkness', lo:99,  hi:115, rh:false},
+    {label:'⚙️ Metal',    lo:116, hi:123, rh:false},
+    {label:'🐉 Dragon',   lo:124, hi:135, rh:false},
+    {label:'⬜ Colorless',lo:136, hi:145, rh:false},
+    {label:'🃏 Trainer',  lo:146, hi:193, rh:false},
+    {label:'💎 Secrets',  lo:194, hi:250, rh:false},
+    {label:'🔄 Rev. Holos',lo:1, hi:999, rh:true},
+  ];
+  sections.forEach(sec=>{
+    const f=sec.rh?s=>s.v==='rh':s=>s.v!=='rh'&&+s.num>=sec.lo&&+s.num<=sec.hi;
+    const firstIdx=SLOTS.findIndex(f);
+    if(firstIdx<0)return;
+    const count=SLOTS.filter(f).length;
+    const chip=document.createElement('button');
+    chip.className='section-chip';
+    chip.textContent=sec.label+' ('+count+')';
+    chip.onclick=()=>{
+      if(activeChip)activeChip.classList.remove('active');
+      chip.classList.add('active');activeChip=chip;
+      const spp=getSPP();
+      curSpread=firstIdx<spp?1:Math.ceil(Math.floor(firstIdx/spp)/2)+1;
+      curSpread=Math.max(1,Math.min(TOTAL_SPREADS,curSpread));
+      render();
+    };
+    bar.appendChild(chip);
+  });
+}
+
+// ── Swipe to turn page ────────────────────────────────────────────────────
+(function(){
+  let x0=null;
+  const sp=document.getElementById('spread');
+  if(!sp)return;
+  sp.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  sp.addEventListener('touchend',e=>{
+    if(x0===null)return;
+    const dx=e.changedTouches[0].clientX-x0;x0=null;
+    if(Math.abs(dx)>50)go(dx<0?1:-1);
+  },{passive:true});
+})();
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadLayout();buildLayoutPicker();buildSectionBar();load();updateProgress();render();
+
