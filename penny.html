@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -7,14 +7,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TCG Binders">
-<title id="page-title">Penny (ãƒœã‚¿ãƒ³) â€” All Prints</title>
+<title id="page-title">Penny (ボタン) — All Prints</title>
 <script src="gist-sync.js"></script>
 <style>
-/* â”€â”€ Reset & base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Reset & base ─────────────────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 12px 80px}
 
-/* â”€â”€ Toolbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Toolbar ──────────────────────────────────────────────────────────────── */
 .app-title{font-size:16px;font-weight:700;color:#fff}
 .app-sub{font-size:11px;color:#555;margin-top:2px}
 .toolbar{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-top:14px}
@@ -27,7 +27,7 @@ input[type=text]:focus{border-color:#666}
 input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:5px 6px;font-size:13px;color:#ddd;width:48px;text-align:center;outline:none;font-family:inherit}
 .pc{font-size:12px;color:#555;white-space:nowrap}
 
-/* â”€â”€ Action bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Action bar ───────────────────────────────────────────────────────────── */
 .action-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .prog-wrap{flex:1;min-width:140px;height:6px;background:#1e1c18;border-radius:999px;overflow:hidden}
 .prog-bar{height:100%;background:#c89a3a;border-radius:999px;transition:width .3s}
@@ -38,12 +38,12 @@ input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;pa
 .btn-dim{background:#1e1c18;border-color:#2a2828;color:#555}.btn-dim:hover{background:#2a2820;color:#aaa}
 .filter-lbl{display:flex;align-items:center;gap:5px;font-size:12px;color:#666;cursor:pointer;user-select:none}.filter-lbl input{accent-color:#c89a3a}
 
-/* â”€â”€ Legend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Legend ───────────────────────────────────────────────────────────────── */
 .legend{width:100%;max-width:1100px;display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px;font-size:11px;color:#555}
 .lv{display:flex;align-items:center;gap:5px}
 .ld{display:inline-block;width:10px;height:10px;border-radius:2px;border:2px solid #555;background:transparent;flex-shrink:0}
 
-/* â”€â”€ Spread â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Spread ───────────────────────────────────────────────────────────────── */
 .alert{width:100%;max-width:1100px;font-size:12px;color:#c06040;margin-bottom:6px;display:none}
 .spread-info{font-size:11px;color:#252220;text-align:center;margin-bottom:5px;letter-spacing:.06em}
 .spread{width:100%;max-width:1100px;display:flex;background:#0d0b09;border:2px solid #252018;border-radius:16px;overflow:hidden;box-shadow:0 10px 50px rgba(0,0,0,.7)}
@@ -54,11 +54,11 @@ input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;pa
 .blank-pg{flex:1;background:#0e0c0a}
 .hide-owned .slot.owned{display:none}
 
-/* â”€â”€ Cover page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Cover page ───────────────────────────────────────────────────────────── */
 .cover-pg{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0f0d0a}
 .cover-box{background:#181410;border:1px solid #2a2418;border-radius:9px;padding:12px 18px;font-size:11px;color:#555;line-height:2.1;text-align:center}
 
-/* â”€â”€ Grid & slots â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Grid & slots ─────────────────────────────────────────────────────────── */
 .grid{display:grid;grid-template-columns:repeat(var(--binder-cols,3),1fr);gap:6px}
 .slot{background:#0b0a08;border-radius:6px;cursor:pointer;transition:border-color .12s,transform .1s;position:relative;overflow:hidden;border:2px solid #252018}
 .slot:hover{transform:scale(1.04);z-index:5}
@@ -77,7 +77,7 @@ input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;pa
 .cnm{font-size:9px;font-weight:500;color:#888;line-height:1.25;margin:1px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vbg{display:inline-block;font-size:7px;padding:1px 4px;border-radius:999px;font-weight:600;line-height:1.5}
 
-/* â”€â”€ Card detail modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Card detail modal ────────────────────────────────────────────────────── */
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
 .modal.open{display:flex}
 .mbox{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:340px;width:100%;margin:auto;text-align:center}
@@ -105,7 +105,7 @@ input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;pa
 .m-btn-unwatch{background:#2a1220;color:#e07090}.m-btn-unwatch:hover{background:#3a1830}
 .m-btn-close{width:100%;padding:8px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;background:#1a1814;border:1px solid #2a2620;color:#888}.m-btn-close:hover{background:#222}
 
-/* â”€â”€ Watchlist modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Watchlist modal ──────────────────────────────────────────────────────── */
 .wl-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
 .wl-modal.open{display:flex}
 .wl-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
@@ -126,7 +126,7 @@ table.wt tr:hover td{background:#111}
 .wl-empty{text-align:center;padding:30px 10px;font-size:13px;color:#333}
 .wl-empty span{display:block;font-size:12px;color:#242220;margin-top:6px}
 
-/* â”€â”€ Missing list modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Missing list modal ───────────────────────────────────────────────────── */
 .ml-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
 .ml-modal.open{display:flex}
 .ml-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
@@ -136,7 +136,7 @@ table.wt tr:hover td{background:#111}
 .ml-chip:hover{border-color:#333;color:#aaa}
 .ml-total{font-size:11px;color:#4cff80;margin-bottom:10px;padding:6px 10px;background:#0d1a0d;border-radius:6px;border:1px solid #1a3a1a}
 
-/* â”€â”€ Nav bar (injected by nav_bar.html) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Nav bar (injected by nav_bar.html) ───────────────────────────────────── */
 #app-nav{position:sticky;top:0;z-index:500;background:#100e0c;border-bottom:1px solid #2a2418;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.6)}
 .nav-back{background:#1e1c18;border:1px solid #2a2620;border-radius:7px;padding:6px 12px;font-size:12px;color:#888;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:background .12s,color .12s}
 .nav-back:hover{background:#2a2820;color:#ccc}
@@ -159,7 +159,7 @@ table.wt tr:hover td{background:#111}
 .sa-dim{background:#1a1814;border-color:#2a2620;color:#666}.sa-dim:hover{background:#222}
 .sync-warn{font-size:10px;color:#3a2820;margin-top:5px;line-height:1.5}
 
-/* â”€â”€ Bottom nav â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Bottom nav ───────────────────────────────────────────────────────────── */
 #binder-bnav{position:fixed;bottom:0;left:0;right:0;z-index:600;background:#100e0c;border-top:1px solid #2a2418;display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:52px;box-shadow:0 -2px 14px rgba(0,0,0,.6)}
 #binder-bnav .bnav-btn{background:#1e1c18;border:1px solid #333;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:600;color:#ccc;cursor:pointer;font-family:inherit;min-width:90px;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s}
 #binder-bnav .bnav-btn:active{background:#2a2820}
@@ -167,7 +167,7 @@ table.wt tr:hover td{background:#111}
 #binder-bnav .bnav-info{font-size:12px;color:#555;text-align:center;flex:1;font-variant-numeric:tabular-nums}
 #gs-btn{bottom:60px!important}
 #gs-update-banner{bottom:60px!important}
-/* â”€â”€ Elegant layout picker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Elegant layout picker ───────────────────────────────────────────────── */
 .layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;margin-bottom:6px;position:relative;z-index:50}
 .layout-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
 .layout-trigger{display:flex;align-items:center;gap:7px;padding:5px 12px;background:#1a1814;border:1px solid #2e2a24;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;color:#c89a3a;font-size:12px;font-weight:600;user-select:none}
@@ -192,7 +192,7 @@ table.wt tr:hover td{background:#111}
 .lp-opt:hover:not(.active) .lp-name{color:#888}
 
 
-/* â”€â”€ Section jump bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Section jump bar ────────────────────────────────────────────────────── */
 .section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
 .section-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
 .section-chip{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
@@ -202,40 +202,40 @@ table.wt tr:hover td{background:#111}
 </head>
 <body>
 
-<!-- â”€â”€ Nav bar â”€â”€ -->
+<!-- ── Nav bar ── -->
 <div id="app-nav">
-  <a href="index.html" class="nav-back">â† All Binders</a>
+  <a href="index.html" class="nav-back">← All Binders</a>
   <div class="nav-title" id="nav-title"></div>
-  <button class="nav-sync" onclick="openSync()">â‡… Sync</button>
+  <button class="nav-sync" onclick="openSync()">⇅ Sync</button>
 </div>
 
-<!-- â”€â”€ Manual sync modal (fallback when Gist not connected) â”€â”€ -->
+<!-- ── Manual sync modal (fallback when Gist not connected) ── -->
 <div class="sync-overlay" id="sync-overlay" onclick="if(event.target===this)closeSyncModal()">
   <div class="sync-box">
-    <div class="sync-title">â‡… Sync Data Between Devices</div>
+    <div class="sync-title">⇅ Sync Data Between Devices</div>
     <div class="sync-desc">Data is saved locally per browser. Export your data on one device, paste it on the other.</div>
     <div class="sync-section">
-      <div class="sync-label">Export â€” copy your data</div>
-      <textarea id="export-ta" class="sync-ta" readonly placeholder="Click Export to generateâ€¦"></textarea>
+      <div class="sync-label">Export — copy your data</div>
+      <textarea id="export-ta" class="sync-ta" readonly placeholder="Click Export to generate…"></textarea>
       <div class="sync-row">
         <button class="sync-btn-a sa-green" onclick="doManualExport()">Export & Copy</button>
-        <span id="export-flash" style="font-size:11px;color:#4cff80;display:none">âœ“ Copied!</span>
+        <span id="export-flash" style="font-size:11px;color:#4cff80;display:none">✓ Copied!</span>
       </div>
     </div>
     <div class="sync-section">
-      <div class="sync-label">Import â€” paste data from another device</div>
-      <textarea id="import-ta" class="sync-ta" placeholder="Paste exported data hereâ€¦"></textarea>
+      <div class="sync-label">Import — paste data from another device</div>
+      <textarea id="import-ta" class="sync-ta" placeholder="Paste exported data here…"></textarea>
       <div class="sync-row">
         <button class="sync-btn-a sa-purple" onclick="doManualImport()">Import Data</button>
         <span id="import-flash" style="font-size:11px;display:none"></span>
       </div>
-      <div class="sync-warn">âš  Overwrites current data on this device.</div>
+      <div class="sync-warn">⚠ Overwrites current data on this device.</div>
     </div>
     <button class="sync-btn-a sa-dim" onclick="closeSyncModal()" style="width:100%;margin-top:4px">Close</button>
   </div>
 </div>
 
-<!-- â”€â”€ Toolbar â”€â”€ -->
+<!-- ── Toolbar ── -->
 <div class="toolbar">
   <div>
     <div class="app-title" id="tb-title"></div>
@@ -243,44 +243,44 @@ table.wt tr:hover td{background:#111}
   </div>
   <div class="controls">
     <div style="display:flex;align-items:center;gap:4px">
-      <input type="text" id="si" placeholder="Searchâ€¦" oninput="findCard(this.value)">
-      <button class="clr" onclick="document.getElementById('si').value='';findCard('')">âœ•</button>
+      <input type="text" id="si" placeholder="Search…" oninput="findCard(this.value)">
+      <button class="clr" onclick="document.getElementById('si').value='';findCard('')">✕</button>
     </div>
     <div class="nav">
-      <button class="nb" id="bprev" onclick="go(-1)">â† Prev</button>
+      <button class="nb" id="bprev" onclick="go(-1)">← Prev</button>
       <span class="pc">Spread</span>
       <input type="number" id="pgn" min="1" value="1" onchange="goTo(+this.value)">
-      <span class="pc" id="of-lbl">of â€”</span>
-      <button class="nb" id="bnext" onclick="go(1)">Next â†’</button>
+      <span class="pc" id="of-lbl">of —</span>
+      <button class="nb" id="bnext" onclick="go(1)">Next →</button>
     </div>
   </div>
 </div>
 
-<!-- â”€â”€ Action bar â”€â”€ -->
+<!-- ── Action bar ── -->
 <div class="action-bar">
   <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
-  <span class="prog-text" id="prog-text">0 / â€”</span>
+  <span class="prog-text" id="prog-text">0 / —</span>
   <label class="filter-lbl"><input type="checkbox" id="chk-miss" onchange="toggleMissing(this.checked)"> Missing only</label>
-  <button class="btn btn-purple" onclick="openWatchlist()">â­ Watchlist</button>
-  <button class="btn btn-gold" onclick="openMissingList()">ðŸ“‹ Missing</button>
+  <button class="btn btn-purple" onclick="openWatchlist()">⭐ Watchlist</button>
+  <button class="btn btn-gold" onclick="openMissingList()">📋 Missing</button>
   <button class="btn btn-dim" onclick="confirmClear()">Clear all</button>
 </div>
 
-<!-- â”€â”€ Layout picker â”€â”€ -->
+<!-- ── Layout picker ── -->
 <div class="layout-bar">
   <span class="layout-lbl">Layout:</span>
   <div id="layout-btns"></div>
 </div>
 
-<!-- â”€â”€ Section jump bar â”€â”€ -->
+<!-- ── Section jump bar ── -->
 <div class="section-bar" id="section-bar" style="display:none">
   <span class="section-lbl">Jump to:</span>
 </div>
 
-<!-- â”€â”€ Legend (rendered from BINDER.legend) â”€â”€ -->
+<!-- ── Legend (rendered from BINDER.legend) ── -->
 <div class="legend" id="legend-bar"></div>
 
-<!-- â”€â”€ Spread â”€â”€ -->
+<!-- ── Spread ── -->
 <div class="alert" id="alert"></div>
 <div class="spread-info" id="sinfo"></div>
 <div class="spread" id="spread">
@@ -289,7 +289,7 @@ table.wt tr:hover td{background:#111}
   <div id="rp"></div>
 </div>
 
-<!-- â”€â”€ Card detail modal â”€â”€ -->
+<!-- ── Card detail modal ── -->
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="mbox">
     <img class="cimg" id="mimg" src="" alt="">
@@ -300,7 +300,7 @@ table.wt tr:hover td{background:#111}
     <div class="price-area">
       <div class="price-area-title">
         <span>Prices (USD)</span>
-        <a id="pc-link" href="#" target="_blank">Open PriceCharting â†—</a>
+        <a id="pc-link" href="#" target="_blank">Open PriceCharting ↗</a>
       </div>
       <div class="price-fields">
         <div class="pfield"><label>Ungraded</label><input type="text" id="p-raw" placeholder="$0.00"></div>
@@ -308,28 +308,28 @@ table.wt tr:hover td{background:#111}
         <div class="pfield"><label>PSA 10</label><input type="text" id="p-10" placeholder="$0.00"></div>
       </div>
       <button class="save-prices-btn" onclick="savePriceFromModal()">Save prices</button>
-      <div class="price-saved" id="price-saved">âœ“ Saved!</div>
+      <div class="price-saved" id="price-saved">✓ Saved!</div>
     </div>
     <div class="m-btns">
       <button class="m-btn m-btn-own" id="m-own-btn" onclick="toggleOwnModal()">Mark as owned</button>
-      <button class="m-btn m-btn-watch" id="m-watch-btn" onclick="toggleWatchModal()">â­ Watch</button>
+      <button class="m-btn m-btn-watch" id="m-watch-btn" onclick="toggleWatchModal()">⭐ Watch</button>
     </div>
     <button class="m-btn-close" onclick="closeModal()">Close</button>
   </div>
 </div>
 
-<!-- â”€â”€ Watchlist modal â”€â”€ -->
+<!-- ── Watchlist modal ── -->
 <div class="wl-modal" id="wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="wl-box">
     <div class="modal-head">
-      <div class="modal-head-left"><div class="title">â­ Watchlist</div><div class="sub" id="wl-sub"></div></div>
+      <div class="modal-head-left"><div class="title">⭐ Watchlist</div><div class="sub" id="wl-sub"></div></div>
       <div class="modal-head-right"><button class="btn btn-dim" onclick="document.getElementById('wl-modal').classList.remove('open')">Close</button></div>
     </div>
     <div id="wl-body"></div>
   </div>
 </div>
 
-<!-- â”€â”€ Missing list modal â”€â”€ -->
+<!-- ── Missing list modal ── -->
 <div class="ml-modal" id="ml-modal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="ml-box">
     <div class="modal-head">
@@ -344,22 +344,22 @@ table.wt tr:hover td{background:#111}
   </div>
 </div>
 
-<!-- â”€â”€ Bottom nav â”€â”€ -->
+<!-- ── Bottom nav ── -->
 <div id="binder-bnav">
-  <button class="bnav-btn" id="bn-prev" onclick="go(-1)">â† Prev</button>
+  <button class="bnav-btn" id="bn-prev" onclick="go(-1)">← Prev</button>
   <div class="bnav-info" id="bn-info">Page 1</div>
-  <button class="bnav-btn" id="bn-next" onclick="go(1)">Next â†’</button>
+  <button class="bnav-btn" id="bn-next" onclick="go(1)">Next →</button>
 </div>
 
 <script>
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-//  BINDER CONFIG â€” edit everything in this section for each new binder
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════════════════════════════════════
+//  BINDER CONFIG — edit everything in this section for each new binder
+// ════════════════════════════════════════════════════════════════════════════
 
 const BINDER = {
-  title:    'Penny (ãƒœã‚¿ãƒ³) â€” All Prints',
-  subtitle: '10 cards Â· Sorted JP â†’ EN by artwork',
-  navTitle: 'Penny â€” All Prints Â· 16 cards',
+  title:    'Penny (ボタン) — All Prints',
+  subtitle: '10 cards · Sorted JP → EN by artwork',
+  navTitle: 'Penny — All Prints · 16 cards',
   lsOwned:  'penny_owned_v1',
   lsWatched:'penny_watched_v1',
   lsPrices: 'penny_prices_v1',
@@ -386,36 +386,36 @@ const BC = {
 const BC_DEFAULT = { bg: '#181410', col: '#666' };
 
 const SLOTS = [
-  // â”€â”€ Group 1: yuu Regular â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Group 1: yuu Regular ─────────────────────────────────────────────────
   { id:'SV1S-077', name:'Penny', set:'Scarlet ex', v:'r-jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-77' },
   { id:'SVI-183',  name:'Penny', set:'Scarlet & Violet', v:'r-en',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183' },
-  // â”€â”€ Group 2: yuu Full Art â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Group 2: yuu Full Art ─────────────────────────────────────────────────
   { id:'SV1S-100', name:'Penny', set:'Scarlet ex', v:'sr-jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-100' },
   { id:'SVI-239',  name:'Penny', set:'Scarlet & Violet', v:'ur-en',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_239_R_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-239' },
-  // â”€â”€ Group 3: OKACHEKE SAR / SIR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Group 3: OKACHEKE SAR / SIR ──────────────────────────────────────────
   { id:'SV1S-105', name:'Penny', set:'Scarlet ex', v:'sar-jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-105' },
   { id:'SVI-252',  name:'Penny', set:'Scarlet & Violet', v:'sir-en',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_252_R_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-252' },
-  // â”€â”€ Group 4: yuu Promo (JP only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Group 4: yuu Promo (JP only) ─────────────────────────────────────────
   { id:'SVP-057',  name:'Penny', set:'SV-P Promo', v:'promo-jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-p-promos/penny-57' },
-  // â”€â”€ Group 5: yuu Regular reprint (JP only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Group 5: yuu Regular reprint (JP only) ───────────────────────────────
   { id:'SV4a-182', name:'Penny', set:'Shiny Treasure ex', v:'r-jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_182_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182' },
-  // â”€â”€ Group 6: aspara SAR / SIR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Group 6: aspara SAR / SIR ────────────────────────────────────────────
   { id:'SV4a-354', name:'Penny', set:'Shiny Treasure ex', v:'sar-jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_354_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-354' },
@@ -423,7 +423,7 @@ const SLOTS = [
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_239_R_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239' },
 
-  // â”€â”€ Cassiopeia (Penny's alter ego â€” Night Wanderer / Shrouded Fable) â”€â”€â”€â”€â”€
+  // ── Cassiopeia (Penny's alter ego — Night Wanderer / Shrouded Fable) ─────
   { id:'SV6a-061', name:'Cassiopeia', set:'Night Wanderer', v:'r-jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_61_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-61' },
@@ -460,19 +460,19 @@ function makeCover() {
   d.className = 'bpage cover-pg';
   d.innerHTML = `
     <div style="font-size:24px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
-      ãƒœã‚¿ãƒ³<br><span style="font-size:14px;font-weight:400;color:#777">Penny â€” All Prints</span>
+      ボタン<br><span style="font-size:14px;font-weight:400;color:#777">Penny — All Prints</span>
     </div>
-    <div style="font-size:11px;color:#555;text-align:center;margin:-6px 0">PokÃ©mon Scarlet &amp; Violet Â· Paldea</div>
+    <div style="font-size:11px;color:#555;text-align:center;margin:-6px 0">Pokémon Scarlet &amp; Violet · Paldea</div>
     <div class="cover-box">
-      Sorted JP â†’ EN by illustrator<br>
-      ðŸ‡¯ðŸ‡µðŸ‡¬ðŸ‡§ yuu Regular Â· Full Art<br>
-      ðŸ‡¯ðŸ‡µðŸ‡¬ðŸ‡§ OKACHEKE SAR / SIR<br>
-      ðŸ‡¯ðŸ‡µ yuu Promo Â· Reprint<br>
-      ðŸ‡¯ðŸ‡µðŸ‡¬ðŸ‡§ aspara SAR / SIR<br>
-      <span style="color:#282420;font-size:10px">â”€â”€ 10 cards total â”€â”€</span>
+      Sorted JP → EN by illustrator<br>
+      🇯🇵🇬🇧 yuu Regular · Full Art<br>
+      🇯🇵🇬🇧 OKACHEKE SAR / SIR<br>
+      🇯🇵 yuu Promo · Reprint<br>
+      🇯🇵🇬🇧 aspara SAR / SIR<br>
+      <span style="color:#282420;font-size:10px">── 10 cards total ──</span>
     </div>
     <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.7">
-      Left-click = mark owned Â· Right-click = price &amp; details
+      Left-click = mark owned · Right-click = price &amp; details
     </div>`;
   return d;
 }
@@ -482,15 +482,15 @@ const SDEFS = [
   { label: 'English Prints',  f: s => s.v.endsWith('-en') },
 ];
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-//  TEMPLATE ENGINE â€” do not edit below this line
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════════════════════════════════════
+//  TEMPLATE ENGINE — do not edit below this line
+// ════════════════════════════════════════════════════════════════════════════
 
 // Derived constants
 const TOTAL = SLOTS.length;
 // CARD_PAGES and TOTAL_SPREADS are computed dynamically in getLayout()
 
-// â”€â”€ Apply BINDER config to DOM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Apply BINDER config to DOM ────────────────────────────────────────────
 (function applyConfig() {
   document.getElementById('page-title').textContent = BINDER.title;
   document.title = BINDER.title;
@@ -508,19 +508,19 @@ const TOTAL = SLOTS.length;
   const suffix = document.createElement('span');
   suffix.className = 'lv';
   suffix.style.marginLeft = '4px';
-  suffix.innerHTML = `âœ“ owned &nbsp; â­ watched &nbsp; <span style="color:#c89a3a">$</span> priced`;
+  suffix.innerHTML = `✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced`;
   bar.appendChild(suffix);
   // Initial layout applied by applyLayout() below
 })();
 
 
-// â”€â”€ Elegant Layout Picker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Elegant Layout Picker ─────────────────────────────────────────────────
 const LS_LAYOUT = (BINDER.lsOwned || 'binder').replace(/owned.*/, 'layout_v1');
 
 const LAYOUT_PRESETS = [
-  {cols:2,rows:2,label:'2Ã—2'}, {cols:3,rows:2,label:'3Ã—2'}, {cols:2,rows:3,label:'2Ã—3'},
-  {cols:3,rows:3,label:'3Ã—3'}, {cols:4,rows:3,label:'4Ã—3'}, {cols:3,rows:4,label:'3Ã—4'},
-  {cols:4,rows:4,label:'4Ã—4'}, {cols:5,rows:4,label:'4Ã—5'}, {cols:5,rows:5,label:'5Ã—5'},
+  {cols:2,rows:2,label:'2×2'}, {cols:3,rows:2,label:'3×2'}, {cols:2,rows:3,label:'2×3'},
+  {cols:3,rows:3,label:'3×3'}, {cols:4,rows:3,label:'4×3'}, {cols:3,rows:4,label:'3×4'},
+  {cols:4,rows:4,label:'4×4'}, {cols:5,rows:4,label:'4×5'}, {cols:5,rows:5,label:'5×5'},
 ];
 
 let currentCols = BINDER.cols || 3;
@@ -564,7 +564,7 @@ function applyLayout(cols, rows, save) {
   const trig = document.getElementById('layout-trigger');
   if (trig) {
     const lbl = trig.querySelector('.lt-label');
-    if (lbl) lbl.textContent = cols + 'Ã—' + rows;
+    if (lbl) lbl.textContent = cols + '×' + rows;
     const old = trig.querySelector('.lt-grid');
     if (old) trig.replaceChild(_makeTriggerGrid(cols, rows), old);
   }
@@ -595,9 +595,9 @@ function buildLayoutPicker() {
   trig.className = 'layout-trigger';
   trig.appendChild(_makeTriggerGrid(currentCols, currentRows));
   const lbl = document.createElement('span'); lbl.className = 'lt-label';
-  lbl.textContent = currentCols + 'Ã—' + currentRows;
+  lbl.textContent = currentCols + '×' + currentRows;
   trig.appendChild(lbl);
-  const arr = document.createElement('span'); arr.className = 'lt-arrow'; arr.textContent = 'â–¾';
+  const arr = document.createElement('span'); arr.className = 'lt-arrow'; arr.textContent = '▾';
   trig.appendChild(arr);
 
   // Build floating panel
@@ -664,7 +664,7 @@ function buildSectionBar() {
 }
 
 
-// â”€â”€ Storage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Storage ────────────────────────────────────────────────────────────────
 let owned = new Set(), watched = new Set(), prices = {};
 function load() {
   try { owned   = new Set(JSON.parse(localStorage.getItem(BINDER.lsOwned)   || '[]')); } catch(e) {}
@@ -675,14 +675,14 @@ function saveOwned()      { localStorage.setItem(BINDER.lsOwned,   JSON.stringif
 function saveWatched()    { localStorage.setItem(BINDER.lsWatched, JSON.stringify([...watched])); }
 function savePricesStore(){ localStorage.setItem(BINDER.lsPrices,  JSON.stringify(prices)); }
 
-// â”€â”€ Progress â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Progress ───────────────────────────────────────────────────────────────
 function updateProgress() {
   const n = owned.size, p = TOTAL ? Math.round(n / TOTAL * 100) : 0;
   document.getElementById('prog-bar').style.width = p + '%';
   document.getElementById('prog-text').textContent = `${n} / ${TOTAL} (${p}%)`;
 }
 
-// â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Render ─────────────────────────────────────────────────────────────────
 let curSpread = 1, showMissing = false;
 
 function render() {
@@ -693,12 +693,12 @@ function render() {
   if (curSpread === 1) {
     lp.appendChild(makeCover());
     rp.appendChild(makeCardPage(0, 'right', 1));
-    info = 'Cover Â· Page 1';
+    info = 'Cover · Page 1';
   } else {
     const ln = 2 * (curSpread - 1), rn = ln + 1;
     lp.appendChild(ln - 1 < CP ? makeCardPage(ln - 1, 'left', ln)  : blankPage());
     rp.appendChild(rn - 1 < CP ? makeCardPage(rn - 1, 'right', rn) : blankPage());
-    info = `Page ${ln}${rn <= CP ? ' Â· Page ' + rn : ''}`;
+    info = `Page ${ln}${rn <= CP ? ' · Page ' + rn : ''}`;
   }
   document.getElementById('sinfo').textContent     = info;
   document.getElementById('pgn').value             = curSpread;
@@ -722,7 +722,7 @@ function makeCardPage(idx0, side, num1) {
   wrap.style.background = side === 'left' ? '#13110e' : '#111009';
   const lbl = document.createElement('div');
   lbl.className = 'pg-lbl';
-  lbl.textContent = `â€” page ${num1} â€”`;
+  lbl.textContent = `— page ${num1} —`;
   wrap.appendChild(lbl);
   const grid = document.createElement('div');
   grid.className = 'grid';
@@ -733,12 +733,12 @@ function makeCardPage(idx0, side, num1) {
   for (let i = end - start; i < spp; i++) {
     const e = document.createElement('div');
     e.className = 'slot empty';
-    // Same height structure as card slots but shows a âœ• mark
+    // Same height structure as card slots but shows a ✕ mark
     e.innerHTML = '<div style="width:100%;aspect-ratio:63/88;background:#0b0a08;display:flex;align-items:center;justify-content:center">' +
-      '<span style="font-size:22px;color:#1e1c18;user-select:none">âœ•</span></div>' +
-      '<div class="clbl"><div class="cnum" style="color:transparent">Â·</div>' +
-      '<div class="cnm" style="color:transparent">Â·</div>' +
-      '<span class="vbg" style="color:transparent">Â·</span></div>';
+      '<span style="font-size:22px;color:#1e1c18;user-select:none">✕</span></div>' +
+      '<div class="clbl"><div class="cnum" style="color:transparent">·</div>' +
+      '<div class="cnm" style="color:transparent">·</div>' +
+      '<span class="vbg" style="color:transparent">·</span></div>';
     grid.appendChild(e);
   }
   wrap.appendChild(grid);
@@ -749,7 +749,7 @@ function go(d)    { curSpread = Math.max(1, Math.min(getTotalSpreads(), curSprea
 function goTo(n)  { if (!isNaN(n) && n >= 1 && n <= getTotalSpreads()) { curSpread = n; render(); } }
 function toggleMissing(on) { showMissing = on; document.getElementById('spread').classList.toggle('hide-owned', on); }
 
-// â”€â”€ Find card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Find card ──────────────────────────────────────────────────────────────
 function findCard(q) {
   q = q.trim().toLowerCase();
   const al = document.getElementById('alert');
@@ -769,7 +769,7 @@ function findCard(q) {
   }
 }
 
-// â”€â”€ Slot DOM element â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Slot DOM element ───────────────────────────────────────────────────────
 function makeSlot(s) {
   const key = sk(s), bc = BC[s.v] || BC_DEFAULT;
   const div = document.createElement('div');
@@ -791,8 +791,8 @@ function makeSlot(s) {
     `<span class="vbg" style="background:${bc.bg};color:${bc.col}">${varLabel(s)}</span>`;
   div.appendChild(lbl);
 
-  if (owned.has(key))   div.appendChild(badge('badge-owned', 'âœ“'));
-  if (watched.has(key)) div.appendChild(badge('badge-star', 'â­'));
+  if (owned.has(key))   div.appendChild(badge('badge-owned', '✓'));
+  if (watched.has(key)) div.appendChild(badge('badge-star', '⭐'));
   const p = prices[key];
   if (p && p.raw) div.appendChild(badge('badge-price', p.raw));
 
@@ -801,7 +801,7 @@ function makeSlot(s) {
     owned.has(key) ? owned.delete(key) : owned.add(key);
     saveOwned(); updateProgress();
     div.classList.toggle('owned');
-    syncBadge(div, 'badge-owned', 'âœ“', owned.has(key));
+    syncBadge(div, 'badge-owned', '✓', owned.has(key));
   });
   div.addEventListener('contextmenu', e => { e.preventDefault(); openModal(s); });
   return div;
@@ -816,7 +816,7 @@ function syncBadge(div, cls, txt, show) {
   else if (!show && b) b.remove();
 }
 
-// â”€â”€ Card detail modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Card detail modal ──────────────────────────────────────────────────────
 let modalSlot = null;
 
 function openModal(s) {
@@ -827,7 +827,7 @@ function openModal(s) {
   mi.src = imgUrl(s);
   mi.onerror = () => { mi.style.display = 'none'; mph.style.display = 'flex'; mph.innerHTML = `<div style="color:#383430;font-size:11px;text-align:center">${s.id}<br>${varLabel(s)}</div>`; };
   document.getElementById('mname').textContent   = s.name || s.id;
-  document.getElementById('mnum').textContent    = `${s.id} Â· ${varLabel(s)}`;
+  document.getElementById('mnum').textContent    = `${s.id} · ${varLabel(s)}`;
   document.getElementById('mbadge').textContent  = varLabel(s);
   document.getElementById('mbadge').style.background = bc.bg;
   document.getElementById('mbadge').style.color      = bc.col;
@@ -846,10 +846,10 @@ function syncModalBtns() {
   if (!modalSlot) return;
   const key = sk(modalSlot), isOwned = owned.has(key), isWatched = watched.has(key);
   const ob = document.getElementById('m-own-btn');
-  ob.textContent = isOwned ? 'âœ“ Remove owned' : 'Mark as owned';
+  ob.textContent = isOwned ? '✓ Remove owned' : 'Mark as owned';
   ob.className   = 'm-btn ' + (isOwned ? 'm-btn-unown' : 'm-btn-own');
   const wb = document.getElementById('m-watch-btn');
-  wb.textContent = isWatched ? 'â˜… Unwatch' : 'â­ Watch';
+  wb.textContent = isWatched ? '★ Unwatch' : '⭐ Watch';
   wb.className   = 'm-btn ' + (isWatched ? 'm-btn-unwatch' : 'm-btn-watch');
 }
 
@@ -859,7 +859,7 @@ function toggleOwnModal() {
   owned.has(key) ? owned.delete(key) : owned.add(key);
   saveOwned(); updateProgress();
   const el = document.querySelector(`.slot[data-key="${key}"]`);
-  if (el) { el.classList.toggle('owned', owned.has(key)); syncBadge(el, 'badge-owned', 'âœ“', owned.has(key)); }
+  if (el) { el.classList.toggle('owned', owned.has(key)); syncBadge(el, 'badge-owned', '✓', owned.has(key)); }
   syncModalBtns();
 }
 
@@ -869,7 +869,7 @@ function toggleWatchModal() {
   watched.has(key) ? watched.delete(key) : watched.add(key);
   saveWatched();
   const el = document.querySelector(`.slot[data-key="${key}"]`);
-  if (el) syncBadge(el, 'badge-star', 'â­', watched.has(key));
+  if (el) syncBadge(el, 'badge-star', '⭐', watched.has(key));
   syncModalBtns();
 }
 
@@ -891,7 +891,7 @@ function savePriceFromModal() {
   ps.style.display = 'block'; setTimeout(() => ps.style.display = 'none', 1800);
 }
 
-// â”€â”€ Watchlist â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Watchlist ──────────────────────────────────────────────────────────────
 function openWatchlist() {
   const slots = SLOTS.filter(s => watched.has(sk(s)));
   document.getElementById('wl-sub').textContent = `${slots.length} card${slots.length !== 1 ? 's' : ''} watched`;
@@ -901,19 +901,19 @@ function openWatchlist() {
 
 function renderWatchlist(slots) {
   const body = document.getElementById('wl-body');
-  if (!slots.length) { body.innerHTML = '<div class="wl-empty">No cards watched yet.<span>Right-click any card â†’ â­ Watch</span></div>'; return; }
+  if (!slots.length) { body.innerHTML = '<div class="wl-empty">No cards watched yet.<span>Right-click any card → ⭐ Watch</span></div>'; return; }
   const bc = s => BC[s.v] || BC_DEFAULT;
   let h = `<table class="wt"><thead><tr><th>ID</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
   slots.forEach(s => {
     const key = sk(s), p = prices[key] || {}, b = bc(s);
-    const fv = v => v ? `<span class="wt-p">${v}</span>` : `<span class="wt-p na">â€”</span>`;
+    const fv = v => v ? `<span class="wt-p">${v}</span>` : `<span class="wt-p na">—</span>`;
     h += `<tr>
       <td class="wt-num">${s.id}</td>
       <td class="wt-name" onclick="jumpTo('${key}')">${s.name || s.id}</td>
       <td><span class="wt-badge" style="background:${b.bg};color:${b.col}">${varLabel(s)}</span></td>
       <td>${fv(p.raw)}</td><td>${fv(p.psa10)}</td>
-      <td style="font-size:10px;color:#282420">${p.date||'â€”'}</td>
-      <td><button class="wt-rm" onclick="unwatchRow('${key}')">âœ•</button></td>
+      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
+      <td><button class="wt-rm" onclick="unwatchRow('${key}')">✕</button></td>
     </tr>`;
   });
   body.innerHTML = h + '</tbody></table>';
@@ -929,11 +929,11 @@ function jumpTo(key) {
 function unwatchRow(key) {
   watched.delete(key); saveWatched();
   const el = document.querySelector(`.slot[data-key="${key}"]`);
-  if (el) syncBadge(el, 'badge-star', 'â­', false);
+  if (el) syncBadge(el, 'badge-star', '⭐', false);
   openWatchlist();
 }
 
-// â”€â”€ Missing list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Missing list ───────────────────────────────────────────────────────────
 function openMissingList() {
   const miss = SLOTS.filter(s => !owned.has(sk(s)));
   document.getElementById('ml-stats').textContent = `${miss.length} missing of ${TOTAL}`;
@@ -951,7 +951,7 @@ function openMissingList() {
     section.forEach(s => {
       const key = sk(s), p = prices[key];
       const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
-      const sfx = ` â€” ${varLabel(s)}`;
+      const sfx = ` — ${varLabel(s)}`;
       const chip = document.createElement('span'); chip.className = 'ml-chip';
       chip.textContent = `${s.id} ${s.name || ''}${sfx}${pt}`;
       chip.onclick = () => jumpTo(key);
@@ -964,11 +964,11 @@ function openMissingList() {
 
 function copyMissing() {
   const miss = SLOTS.filter(s => !owned.has(sk(s)));
-  let txt = `${BINDER.title} â€” Missing (${miss.length}/${TOTAL})\nGenerated ${new Date().toLocaleDateString()}\n${'â”€'.repeat(50)}\n`;
+  let txt = `${BINDER.title} — Missing (${miss.length}/${TOTAL})\nGenerated ${new Date().toLocaleDateString()}\n${'─'.repeat(50)}\n`;
   miss.forEach(s => {
     const p = prices[sk(s)];
     const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
-    txt += `  ${s.id}  ${s.name || ''}  â€” ${varLabel(s)}${pt}\n`;
+    txt += `  ${s.id}  ${s.name || ''}  — ${varLabel(s)}${pt}\n`;
   });
   navigator.clipboard.writeText(txt).then(() => {
     const b = document.querySelector('#ml-modal .btn-purple');
@@ -985,7 +985,7 @@ function confirmClear() {
   }
 }
 
-// â”€â”€ Manual sync (fallback) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Manual sync (fallback) ─────────────────────────────────────────────────
 const SYNC_KEYS_LOCAL = [BINDER.lsOwned, BINDER.lsWatched, BINDER.lsPrices];
 function openSync() { document.getElementById('sync-overlay').classList.add('open'); }
 function closeSyncModal() { document.getElementById('sync-overlay').classList.remove('open'); }
@@ -1005,12 +1005,12 @@ function doManualImport() {
   try {
     const data = JSON.parse(raw); let n = 0;
     SYNC_KEYS_LOCAL.forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
-    f.style.display='inline'; f.style.color='#4cff80'; f.textContent=`âœ“ Imported ${n} keys â€” reloadingâ€¦`;
+    f.style.display='inline'; f.style.color='#4cff80'; f.textContent=`✓ Imported ${n} keys — reloading…`;
     setTimeout(() => { closeSyncModal(); location.reload(); }, 1200);
   } catch(e) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Invalid data.'; }
 }
 
-// â”€â”€ Swipe to turn pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Swipe to turn pages ────────────────────────────────────────────────────
 (function(){
   const sp = document.getElementById('spread');
   let tx = null, ty = null;
@@ -1023,7 +1023,7 @@ function doManualImport() {
   }, { passive: true });
 })();
 
-// â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Init ───────────────────────────────────────────────────────────────────
 loadLayout(); buildLayoutPicker(); buildSectionBar(); loadLayout(); buildLayoutPicker(); buildSectionBar(); load(); updateProgress(); render();
 </script>
 </body>
