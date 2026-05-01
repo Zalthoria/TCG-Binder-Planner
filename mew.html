@@ -199,6 +199,7 @@ table.wt tr:hover td{background:#111}
 .section-chip:hover{border-color:#555;color:#aaa;background:#222}
 .section-chip.active{border-color:#9070e0;background:#1e1040;color:#9070e0}
 .v-rh .card-img-wrap{position:relative}.v-rh .card-img-wrap::after{content:'RH';position:absolute;top:4px;right:4px;background:linear-gradient(135deg,#b06aff,#ff6ab0);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:.5px;pointer-events:none}
+.v-rh .cimg{filter:hue-rotate(270deg) saturate(1.3)}
 </style>
 </head>
 <body>
@@ -374,6 +375,10 @@ const BINDER = {
 
 const BC = {
   'main':   { bg: '#181410', col: '#666'    },
+  'rh':     { bg: '#1a1028', col: '#b06aff'  },
+  'ir':     { bg: '#101828', col: '#4a9eff'  },
+  'ur':     { bg: '#1a2810', col: '#4cff80'  },
+  'sar':    { bg: '#2a1020', col: '#ff6ab0'  },
   'secret': { bg: '#2a2010', col: '#c89a3a' },
   'mur':    { bg: '#3a2000', col: '#ff9940' },
 };
@@ -436,14 +441,14 @@ const SLOTS = [
   {id:'MEW-027-RH',name:'Sandshrew (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_027_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-27'},
   {id:'MEW-028',name:'Sandslash',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_028_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-28'},
   {id:'MEW-028-RH',name:'Sandslash (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_028_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-28'},
-  {id:'MEW-029',name:'Nidoran♀',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_029_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-29'},
-  {id:'MEW-029-RH',name:'Nidoran♀ (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_029_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-29'},
+  {id:'MEW-029',name:'Nidoran\u2640',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_029_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-29'},
+  {id:'MEW-029-RH',name:'Nidoran\u2640 (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_029_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-29'},
   {id:'MEW-030',name:'Nidorina',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_030_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-30'},
   {id:'MEW-030-RH',name:'Nidorina (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_030_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-30'},
   {id:'MEW-031',name:'Nidoqueen',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_031_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-31'},
   {id:'MEW-031-RH',name:'Nidoqueen (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_031_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-31'},
-  {id:'MEW-032',name:'Nidoran♂',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_032_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-32'},
-  {id:'MEW-032-RH',name:'Nidoran♂ (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_032_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-32'},
+  {id:'MEW-032',name:'Nidoran\u2642',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_032_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-32'},
+  {id:'MEW-032-RH',name:'Nidoran\u2642 (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_032_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-32'},
   {id:'MEW-033',name:'Nidorino',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_033_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-33'},
   {id:'MEW-033-RH',name:'Nidorino (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_033_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-33'},
   {id:'MEW-034',name:'Nidoking',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_034_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-34'},
@@ -544,8 +549,8 @@ const SLOTS = [
   {id:'MEW-081-RH',name:'Magnemite (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_081_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-81'},
   {id:'MEW-082',name:'Magneton',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_082_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-82'},
   {id:'MEW-082-RH',name:'Magneton (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_082_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-82'},
-  {id:'MEW-083',name:'Farfetch'd',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_083_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-83'},
-  {id:'MEW-083-RH',name:'Farfetch'd (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_083_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-83'},
+  {id:'MEW-083',name:'Farfetch\'d',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_083_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-83'},
+  {id:'MEW-083-RH',name:'Farfetch\'d (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_083_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-83'},
   {id:'MEW-084',name:'Doduo',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_084_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-84'},
   {id:'MEW-084-RH',name:'Doduo (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_084_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-84'},
   {id:'MEW-085',name:'Dodrio',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_085_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-85'},
@@ -690,18 +695,18 @@ const SLOTS = [
   {id:'MEW-154-RH',name:'Antique Old Amber (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_154_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-154'},
   {id:'MEW-155',name:'Big Air Balloon',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_155_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-155'},
   {id:'MEW-155-RH',name:'Big Air Balloon (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_155_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-155'},
-  {id:'MEW-156',name:'Bill's Transfer',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_156_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-156'},
-  {id:'MEW-156-RH',name:'Bill's Transfer (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_156_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-156'},
+  {id:'MEW-156',name:'Bill\'s Transfer',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_156_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-156'},
+  {id:'MEW-156-RH',name:'Bill\'s Transfer (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_156_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-156'},
   {id:'MEW-157',name:'Cycling Road',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_157_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-157'},
   {id:'MEW-157-RH',name:'Cycling Road (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_157_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-157'},
-  {id:'MEW-158',name:'Daisy's Help',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_158_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-158'},
-  {id:'MEW-158-RH',name:'Daisy's Help (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_158_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-158'},
+  {id:'MEW-158',name:'Daisy\'s Help',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_158_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-158'},
+  {id:'MEW-158-RH',name:'Daisy\'s Help (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_158_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-158'},
   {id:'MEW-159',name:'Energy Sticker',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_159_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-159'},
   {id:'MEW-159-RH',name:'Energy Sticker (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_159_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-159'},
-  {id:'MEW-160',name:'Erika's Invitation',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_160_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-160'},
-  {id:'MEW-160-RH',name:'Erika's Invitation (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_160_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-160'},
-  {id:'MEW-161',name:'Giovanni's Charisma',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_161_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-161'},
-  {id:'MEW-161-RH',name:'Giovanni's Charisma (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_161_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-161'},
+  {id:'MEW-160',name:'Erika\'s Invitation',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_160_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-160'},
+  {id:'MEW-160-RH',name:'Erika\'s Invitation (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_160_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-160'},
+  {id:'MEW-161',name:'Giovanni\'s Charisma',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_161_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-161'},
+  {id:'MEW-161-RH',name:'Giovanni\'s Charisma (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_161_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-161'},
   {id:'MEW-162',name:'Grabber',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_162_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-162'},
   {id:'MEW-162-RH',name:'Grabber (RH)',v:'rh',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_162_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-162'},
   {id:'MEW-163',name:'Leftovers',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_163_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-163'},
@@ -738,24 +743,24 @@ const SLOTS = [
   {id:'MEW-191',name:'Jynx ex',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_191_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-191'},
   {id:'MEW-192',name:'Zapdos ex',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_192_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-192'},
   {id:'MEW-193',name:'Mew ex',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_193_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-193'},
-  {id:'MEW-194',name:'Bill's Transfer',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_194_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-194'},
-  {id:'MEW-195',name:'Daisy's Help',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_195_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-195'},
-  {id:'MEW-196',name:'Erika's Invitation',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_196_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-196'},
-  {id:'MEW-197',name:'Giovanni's Charisma',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_197_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-197'},
+  {id:'MEW-194',name:'Bill\'s Transfer',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_194_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-194'},
+  {id:'MEW-195',name:'Daisy\'s Help',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_195_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-195'},
+  {id:'MEW-196',name:'Erika\'s Invitation',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_196_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-196'},
+  {id:'MEW-197',name:'Giovanni\'s Charisma',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_197_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-197'},
   {id:'MEW-198',name:'Venusaur ex',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_198_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-198'},
   {id:'MEW-199',name:'Charizard ex',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_199_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-199'},
   {id:'MEW-200',name:'Blastoise ex',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_200_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-200'},
   {id:'MEW-201',name:'Alakazam ex',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_201_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-201'},
   {id:'MEW-202',name:'Zapdos ex',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_202_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-202'},
-  {id:'MEW-203',name:'Erika's Invitation',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_203_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-203'},
-  {id:'MEW-204',name:'Giovanni's Charisma',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_204_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-204'},
+  {id:'MEW-203',name:'Erika\'s Invitation',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_203_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-203'},
+  {id:'MEW-204',name:'Giovanni\'s Charisma',v:'sar',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_204_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-204'},
   {id:'MEW-205',name:'Mew ex',v:'mur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_205_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-205'},
   {id:'MEW-206',name:'Switch',v:'mur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_206_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-206'},
   {id:'MEW-207',name:'Psychic Energy',v:'mur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_207_R_EN_SM.png',pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet-151/sv2a-207'},
 ];
 
 function sk(s)       { return s.id; }
-function varLabel(s) { return {main:'Main',secret:'Secret',mur:'MUR'}[s.v]||s.v; }
+function varLabel(s) { return {main:'Normal',rh:'Rev. Holo',ir:'Art Rare',ur:'Ultra Rare',sar:'Special AR',secret:'Secret',mur:'Secret'}[s.v]||s.v; }
 function imgUrl(s)   { return s.img||''; }
 function pcUrl(s)    { return s.pc||'#'; }
 
@@ -779,12 +784,12 @@ function makeCover() {
 }
 
 const SDEFS = [
-  { label: '#001-051 * Normal+RH', f: s => { const n=parseInt(s.id.split('-')[1]); return n>=1&&n<=51; }},
-  { label: '#052-105 * Normal+RH', f: s => { const n=parseInt(s.id.split('-')[1]); return n>=52&&n<=105; }},
-  { label: '#106-165 * Normal+RH', f: s => { const n=parseInt(s.id.split('-')[1]); return n>=106&&n<=165; }},
-  { label: '166-181 * Art Rares',  f: s => { const n=parseInt(s.id.split('-')[1]); return n>=166&&n<=181; }},
-  { label: '182-197 * Ultra Rares',f: s => { const n=parseInt(s.id.split('-')[1]); return n>=182&&n<=197; }},
-  { label: '198-207 * SAR+Secrets',f: s => { const n=parseInt(s.id.split('-')[1]); return n>=198&&n<=207; }},
+  { label: '#001-051 Normal+RH', f: s => { const n=parseInt(s.id.split('-')[1]); return n>=1&&n<=51; }},
+  { label: '#052-105 Normal+RH', f: s => { const n=parseInt(s.id.split('-')[1]); return n>=52&&n<=105; }},
+  { label: '#106-165 Normal+RH', f: s => { const n=parseInt(s.id.split('-')[1]); return n>=106&&n<=165; }},
+  { label: '166-181 Art Rares',  f: s => { const n=parseInt(s.id.split('-')[1]); return n>=166&&n<=181; }},
+  { label: '182-197 Ultra Rares',f: s => { const n=parseInt(s.id.split('-')[1]); return n>=182&&n<=197; }},
+  { label: '198-207 SAR+Secrets',f: s => { const n=parseInt(s.id.split('-')[1]); return n>=198&&n<=207; }},
 ];
 
 // ════════════════════════════════════════════════════════════════════════════
