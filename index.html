@@ -961,10 +961,11 @@ function setActive(ids) { localStorage.setItem(LS_ACTIVE, JSON.stringify(ids)); 
 
 
 function ensureDefaults() {
-
-
-
-  if (!getActive()) setActive([...DEFAULT_BINDER_IDS]);
+  const cur = getActive() || [];
+  const def = DEFAULT_BINDER_IDS;
+  const reordered = def.filter(id => cur.length === 0 || cur.includes(id))
+                      .concat(cur.filter(id => !def.includes(id)));
+  setActive(reordered);
 
 
 
@@ -984,7 +985,9 @@ function renderGrid() {
 
 
 
-  const ids = getActive() || DEFAULT_BINDER_IDS;
+  const activeSet = new Set(getActive() || DEFAULT_BINDER_IDS);
+  const ids = DEFAULT_BINDER_IDS.filter(id => activeSet.has(id))
+              .concat([...activeSet].filter(id => !DEFAULT_BINDER_IDS.includes(id)));
 
 
 
