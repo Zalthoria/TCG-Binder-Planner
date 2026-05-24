@@ -959,7 +959,13 @@ function setActive(ids) { localStorage.setItem(LS_ACTIVE, JSON.stringify(ids)); 
 
 
 function ensureDefaults() {
-  if (!getActive()) setActive([...DEFAULT_BINDER_IDS]);
+  const cur = getActive();
+  if (!cur) { setActive([...DEFAULT_BINDER_IDS]); return; }
+  // Merge any new DEFAULT binders that aren't in the cached list yet
+  const merged = [...new Set([...cur, ...DEFAULT_BINDER_IDS.filter(id => cur.includes(id) || true)])];
+  // Actually: add any DEFAULT_BINDER_IDS missing from cur
+  const toAdd = DEFAULT_BINDER_IDS.filter(id => !cur.includes(id));
+  if (toAdd.length > 0) setActive([...cur, ...toAdd]);
 
 
 
