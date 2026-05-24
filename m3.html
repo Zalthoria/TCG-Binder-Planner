@@ -1,6 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+// ── Cloud Auto-Sync (JSONbin) ─────────────────────────────────────────────
+(function() {
+  const JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
+  const JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
+  let pushTimer = null;
+  let _syncing = false;
+
+  function allData() {
+    const d = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && /owned|watched|prices|layout|active/.test(k)) d[k] = localStorage.getItem(k);
+    }
+    return d;
+  }
+
+  window._cloudPush = async function() {
+    try {
+      const payload = JSON.stringify({ v:1, updated: Date.now(), data: allData() });
+      const r = await fetch(JURL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': JKEY },
+        body: payload
+      });
+      console.log('[Sync] pushed', r.status);
+    } catch(e) { console.warn('[Sync] push failed', e); }
+  };
+
+  window._cloudPull = async function() {
+    try {
+      const r = await fetch(JURL, { headers: { 'X-Master-Key': JKEY } });
+      const j = await r.json();
+      const cloud = j.record;
+      if (!cloud || !cloud.data || !cloud.updated) return;
+      const cloudTs = cloud.updated;
+      const localTs = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
+      console.log('[Sync] cloud:', cloudTs, 'local:', localTs);
+      if (cloudTs > localTs) {
+        _syncing = true;
+        Object.entries(cloud.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch(e){} });
+        localStorage.setItem('tcg_sync_ts', String(cloudTs));
+        _syncing = false;
+        console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
+        // Re-render after pull
+        setTimeout(() => {
+          if (typeof render === 'function') render();
+          if (typeof renderGrid === 'function') renderGrid();
+          if (typeof updateProgress === 'function') updateProgress();
+          if (typeof load === 'function') { load(); render(); updateProgress(); }
+        }, 100);
+      }
+    } catch(e) { console.warn('[Sync] pull failed', e); }
+  };
+
+  function schedulePush() {
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(window._cloudPush, 1500);
+  }
+
+  // Intercept localStorage writes
+  const _orig = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function(k, v) {
+    _orig(k, v);
+    if (!_syncing && /owned|watched|prices/.test(k)) {
+      _orig('tcg_sync_ts', String(Date.now()));
+      schedulePush();
+    }
+  };
+
+  // Pull on load
+  window.addEventListener('load', window._cloudPull);
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#181410">
@@ -1075,73 +1149,6 @@ function doManualImport() {
 loadLayout(); buildLayoutPicker(); buildSectionBar(); loadLayout(); buildLayoutPicker(); buildSectionBar(); load(); updateProgress(); render();
 </script>
 
-<script>
-// ── Cloud Auto-Sync (JSONbin) ─────────────────────────────────────────────
-(function() {
-  const KEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
-  const URL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
-  let pushTimer = null;
-  let syncing = false;
-
-  function allBinderData() {
-    const d = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && /owned|watched|prices|layout|active/.test(k)) {
-        d[k] = localStorage.getItem(k);
-      }
-    }
-    return d;
-  }
-
-  async function push() {
-    try {
-      await fetch(URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': KEY },
-        body: JSON.stringify({ v:1, updated: Date.now(), data: allBinderData() })
-      });
-    } catch(e) {}
-  }
-
-  async function pull() {
-    try {
-      const r = await fetch(URL, { headers: { 'X-Master-Key': KEY } });
-      const j = await r.json();
-      const cloud = j.record;
-      if (!cloud || !cloud.data) return;
-      const cloudTime  = cloud.updated || 0;
-      const localTime  = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
-      if (cloudTime > localTime) {
-        syncing = true;
-        for (const [k, v] of Object.entries(cloud.data)) localStorage.setItem(k, v);
-        syncing = false;
-        if (typeof render === 'function') render();
-        if (typeof renderGrid === 'function') renderGrid();
-        if (typeof updateProgress === 'function') updateProgress();
-      }
-    } catch(e) {}
-  }
-
-  function schedulePush() {
-    clearTimeout(pushTimer);
-    pushTimer = setTimeout(push, 1500);
-  }
-
-  // Intercept localStorage writes
-  const _set = localStorage.setItem.bind(localStorage);
-  localStorage.setItem = function(k, v) {
-    _set(k, v);
-    if (!syncing && /owned|watched|prices/.test(k)) {
-      _set('tcg_sync_ts', Date.now().toString());
-      schedulePush();
-    }
-  };
-
-  // Pull on load
-  pull();
-})();
-</script>
 
 </body>
 </html>
