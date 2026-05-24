@@ -3,77 +3,75 @@
 <head>
 <script>
 // ── Cloud Auto-Sync (JSONbin) ─────────────────────────────────────────────
-(function() {
-  const JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
-  const JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
-  let pushTimer = null;
-  let _syncing = false;
+const _JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
+const _JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
+let _pushTimer = null;
+let _syncing = false;
 
-  function allData() {
-    const d = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && /owned|watched|prices|layout|active/.test(k)) d[k] = localStorage.getItem(k);
-    }
-    return d;
+function _allData() {
+  const d = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && /owned|watched|prices|layout|active/.test(k)) d[k] = localStorage.getItem(k);
   }
+  return d;
+}
 
-  window._cloudPush = async function() {
-    try {
-      const payload = JSON.stringify({ v:1, updated: Date.now(), data: allData() });
-      const r = await fetch(JURL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': JKEY },
-        body: payload
-      });
-      console.log('[Sync] pushed', r.status);
-    } catch(e) { console.warn('[Sync] push failed', e); }
-  };
+async function _cloudPush() {
+  try {
+    const r = await fetch(_JURL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JKEY },
+      body: JSON.stringify({ v:1, updated: Date.now(), data: _allData() })
+    });
+    console.log('[Sync] pushed', r.status);
+  } catch(e) { console.warn('[Sync] push failed', e); }
+}
 
-  window._cloudPull = async function() {
-    try {
-      const r = await fetch(JURL, { headers: { 'X-Master-Key': JKEY } });
-      const j = await r.json();
-      const cloud = j.record;
-      if (!cloud || !cloud.data || !cloud.updated) return;
-      const cloudTs = cloud.updated;
-      const localTs = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
-      console.log('[Sync] cloud:', cloudTs, 'local:', localTs);
-      if (cloudTs > localTs) {
-        _syncing = true;
-        Object.entries(cloud.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch(e){} });
-        localStorage.setItem('tcg_sync_ts', String(cloudTs));
-        _syncing = false;
-        console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
-        // Re-render after pull
-        setTimeout(() => {
-          if (typeof render === 'function') render();
-          if (typeof renderGrid === 'function') renderGrid();
-          if (typeof updateProgress === 'function') updateProgress();
-          if (typeof load === 'function') { load(); render(); updateProgress(); }
-        }, 100);
-      }
-    } catch(e) { console.warn('[Sync] pull failed', e); }
-  };
-
-  function schedulePush() {
-    clearTimeout(pushTimer);
-    pushTimer = setTimeout(window._cloudPush, 1500);
-  }
-
-  // Intercept localStorage writes
-  const _orig = localStorage.setItem.bind(localStorage);
-  localStorage.setItem = function(k, v) {
-    _orig(k, v);
-    if (!_syncing && /owned|watched|prices/.test(k)) {
-      _orig('tcg_sync_ts', String(Date.now()));
-      schedulePush();
+async function _cloudPull() {
+  try {
+    const r = await fetch(_JURL, { headers: { 'X-Master-Key': _JKEY } });
+    const j = await r.json();
+    const cloud = j.record;
+    if (!cloud || !cloud.data || !cloud.updated) { console.log('[Sync] nothing to pull'); return; }
+    const cloudTs = cloud.updated;
+    const localTs = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
+    console.log('[Sync] cloud ts:', cloudTs, 'local ts:', localTs);
+    if (cloudTs > localTs) {
+      _syncing = true;
+      Object.entries(cloud.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch(e){} });
+      localStorage.setItem('tcg_sync_ts', String(cloudTs));
+      _syncing = false;
+      console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
+      setTimeout(() => {
+        if (typeof render === 'function') render();
+        if (typeof renderGrid === 'function') renderGrid();
+        if (typeof updateProgress === 'function') updateProgress();
+        if (typeof load === 'function') { load(); render(); updateProgress(); }
+      }, 200);
+    } else {
+      console.log('[Sync] local is up to date');
     }
-  };
+  } catch(e) { console.warn('[Sync] pull failed', e); }
+}
 
-  // Pull on load
-  window.addEventListener('load', window._cloudPull);
-})();
+function _schedulePush() {
+  clearTimeout(_pushTimer);
+  _pushTimer = setTimeout(_cloudPush, 1500);
+}
+
+// Intercept localStorage writes to auto-push on changes
+const _origSet = localStorage.setItem.bind(localStorage);
+localStorage.setItem = function(k, v) {
+  _origSet(k, v);
+  if (!_syncing && /owned|watched|prices/.test(k)) {
+    _origSet('tcg_sync_ts', String(Date.now()));
+    _schedulePush();
+  }
+};
+
+// Pull on page load
+window.addEventListener('load', _cloudPull);
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
