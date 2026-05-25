@@ -44,6 +44,9 @@ async function _cloudPull() {
       _syncing = false;
       console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
       setTimeout(() => {
+        if (typeof loadLayout === 'function') loadLayout();
+        if (typeof applyLayout === 'function' && typeof currentCols !== 'undefined') applyLayout(currentCols, currentRows, false);
+        if (typeof buildLayoutPicker === 'function') buildLayoutPicker();
         if (typeof render === 'function') render();
         if (typeof renderGrid === 'function') renderGrid();
         if (typeof updateProgress === 'function') updateProgress();
