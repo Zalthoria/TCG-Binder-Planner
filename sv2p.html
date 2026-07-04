@@ -440,7 +440,21 @@ const BINDER = {
   lsWatched:'sv2p_snow_hazard_watched_v1',
   lsPrices: 'sv2p_snow_hazard_prices_v1',
   cols: 3,
-  legend: [
+  legend: [
+    { label: 'Main Set',    color: '#666'    },
+    { label: 'Secret Rare', color: '#c89a3a' },
+    { label: 'MUR',         color: '#ff9940' },
+  ],
+};
+
+const BC = {
+  'main':   { bg: '#181410', col: '#666'    },
+  'secret': { bg: '#2a2010', col: '#c89a3a' },
+  'mur':    { bg: '#3a2000', col: '#ff9940' },
+};
+const BC_DEFAULT = { bg: '#181410', col: '#666' };
+
+const SLOTS = [
   {id:'SV2P-1',name:'Surskit',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2P/SV2P_1_R_JP_LG.png'},
   {id:'SV2P-2',name:'Masquerain',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2P/SV2P_2_R_JP_LG.png'},
   {id:'SV2P-3',name:'Combee',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2P/SV2P_3_R_JP_LG.png'},
