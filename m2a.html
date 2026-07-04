@@ -7,6 +7,7 @@ const _JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
 const _JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
 let _pushTimer = null;
 let _syncing = false;
+let _lastPushTs = 0;
 
 function _allData() {
   const d = {};
@@ -19,11 +20,14 @@ function _allData() {
 
 async function _cloudPush() {
   try {
+    const ts = Date.now();
     const r = await fetch(_JURL, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JKEY },
-      body: JSON.stringify({ v:1, updated: Date.now(), data: _allData() })
+      body: JSON.stringify({ v:1, updated: ts, data: _allData() })
     });
+    _lastPushTs = ts;
+    localStorage.setItem('tcg_sync_ts', String(ts));
     console.log('[Sync] pushed', r.status);
   } catch(e) { console.warn('[Sync] push failed', e); }
 }
@@ -52,6 +56,9 @@ async function _cloudPull() {
         if (typeof updateProgress === 'function') updateProgress();
         if (typeof load === 'function') { load(); render(); updateProgress(); }
       }, 200);
+    } else if (localTs > cloudTs) {
+      console.log('[Sync] local newer than cloud - pushing local data');
+      await _cloudPush();
     } else {
       console.log('[Sync] local is up to date');
     }
@@ -60,10 +67,10 @@ async function _cloudPull() {
 
 function _schedulePush() {
   clearTimeout(_pushTimer);
-  _pushTimer = setTimeout(_cloudPush, 1500);
+  _pushTimer = setTimeout(_cloudPush, 300);
 }
 
-// Intercept localStorage writes to auto-push on changes
+// Intercept localStorage writes to auto-push
 const _origSet = localStorage.setItem.bind(localStorage);
 localStorage.setItem = function(k, v) {
   _origSet(k, v);
@@ -75,6 +82,20 @@ localStorage.setItem = function(k, v) {
 
 // Pull on page load
 window.addEventListener('load', _cloudPull);
+
+// Force flush pending push on tab hidden / page unload
+function _flushPush() {
+  if (_pushTimer) {
+    clearTimeout(_pushTimer);
+    _pushTimer = null;
+    _cloudPush();
+  }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') _flushPush();
+});
+window.addEventListener('pagehide', _flushPush);
+window.addEventListener('beforeunload', _flushPush);
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
