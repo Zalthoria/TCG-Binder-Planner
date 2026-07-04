@@ -11,7 +11,26 @@ const _JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
 const _JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
 let _pushTimer = null;
 let _syncing = false;
-let _lastPushTs = 0;
+
+function _syncBadge() {
+  let b = document.getElementById('_sync_badge');
+  if (!b && document.body) {
+    b = document.createElement('div');
+    b.id = '_sync_badge';
+    b.style.cssText = 'position:fixed;bottom:72px;right:12px;z-index:9998;background:#1a1815;border:1px solid #2a2418;border-radius:20px;padding:6px 12px;font:600 11px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#7a6f5c;letter-spacing:.3px;box-shadow:0 4px 12px rgba(0,0,0,.4);opacity:0;transition:opacity .3s;pointer-events:none';
+    document.body.appendChild(b);
+  }
+  return b;
+}
+function _showStatus(text, color, ttl) {
+  const b = _syncBadge();
+  if (!b) return;
+  b.textContent = text;
+  b.style.color = color || '#7a6f5c';
+  b.style.opacity = '1';
+  if (b._timer) clearTimeout(b._timer);
+  if (ttl > 0) b._timer = setTimeout(() => { b.style.opacity = '0'; }, ttl);
+}
 
 function _allData() {
   const d = {};
@@ -24,33 +43,36 @@ function _allData() {
 
 async function _cloudPush() {
   try {
+    _showStatus('⇅ Syncing…', '#c89a3a', 0);
     const ts = Date.now();
     const r = await fetch(_JURL, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JKEY },
       body: JSON.stringify({ v:1, updated: ts, data: _allData() })
     });
-    _lastPushTs = ts;
     localStorage.setItem('tcg_sync_ts', String(ts));
-    console.log('[Sync] pushed', r.status);
-  } catch(e) { console.warn('[Sync] push failed', e); }
+    if (r.ok) _showStatus('✓ Synced', '#5c9a6a', 2000);
+    else _showStatus('✗ Sync failed', '#c85c5c', 4000);
+  } catch(e) {
+    _showStatus('✗ Offline', '#c85c5c', 4000);
+  }
 }
 
 async function _cloudPull() {
   try {
+    _showStatus('⇅ Loading…', '#c89a3a', 0);
     const r = await fetch(_JURL, { headers: { 'X-Master-Key': _JKEY } });
     const j = await r.json();
     const cloud = j.record;
-    if (!cloud || !cloud.data || !cloud.updated) { console.log('[Sync] nothing to pull'); return; }
+    if (!cloud || !cloud.data || !cloud.updated) { _showStatus('✓ Synced', '#5c9a6a', 2000); return; }
     const cloudTs = cloud.updated;
     const localTs = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
-    console.log('[Sync] cloud ts:', cloudTs, 'local ts:', localTs);
     if (cloudTs > localTs) {
       _syncing = true;
       Object.entries(cloud.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch(e){} });
       localStorage.setItem('tcg_sync_ts', String(cloudTs));
       _syncing = false;
-      console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
+      _showStatus('✓ Loaded from cloud', '#5c9a6a', 3000);
       setTimeout(() => {
         if (typeof loadLayout === 'function') loadLayout();
         if (typeof applyLayout === 'function' && typeof currentCols !== 'undefined') applyLayout(currentCols, currentRows, false);
@@ -61,12 +83,11 @@ async function _cloudPull() {
         if (typeof load === 'function') { load(); render(); updateProgress(); }
       }, 200);
     } else if (localTs > cloudTs) {
-      console.log('[Sync] local newer than cloud - pushing local data');
       await _cloudPush();
     } else {
-      console.log('[Sync] local is up to date');
+      _showStatus('✓ Synced', '#5c9a6a', 2000);
     }
-  } catch(e) { console.warn('[Sync] pull failed', e); }
+  } catch(e) { _showStatus('✗ Offline', '#c85c5c', 4000); }
 }
 
 function _schedulePush() {
@@ -74,7 +95,6 @@ function _schedulePush() {
   _pushTimer = setTimeout(_cloudPush, 300);
 }
 
-// Intercept localStorage writes to auto-push
 const _origSet = localStorage.setItem.bind(localStorage);
 localStorage.setItem = function(k, v) {
   _origSet(k, v);
@@ -84,16 +104,10 @@ localStorage.setItem = function(k, v) {
   }
 };
 
-// Pull on page load
 window.addEventListener('load', _cloudPull);
 
-// Force flush pending push on tab hidden / page unload
 function _flushPush() {
-  if (_pushTimer) {
-    clearTimeout(_pushTimer);
-    _pushTimer = null;
-    _cloudPush();
-  }
+  if (_pushTimer) { clearTimeout(_pushTimer); _pushTimer = null; _cloudPush(); }
 }
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') _flushPush();
@@ -101,8 +115,6 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('pagehide', _flushPush);
 window.addEventListener('beforeunload', _flushPush);
 </script>
-
-
 <meta charset="UTF-8">
 
 
@@ -577,19 +589,12 @@ table.wt tr:hover td{background:#111}
 /* ── Bottom nav ───────────────────────────────────────────────────────────── */
 
 
-#binder-bnav{position:fixed;bottom:0;left:0;right:0;z-index:600;background:#100e0c;border-top:1px solid #2a2418;display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:52px;box-shadow:0 -2px 14px rgba(0,0,0,.6)}
-
-
-#binder-bnav .bnav-btn{background:#2a2820;border:2px solid #c89a3a;border-radius:10px;padding:12px 28px;font-size:16px;font-weight:700;color:#c89a3a;cursor:pointer;font-family:inherit;min-width:110px;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s;letter-spacing:.5px}
-
-
+#binder-bnav{position:fixed;bottom:0;left:0;right:0;z-index:600;background:#100e0c;border-top:1px solid #2a2418;display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 10px;height:64px;box-shadow:0 -2px 14px rgba(0,0,0,.6)}
+#binder-bnav .bnav-btn{background:#2a2820;border:2px solid #c89a3a;border-radius:12px;padding:14px 32px;font-size:17px;font-weight:700;color:#c89a3a;cursor:pointer;font-family:inherit;min-width:130px;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s;letter-spacing:.5px}
+#binder-bnav .bnav-info{background:#181410;border:1px solid #2a2418;border-radius:20px;padding:8px 14px;font-size:12px;font-weight:600;color:#8a7a5a;letter-spacing:.3px;min-width:70px;text-align:center}
 #binder-bnav .bnav-btn:hover:not(:disabled){background:#3a3020;color:#e8b84a}
-
-
-#binder-bnav .bnav-btn:active{background:#3a3020}
-
-
-#binder-bnav .bnav-btn:disabled{opacity:.25;cursor:default;border-color:#555;color:#555}
+#binder-bnav .bnav-btn:active{background:#c89a3a;color:#0e0d0a}
+#binder-bnav .bnav-btn:disabled{opacity:.35;cursor:not-allowed;border-color:#3a3020}
 
 
 #binder-bnav .bnav-info{font-size:12px;color:#555;text-align:center;flex:1;font-variant-numeric:tabular-nums}
