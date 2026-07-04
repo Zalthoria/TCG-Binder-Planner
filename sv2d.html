@@ -1,459 +1,1467 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<script>
-// ── Cloud Auto-Sync (JSONbin) ─────────────────────────────────────────────
-const _JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
-const _JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
-let _pushTimer = null;
-let _syncing = false;
-
-function _allData() {
-  const d = {};
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k && /owned|watched|prices|layout|active/.test(k)) d[k] = localStorage.getItem(k);
-  }
-  return d;
-}
-
-async function _cloudPush() {
-  try {
-    const r = await fetch(_JURL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JKEY },
-      body: JSON.stringify({ v:1, updated: Date.now(), data: _allData() })
-    });
-    console.log('[Sync] pushed', r.status);
-  } catch(e) { console.warn('[Sync] push failed', e); }
-}
-
-async function _cloudPull() {
-  try {
-    const r = await fetch(_JURL, { headers: { 'X-Master-Key': _JKEY } });
-    const j = await r.json();
-    const cloud = j.record;
-    if (!cloud || !cloud.data || !cloud.updated) { console.log('[Sync] nothing to pull'); return; }
-    const cloudTs = cloud.updated;
-    const localTs = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
-    console.log('[Sync] cloud ts:', cloudTs, 'local ts:', localTs);
-    if (cloudTs > localTs) {
-      _syncing = true;
-      Object.entries(cloud.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch(e){} });
-      localStorage.setItem('tcg_sync_ts', String(cloudTs));
-      _syncing = false;
-      console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
-      setTimeout(() => {
-        if (typeof loadLayout === 'function') loadLayout();
-        if (typeof applyLayout === 'function' && typeof currentCols !== 'undefined') applyLayout(currentCols, currentRows, false);
-        if (typeof buildLayoutPicker === 'function') buildLayoutPicker();
-        if (typeof render === 'function') render();
-        if (typeof renderGrid === 'function') renderGrid();
-        if (typeof updateProgress === 'function') updateProgress();
-        if (typeof load === 'function') { load(); render(); updateProgress(); }
-      }, 200);
-    } else {
-      console.log('[Sync] local is up to date');
-    }
-  } catch(e) { console.warn('[Sync] pull failed', e); }
-}
-
-function _schedulePush() {
-  clearTimeout(_pushTimer);
-  _pushTimer = setTimeout(_cloudPush, 1500);
-}
-
-// Intercept localStorage writes to auto-push on changes
-const _origSet = localStorage.setItem.bind(localStorage);
-localStorage.setItem = function(k, v) {
-  _origSet(k, v);
-  if (!_syncing && /owned|watched|prices/.test(k)) {
-    _origSet('tcg_sync_ts', String(Date.now()));
-    _schedulePush();
-  }
-};
-
-// Pull on page load
-window.addEventListener('load', _cloudPull);
-</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#181410">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="TCG Binders">
-<title id="page-title">M4 Ninja Spinner Master Set</title>
-<script src="gist-sync.js"></script>
-<style>
-/* ── Reset & base ─────────────────────────────────────────────────────────── */
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 12px 80px}
-
-/* ── Toolbar ──────────────────────────────────────────────────────────────── */
-.app-title{font-size:16px;font-weight:700;color:#fff}
-.app-sub{font-size:11px;color:#555;margin-top:2px}
-.toolbar{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-top:14px}
-.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-input[type=text]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:6px 10px;font-size:13px;color:#ddd;width:150px;outline:none}
-input[type=text]:focus{border-color:#666}
-.clr{background:none;border:none;color:#555;cursor:pointer;font-size:14px;padding:0 4px}.clr:hover{color:#aaa}
-.nav{display:flex;align-items:center;gap:5px}
-.nb{background:#2a2820;border:2px solid #c89a3a;border-radius:9px;padding:8px 18px;font-size:14px;font-weight:700;color:#c89a3a;cursor:pointer;font-family:inherit;letter-spacing:.5px;transition:background .12s,color .12s}.nb:hover:not(:disabled){background:#3a3020;color:#e8b84a}.nb:disabled{opacity:.25;cursor:default;border-color:#555;color:#555}.nb:hover:not(:disabled){background:#2a2820}.nb:disabled{opacity:.3;cursor:default}
-input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:5px 6px;font-size:13px;color:#ddd;width:48px;text-align:center;outline:none;font-family:inherit}
-.pc{font-size:12px;color:#555;white-space:nowrap}
-
-/* ── Action bar ───────────────────────────────────────────────────────────── */
-.action-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.prog-wrap{flex:1;min-width:140px;height:6px;background:#1e1c18;border-radius:999px;overflow:hidden}
-.prog-bar{height:100%;background:#c89a3a;border-radius:999px;transition:width .3s}
-.prog-text{font-size:11px;color:#666;white-space:nowrap}
-.btn{padding:6px 13px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid}
-.btn-gold{background:#1e1c18;border-color:#3a3020;color:#c89a3a}.btn-gold:hover{background:#2a2010}
-.btn-purple{background:#1e1c18;border-color:#2a2040;color:#9070e0}.btn-purple:hover{background:#22183a}
-.btn-dim{background:#1e1c18;border-color:#2a2828;color:#555}.btn-dim:hover{background:#2a2820;color:#aaa}
-.filter-lbl{display:flex;align-items:center;gap:5px;font-size:12px;color:#666;cursor:pointer;user-select:none}.filter-lbl input{accent-color:#c89a3a}
-
-/* ── Legend ───────────────────────────────────────────────────────────────── */
-.legend{width:100%;max-width:1100px;display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px;font-size:11px;color:#555}
-.lv{display:flex;align-items:center;gap:5px}
-.ld{display:inline-block;width:10px;height:10px;border-radius:2px;border:2px solid #555;background:transparent;flex-shrink:0}
-
-/* ── Spread ───────────────────────────────────────────────────────────────── */
-.alert{width:100%;max-width:1100px;font-size:12px;color:#c06040;margin-bottom:6px;display:none}
-.spread-info{font-size:11px;color:#252220;text-align:center;margin-bottom:5px;letter-spacing:.06em}
-.spread{width:100%;max-width:1100px;display:flex;background:#0d0b09;border:2px solid #252018;border-radius:16px;overflow:hidden;box-shadow:0 10px 50px rgba(0,0,0,.7)}
-.spine{width:20px;flex-shrink:0;background:linear-gradient(to right,#080706,#1c1814,#1c1814,#080706)}
-#lp,#rp{flex:1;min-width:0;overflow:hidden}
-.bpage{flex:1;padding:11px;min-width:0}
-.pg-lbl{font-size:9px;color:#252220;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
-.blank-pg{flex:1;background:#0e0c0a}
-.hide-owned .slot.owned{display:none}
-
-/* ── Cover page ───────────────────────────────────────────────────────────── */
-.cover-pg{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0f0d0a}
-.cover-box{background:#181410;border:1px solid #2a2418;border-radius:9px;padding:12px 18px;font-size:11px;color:#555;line-height:2.1;text-align:center}
-
-/* ── Grid & slots ─────────────────────────────────────────────────────────── */
-.grid{display:grid;grid-template-columns:repeat(var(--binder-cols,3),1fr);gap:6px}
-.slot{background:#0b0a08;border-radius:6px;cursor:pointer;transition:border-color .12s,transform .1s;position:relative;overflow:hidden;border:2px solid #252018}
-.slot:hover{transform:scale(1.04);z-index:5}
-.slot.empty{border:2px dashed #181614;cursor:default;background:transparent;overflow:hidden}
-.slot.empty:hover{transform:none;border-color:#181614}
-.slot.owned .cimg,.slot.owned .cph{opacity:.38;filter:brightness(.6)}
-.badge-owned{position:absolute;top:3px;right:3px;font-size:12px;font-weight:700;color:#4cff80;text-shadow:0 0 6px rgba(60,255,120,.5);pointer-events:none;z-index:4;line-height:1}
-.badge-star{position:absolute;top:3px;left:3px;font-size:11px;pointer-events:none;z-index:4;line-height:1}
-.badge-price{position:absolute;bottom:23px;left:0;right:0;font-size:8px;font-weight:700;color:#c89a3a;pointer-events:none;z-index:4;text-align:center;background:rgba(11,10,8,.85);padding:1px 0}
-.cimg{width:100%;aspect-ratio:63/88;object-fit:cover;display:block;background:#0d0c0a}
-.cph{width:100%;aspect-ratio:63/88;background:#0d0c0a;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px}
-.ph-n{font-size:10px;color:#2a2826;font-weight:600}
-.ph-nm{font-size:8px;color:#222;text-align:center}
-.clbl{padding:3px 4px 4px;background:#060504}
-.cnum{font-size:8px;color:#2a2826;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cnm{font-size:9px;font-weight:500;color:#888;line-height:1.25;margin:1px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vbg{display:inline-block;font-size:7px;padding:1px 4px;border-radius:999px;font-weight:600;line-height:1.5}
-
-/* ── Card detail modal ────────────────────────────────────────────────────── */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
-.modal.open{display:flex}
-.mbox{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:340px;width:100%;margin:auto;text-align:center}
-.mbox .cimg{border-radius:8px;margin-bottom:10px;max-width:200px}
-.mph{display:none;width:200px;aspect-ratio:63/88;background:#111;border-radius:8px;margin:0 auto 10px;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:8px}
-.mname{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}
-.mnum{font-size:11px;color:#555;margin-bottom:4px}
-.mbadge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600;margin-bottom:14px}
-.price-area{background:#111;border-radius:8px;padding:12px;margin-bottom:12px;text-align:left}
-.price-area-title{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#444;margin-bottom:8px}
-.price-area-title a{font-size:11px;color:#5060a0;text-decoration:none}.price-area-title a:hover{color:#8090d0}
-.price-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.pfield label{display:block;font-size:10px;color:#444;margin-bottom:3px;text-align:center}
-.pfield input{width:100%;background:#0b0a08;border:1px solid #222;border-radius:5px;padding:5px 6px;font-size:12px;color:#c89a3a;text-align:center;outline:none;font-family:inherit}
-.pfield input:focus{border-color:#5a3a10}
-.pfield input::placeholder{color:#252220}
-.save-prices-btn{width:100%;margin-top:8px;padding:7px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;background:#1e2a10;border:1px solid #3a5020;color:#80c040}
-.save-prices-btn:hover{background:#283814}
-.price-saved{font-size:11px;color:#4cff80;text-align:center;margin-top:4px;display:none}
-.m-btns{display:flex;gap:7px;margin-bottom:10px}
-.m-btn{flex:1;padding:8px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:none}
-.m-btn-own{background:#1e3a20;color:#4cff80}.m-btn-own:hover{background:#2a5030}
-.m-btn-unown{background:#3a2010;color:#ff8040}.m-btn-unown:hover{background:#502818}
-.m-btn-watch{background:#22183a;color:#9070e0}.m-btn-watch:hover{background:#2e2050}
-.m-btn-unwatch{background:#2a1220;color:#e07090}.m-btn-unwatch:hover{background:#3a1830}
-.m-btn-close{width:100%;padding:8px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;background:#1a1814;border:1px solid #2a2620;color:#888}.m-btn-close:hover{background:#222}
-
-/* ── Watchlist modal ──────────────────────────────────────────────────────── */
-.wl-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
-.wl-modal.open{display:flex}
-.wl-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
-.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
-.modal-head-left .title{font-size:15px;font-weight:700;color:#fff}
-.modal-head-left .sub{font-size:11px;color:#555;margin-top:2px}
-.modal-head-right{display:flex;gap:6px;flex-wrap:wrap}
-table.wt{width:100%;border-collapse:collapse;font-size:12px}
-table.wt th{text-align:left;padding:6px 8px;color:#383430;font-weight:500;border-bottom:1px solid #1e1c18;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
-table.wt td{padding:7px 8px;border-bottom:1px solid #141210;vertical-align:middle}
-table.wt tr:last-child td{border-bottom:none}
-table.wt tr:hover td{background:#111}
-.wt-num{color:#282420;font-size:11px;font-variant-numeric:tabular-nums}
-.wt-name{color:#888;cursor:pointer}.wt-name:hover{color:#ccc}
-.wt-badge{font-size:9px;padding:1px 5px;border-radius:999px;font-weight:600}
-.wt-p{font-weight:600;color:#c89a3a;font-variant-numeric:tabular-nums}.wt-p.na{color:#282420;font-weight:400;font-style:italic}
-.wt-rm{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid #282420;background:#1a1814;color:#444;cursor:pointer;font-family:inherit}.wt-rm:hover{background:#3a1010;border-color:#5a1010;color:#e07070}
-.wl-empty{text-align:center;padding:30px 10px;font-size:13px;color:#333}
-.wl-empty span{display:block;font-size:12px;color:#242220;margin-top:6px}
-
-/* ── Missing list modal ───────────────────────────────────────────────────── */
-.ml-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
-.ml-modal.open{display:flex}
-.ml-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
-.ml-section{margin-bottom:12px}
-.ml-section-title{font-size:10px;color:#383430;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #1e1c18}
-.ml-chip{display:inline-block;font-size:11px;color:#777;background:#111;border:1px solid #1e1c18;border-radius:5px;padding:3px 8px;margin:2px;cursor:pointer}
-.ml-chip:hover{border-color:#333;color:#aaa}
-.ml-total{font-size:11px;color:#4cff80;margin-bottom:10px;padding:6px 10px;background:#0d1a0d;border-radius:6px;border:1px solid #1a3a1a}
-
-/* ── Nav bar (injected by nav_bar.html) ───────────────────────────────────── */
-#app-nav{position:sticky;top:0;z-index:500;background:#100e0c;border-bottom:1px solid #2a2418;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.6)}
-.nav-back{background:#1e1c18;border:1px solid #2a2620;border-radius:7px;padding:6px 12px;font-size:12px;color:#888;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:background .12s,color .12s}
-.nav-back:hover{background:#2a2820;color:#ccc}
-.nav-title{flex:1;font-size:13px;font-weight:600;color:#c89a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
-.nav-sync{background:#1e1c18;border:1px solid #2a2040;border-radius:7px;padding:6px 10px;font-size:11px;color:#7060c0;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
-.nav-sync:hover{background:#22183a}
-.sync-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
-.sync-overlay.open{display:flex}
-.sync-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:22px;max-width:480px;width:100%;margin:auto}
-.sync-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
-.sync-desc{font-size:11px;color:#555;margin-bottom:16px;line-height:1.7}
-.sync-section{margin-bottom:14px}
-.sync-label{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-.sync-ta{width:100%;height:80px;background:#0b0a08;border:1px solid #222;border-radius:7px;padding:8px;font-size:11px;color:#aaa;font-family:'Courier New',monospace;resize:vertical;outline:none;display:block}
-.sync-ta:focus{border-color:#5a3a10}
-.sync-row{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap}
-.sync-btn-a{padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid}
-.sa-green{background:#1e2a10;border-color:#3a5020;color:#80c040}.sa-green:hover{background:#283814}
-.sa-purple{background:#1e1a38;border-color:#3a3060;color:#8070d0}.sa-purple:hover{background:#26224a}
-.sa-dim{background:#1a1814;border-color:#2a2620;color:#666}.sa-dim:hover{background:#222}
-.sync-warn{font-size:10px;color:#3a2820;margin-top:5px;line-height:1.5}
-
-/* ── Bottom nav ───────────────────────────────────────────────────────────── */
-#binder-bnav{position:fixed;bottom:0;left:0;right:0;z-index:600;background:#100e0c;border-top:1px solid #2a2418;display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:52px;box-shadow:0 -2px 14px rgba(0,0,0,.6)}
-#binder-bnav .bnav-btn{background:#2a2820;border:2px solid #c89a3a;border-radius:10px;padding:12px 28px;font-size:16px;font-weight:700;color:#c89a3a;cursor:pointer;font-family:inherit;min-width:110px;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s;letter-spacing:.5px}
-#binder-bnav .bnav-btn:hover:not(:disabled){background:#3a3020;color:#e8b84a}
-#binder-bnav .bnav-btn:active{background:#3a3020}
-#binder-bnav .bnav-btn:disabled{opacity:.25;cursor:default;border-color:#555;color:#555}
-#binder-bnav .bnav-info{font-size:12px;color:#555;text-align:center;flex:1;font-variant-numeric:tabular-nums}
-#gs-btn{bottom:60px!important}
-#gs-update-banner{bottom:60px!important}
-/* ── Elegant layout picker ───────────────────────────────────────────────── */
-.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;margin-bottom:6px;position:relative;z-index:50}
-.layout-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
-.layout-trigger{display:flex;align-items:center;gap:7px;padding:5px 12px;background:#1a1814;border:1px solid #2e2a24;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;color:#c89a3a;font-size:12px;font-weight:600;user-select:none}
-.layout-trigger:hover{border-color:#c89a3a55;background:#222018}
-.layout-trigger.open{border-color:#c89a3a88;background:#221e10}
-.lt-grid{display:grid;gap:2px;flex-shrink:0}
-.lt-grid .ltg-dot{width:5px;height:5px;border-radius:1px;background:#c89a3a;display:block}
-.lt-arrow{font-size:9px;color:#555;margin-left:2px;transition:transform .15s}
-.layout-trigger.open .lt-arrow{transform:rotate(180deg)}
-.lt-label{font-size:12px;font-weight:700;letter-spacing:.02em}
-.layout-panel{position:absolute;top:calc(100% + 4px);left:0;background:#1a1814;border:1px solid #2e2a24;border-radius:10px;padding:10px;display:none;grid-template-columns:repeat(3,1fr);gap:6px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:200}
-.layout-panel.open{display:grid}
-.lp-opt{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 6px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:all .12s;background:transparent}
-.lp-opt:hover{background:#22201a;border-color:#3a3428}
-.lp-opt.active{background:#2a2010;border-color:#c89a3a}
-.lp-mini{display:grid;gap:2px}
-.lp-mini-dot{width:5px;height:5px;border-radius:1px;background:#444;display:block}
-.lp-opt.active .lp-mini-dot{background:#c89a3a}
-.lp-opt:hover:not(.active) .lp-mini-dot{background:#666}
-.lp-name{font-size:10px;font-weight:700;color:#555;letter-spacing:.04em}
-.lp-opt.active .lp-name{color:#c89a3a}
-.lp-opt:hover:not(.active) .lp-name{color:#888}
-
-
-/* ── Section jump bar ────────────────────────────────────────────────────── */
-.section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
-.section-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
-.section-chip{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
-.section-chip:hover{border-color:#555;color:#aaa;background:#222}
-.section-chip.active{border-color:#9070e0;background:#1e1040;color:#9070e0}
-</style>
-</head>
-<body>
-
-<!-- ── Nav bar ── -->
-<div id="app-nav">
-  <a href="index.html" class="nav-back">← All Binders</a>
-  <div class="nav-title" id="nav-title"></div>
-  <button class="nav-sync" onclick="openSync()">⇅ Sync</button>
-</div>
-
-<!-- ── Manual sync modal (fallback when Gist not connected) ── -->
-<div class="sync-overlay" id="sync-overlay" onclick="if(event.target===this)closeSyncModal()">
-  <div class="sync-box">
-    <div class="sync-title">⇅ Sync Data Between Devices</div>
-    <div class="sync-desc">Data is saved locally per browser. Export your data on one device, paste it on the other.</div>
-    <div class="sync-section">
-      <div class="sync-label">Export — copy your data</div>
-      <textarea id="export-ta" class="sync-ta" readonly placeholder="Click Export to generate…"></textarea>
-      <div class="sync-row">
-        <button class="sync-btn-a sa-green" onclick="doManualExport()">Export & Copy</button>
-        <span id="export-flash" style="font-size:11px;color:#4cff80;display:none">✓ Copied!</span>
-      </div>
-    </div>
-    <div class="sync-section">
-      <div class="sync-label">Import — paste data from another device</div>
-      <textarea id="import-ta" class="sync-ta" placeholder="Paste exported data here…"></textarea>
-      <div class="sync-row">
-        <button class="sync-btn-a sa-purple" onclick="doManualImport()">Import Data</button>
-        <span id="import-flash" style="font-size:11px;display:none"></span>
-      </div>
-      <div class="sync-warn">⚠ Overwrites current data on this device.</div>
-    </div>
-    <button class="sync-btn-a sa-dim" onclick="closeSyncModal()" style="width:100%;margin-top:4px">Close</button>
-  </div>
-</div>
-
-<!-- ── Toolbar ── -->
-<div class="toolbar">
-  <div>
-    <div class="app-title" id="tb-title"></div>
-    <div class="app-sub" id="tb-sub"></div>
-  </div>
-  <div class="controls">
-    <div style="display:flex;align-items:center;gap:4px">
-      <input type="text" id="si" placeholder="Search…" oninput="findCard(this.value)">
-      <button class="clr" onclick="document.getElementById('si').value='';findCard('')">✕</button>
-    </div>
-    <div class="nav">
-      <button class="nb" id="bprev" onclick="go(-1)">← Prev</button>
-      <span class="pc">Spread</span>
-      <input type="number" id="pgn" min="1" value="1" onchange="goTo(+this.value)">
-      <span class="pc" id="of-lbl">of —</span>
-      <button class="nb" id="bnext" onclick="go(1)">Next →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── Action bar ── -->
-<div class="action-bar">
-  <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
-  <span class="prog-text" id="prog-text">0 / —</span>
-  <label class="filter-lbl"><input type="checkbox" id="chk-miss" onchange="toggleMissing(this.checked)"> Missing only</label>
-  <button class="btn btn-purple" onclick="openWatchlist()">⭐ Watchlist</button>
-  <button class="btn btn-gold" onclick="openMissingList()">📋 Missing</button>
-  <button class="btn btn-dim" onclick="confirmClear()">Clear all</button>
-</div>
-
-<!-- ── Layout picker ── -->
-<div class="layout-bar">
-  <span class="layout-lbl">Layout:</span>
-  <div id="layout-btns"></div>
-</div>
-
-<!-- ── Section jump bar ── -->
-<div class="section-bar" id="section-bar" style="display:none">
-  <span class="section-lbl">Jump to:</span>
-</div>
-
-<!-- ── Legend (rendered from BINDER.legend) ── -->
-<div class="legend" id="legend-bar"></div>
-
-<!-- ── Spread ── -->
-<div class="alert" id="alert"></div>
-<div class="spread-info" id="sinfo"></div>
-<div class="spread" id="spread">
-  <div id="lp"></div>
-  <div class="spine"></div>
-  <div id="rp"></div>
-</div>
-
-<!-- ── Card detail modal ── -->
-<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
-  <div class="mbox">
-    <img class="cimg" id="mimg" src="" alt="">
-    <div class="mph" id="mph"></div>
-    <div class="mname" id="mname"></div>
-    <div class="mnum" id="mnum"></div>
-    <div class="mbadge" id="mbadge"></div>
-    <div class="price-area">
-      <div class="price-area-title">
-        <span>Prices (USD)</span>
-        <a id="pc-link" href="#" target="_blank">Open PriceCharting ↗</a>
-      </div>
-      <div class="price-fields">
-        <div class="pfield"><label>Ungraded</label><input type="text" id="p-raw" placeholder="$0.00"></div>
-        <div class="pfield"><label>PSA 9</label><input type="text" id="p-9" placeholder="$0.00"></div>
-        <div class="pfield"><label>PSA 10</label><input type="text" id="p-10" placeholder="$0.00"></div>
-      </div>
-      <button class="save-prices-btn" onclick="savePriceFromModal()">Save prices</button>
-      <div class="price-saved" id="price-saved">✓ Saved!</div>
-    </div>
-    <div class="m-btns">
-      <button class="m-btn m-btn-own" id="m-own-btn" onclick="toggleOwnModal()">Mark as owned</button>
-      <button class="m-btn m-btn-watch" id="m-watch-btn" onclick="toggleWatchModal()">⭐ Watch</button>
-    </div>
-    <button class="m-btn-close" onclick="closeModal()">Close</button>
-  </div>
-</div>
-
-<!-- ── Watchlist modal ── -->
-<div class="wl-modal" id="wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="wl-box">
-    <div class="modal-head">
-      <div class="modal-head-left"><div class="title">⭐ Watchlist</div><div class="sub" id="wl-sub"></div></div>
-      <div class="modal-head-right"><button class="btn btn-dim" onclick="document.getElementById('wl-modal').classList.remove('open')">Close</button></div>
-    </div>
-    <div id="wl-body"></div>
-  </div>
-</div>
-
-<!-- ── Missing list modal ── -->
-<div class="ml-modal" id="ml-modal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="ml-box">
-    <div class="modal-head">
-      <div class="modal-head-left"><div class="title">Missing Cards</div><div class="sub" id="ml-stats"></div></div>
-      <div class="modal-head-right">
-        <button class="btn btn-purple" onclick="copyMissing()">Copy as text</button>
-        <button class="btn btn-dim" onclick="document.getElementById('ml-modal').classList.remove('open')">Close</button>
-      </div>
-    </div>
-    <div id="ml-total" class="ml-total" style="display:none"></div>
-    <div id="ml-body"></div>
-  </div>
-</div>
-
-<!-- ── Bottom nav ── -->
-<div id="binder-bnav">
-  <button class="bnav-btn" id="bn-prev" onclick="go(-1)">← Prev</button>
-  <div class="bnav-info" id="bn-info">Page 1</div>
-  <button class="bnav-btn" id="bn-next" onclick="go(1)">Next →</button>
-</div>
-
-<script>
-// ════════════════════════════════════════════════════════════════════════════
-//  BINDER CONFIG — edit everything in this section for each new binder
-// ════════════════════════════════════════════════════════════════════════════
-
-const BINDER = {
-  title:    'SV2D Clay Burst',
-  subtitle: '99 cards · Master Set',
-  navTitle: 'SV2D Clay Burst · 99 cards',
-  lsOwned:  'sv2d_clay_burst_owned_v1',
-  lsWatched:'sv2d_clay_burst_watched_v1',
-  lsPrices: 'sv2d_clay_burst_prices_v1',
-  cols: 3,
-  legend: [
-    { label: 'Main Set',    color: '#666'    },
-    { label: 'Secret Rare', color: '#c89a3a' },
-    { label: 'MUR',         color: '#ff9940' },
-  ],
-};
-
-const BC = {
-  'main':   { bg: '#181410', col: '#666'    },
-  'secret': { bg: '#2a2010', col: '#c89a3a' },
-  'mur':    { bg: '#3a2000', col: '#ff9940' },
-};
-const BC_DEFAULT = { bg: '#181410', col: '#666' };
-
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+<script>
+// ── Cloud Auto-Sync (JSONbin) ─────────────────────────────────────────────
+const _JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
+const _JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
+let _pushTimer = null;
+let _syncing = false;
+let _lastPushTs = 0;
+
+function _allData() {
+  const d = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && /owned|watched|prices|layout|active/.test(k)) d[k] = localStorage.getItem(k);
+  }
+  return d;
+}
+
+async function _cloudPush() {
+  try {
+    const ts = Date.now();
+    const r = await fetch(_JURL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JKEY },
+      body: JSON.stringify({ v:1, updated: ts, data: _allData() })
+    });
+    _lastPushTs = ts;
+    localStorage.setItem('tcg_sync_ts', String(ts));
+    console.log('[Sync] pushed', r.status);
+  } catch(e) { console.warn('[Sync] push failed', e); }
+}
+
+async function _cloudPull() {
+  try {
+    const r = await fetch(_JURL, { headers: { 'X-Master-Key': _JKEY } });
+    const j = await r.json();
+    const cloud = j.record;
+    if (!cloud || !cloud.data || !cloud.updated) { console.log('[Sync] nothing to pull'); return; }
+    const cloudTs = cloud.updated;
+    const localTs = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
+    console.log('[Sync] cloud ts:', cloudTs, 'local ts:', localTs);
+    if (cloudTs > localTs) {
+      _syncing = true;
+      Object.entries(cloud.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch(e){} });
+      localStorage.setItem('tcg_sync_ts', String(cloudTs));
+      _syncing = false;
+      console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
+      setTimeout(() => {
+        if (typeof loadLayout === 'function') loadLayout();
+        if (typeof applyLayout === 'function' && typeof currentCols !== 'undefined') applyLayout(currentCols, currentRows, false);
+        if (typeof buildLayoutPicker === 'function') buildLayoutPicker();
+        if (typeof render === 'function') render();
+        if (typeof renderGrid === 'function') renderGrid();
+        if (typeof updateProgress === 'function') updateProgress();
+        if (typeof load === 'function') { load(); render(); updateProgress(); }
+      }, 200);
+    } else if (localTs > cloudTs) {
+      console.log('[Sync] local newer than cloud - pushing local data');
+      await _cloudPush();
+    } else {
+      console.log('[Sync] local is up to date');
+    }
+  } catch(e) { console.warn('[Sync] pull failed', e); }
+}
+
+function _schedulePush() {
+  clearTimeout(_pushTimer);
+  _pushTimer = setTimeout(_cloudPush, 300);
+}
+
+// Intercept localStorage writes to auto-push
+const _origSet = localStorage.setItem.bind(localStorage);
+localStorage.setItem = function(k, v) {
+  _origSet(k, v);
+  if (!_syncing && /owned|watched|prices/.test(k)) {
+    _origSet('tcg_sync_ts', String(Date.now()));
+    _schedulePush();
+  }
+};
+
+// Pull on page load
+window.addEventListener('load', _cloudPull);
+
+// Force flush pending push on tab hidden / page unload
+function _flushPush() {
+  if (_pushTimer) {
+    clearTimeout(_pushTimer);
+    _pushTimer = null;
+    _cloudPush();
+  }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') _flushPush();
+});
+window.addEventListener('pagehide', _flushPush);
+window.addEventListener('beforeunload', _flushPush);
+</script>
+
+
+<script>
+
+
+// ── Cloud Auto-Sync (JSONbin) ─────────────────────────────────────────────
+
+
+const _JKEY = '$2a$10$SgI1LlD3oDdXwzt6iGNQiu8g9ysN3wN0vxOZa9dcTlKNUB8Ro9iau';
+
+
+const _JURL = 'https://api.jsonbin.io/v3/b/6a1342fb6610dd3ae89bbd0c';
+
+
+let _pushTimer = null;
+
+
+let _syncing = false;
+
+
+
+
+
+function _allData() {
+
+
+  const d = {};
+
+
+  for (let i = 0; i < localStorage.length; i++) {
+
+
+    const k = localStorage.key(i);
+
+
+    if (k && /owned|watched|prices|layout|active/.test(k)) d[k] = localStorage.getItem(k);
+
+
+  }
+
+
+  return d;
+
+
+}
+
+
+
+
+
+async function _cloudPush() {
+
+
+  try {
+
+
+    const r = await fetch(_JURL, {
+
+
+      method: 'PUT',
+
+
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JKEY },
+
+
+      body: JSON.stringify({ v:1, updated: Date.now(), data: _allData() })
+
+
+    });
+
+
+    console.log('[Sync] pushed', r.status);
+
+
+  } catch(e) { console.warn('[Sync] push failed', e); }
+
+
+}
+
+
+
+
+
+async function _cloudPull() {
+
+
+  try {
+
+
+    const r = await fetch(_JURL, { headers: { 'X-Master-Key': _JKEY } });
+
+
+    const j = await r.json();
+
+
+    const cloud = j.record;
+
+
+    if (!cloud || !cloud.data || !cloud.updated) { console.log('[Sync] nothing to pull'); return; }
+
+
+    const cloudTs = cloud.updated;
+
+
+    const localTs = parseInt(localStorage.getItem('tcg_sync_ts') || '0');
+
+
+    console.log('[Sync] cloud ts:', cloudTs, 'local ts:', localTs);
+
+
+    if (cloudTs > localTs) {
+
+
+      _syncing = true;
+
+
+      Object.entries(cloud.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch(e){} });
+
+
+      localStorage.setItem('tcg_sync_ts', String(cloudTs));
+
+
+      _syncing = false;
+
+
+      console.log('[Sync] pulled', Object.keys(cloud.data).length, 'keys');
+
+
+      setTimeout(() => {
+
+
+        if (typeof loadLayout === 'function') loadLayout();
+
+
+        if (typeof applyLayout === 'function' && typeof currentCols !== 'undefined') applyLayout(currentCols, currentRows, false);
+
+
+        if (typeof buildLayoutPicker === 'function') buildLayoutPicker();
+
+
+        if (typeof render === 'function') render();
+
+
+        if (typeof renderGrid === 'function') renderGrid();
+
+
+        if (typeof updateProgress === 'function') updateProgress();
+
+
+        if (typeof load === 'function') { load(); render(); updateProgress(); }
+
+
+      }, 200);
+
+
+    } else {
+
+
+      console.log('[Sync] local is up to date');
+
+
+    }
+
+
+  } catch(e) { console.warn('[Sync] pull failed', e); }
+
+
+}
+
+
+
+
+
+function _schedulePush() {
+
+
+  clearTimeout(_pushTimer);
+
+
+  _pushTimer = setTimeout(_cloudPush, 1500);
+
+
+}
+
+
+
+
+
+// Intercept localStorage writes to auto-push on changes
+
+
+const _origSet = localStorage.setItem.bind(localStorage);
+
+
+localStorage.setItem = function(k, v) {
+
+
+  _origSet(k, v);
+
+
+  if (!_syncing && /owned|watched|prices/.test(k)) {
+
+
+    _origSet('tcg_sync_ts', String(Date.now()));
+
+
+    _schedulePush();
+
+
+  }
+
+
+};
+
+
+
+
+
+// Pull on page load
+
+
+window.addEventListener('load', _cloudPull);
+
+
+</script>
+
+
+<meta charset="UTF-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+<meta name="theme-color" content="#181410">
+
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+<meta name="apple-mobile-web-app-title" content="TCG Binders">
+
+
+<title id="page-title">M4 Ninja Spinner Master Set</title>
+
+
+<script src="gist-sync.js"></script>
+
+
+<style>
+
+
+/* ── Reset & base ─────────────────────────────────────────────────────────── */
+
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#181410;color:#ddd;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 12px 80px}
+
+
+
+
+
+/* ── Toolbar ──────────────────────────────────────────────────────────────── */
+
+
+.app-title{font-size:16px;font-weight:700;color:#fff}
+
+
+.app-sub{font-size:11px;color:#555;margin-top:2px}
+
+
+.toolbar{width:100%;max-width:1100px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding-top:14px}
+
+
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+
+input[type=text]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:6px 10px;font-size:13px;color:#ddd;width:150px;outline:none}
+
+
+input[type=text]:focus{border-color:#666}
+
+
+.clr{background:none;border:none;color:#555;cursor:pointer;font-size:14px;padding:0 4px}.clr:hover{color:#aaa}
+
+
+.nav{display:flex;align-items:center;gap:5px}
+
+
+.nb{background:#2a2820;border:2px solid #c89a3a;border-radius:9px;padding:8px 18px;font-size:14px;font-weight:700;color:#c89a3a;cursor:pointer;font-family:inherit;letter-spacing:.5px;transition:background .12s,color .12s}.nb:hover:not(:disabled){background:#3a3020;color:#e8b84a}.nb:disabled{opacity:.25;cursor:default;border-color:#555;color:#555}.nb:hover:not(:disabled){background:#2a2820}.nb:disabled{opacity:.3;cursor:default}
+
+
+input[type=number]{background:#1e1c18;border:1px solid #333;border-radius:7px;padding:5px 6px;font-size:13px;color:#ddd;width:48px;text-align:center;outline:none;font-family:inherit}
+
+
+.pc{font-size:12px;color:#555;white-space:nowrap}
+
+
+
+
+
+/* ── Action bar ───────────────────────────────────────────────────────────── */
+
+
+.action-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+
+
+.prog-wrap{flex:1;min-width:140px;height:6px;background:#1e1c18;border-radius:999px;overflow:hidden}
+
+
+.prog-bar{height:100%;background:#c89a3a;border-radius:999px;transition:width .3s}
+
+
+.prog-text{font-size:11px;color:#666;white-space:nowrap}
+
+
+.btn{padding:6px 13px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid}
+
+
+.btn-gold{background:#1e1c18;border-color:#3a3020;color:#c89a3a}.btn-gold:hover{background:#2a2010}
+
+
+.btn-purple{background:#1e1c18;border-color:#2a2040;color:#9070e0}.btn-purple:hover{background:#22183a}
+
+
+.btn-dim{background:#1e1c18;border-color:#2a2828;color:#555}.btn-dim:hover{background:#2a2820;color:#aaa}
+
+
+.filter-lbl{display:flex;align-items:center;gap:5px;font-size:12px;color:#666;cursor:pointer;user-select:none}.filter-lbl input{accent-color:#c89a3a}
+
+
+
+
+
+/* ── Legend ───────────────────────────────────────────────────────────────── */
+
+
+.legend{width:100%;max-width:1100px;display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:8px;font-size:11px;color:#555}
+
+
+.lv{display:flex;align-items:center;gap:5px}
+
+
+.ld{display:inline-block;width:10px;height:10px;border-radius:2px;border:2px solid #555;background:transparent;flex-shrink:0}
+
+
+
+
+
+/* ── Spread ───────────────────────────────────────────────────────────────── */
+
+
+.alert{width:100%;max-width:1100px;font-size:12px;color:#c06040;margin-bottom:6px;display:none}
+
+
+.spread-info{font-size:11px;color:#252220;text-align:center;margin-bottom:5px;letter-spacing:.06em}
+
+
+.spread{width:100%;max-width:1100px;display:flex;background:#0d0b09;border:2px solid #252018;border-radius:16px;overflow:hidden;box-shadow:0 10px 50px rgba(0,0,0,.7)}
+
+
+.spine{width:20px;flex-shrink:0;background:linear-gradient(to right,#080706,#1c1814,#1c1814,#080706)}
+
+
+#lp,#rp{flex:1;min-width:0;overflow:hidden}
+
+
+.bpage{flex:1;padding:11px;min-width:0}
+
+
+.pg-lbl{font-size:9px;color:#252220;text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+
+
+.blank-pg{flex:1;background:#0e0c0a}
+
+
+.hide-owned .slot.owned{display:none}
+
+
+
+
+
+/* ── Cover page ───────────────────────────────────────────────────────────── */
+
+
+.cover-pg{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#0f0d0a}
+
+
+.cover-box{background:#181410;border:1px solid #2a2418;border-radius:9px;padding:12px 18px;font-size:11px;color:#555;line-height:2.1;text-align:center}
+
+
+
+
+
+/* ── Grid & slots ─────────────────────────────────────────────────────────── */
+
+
+.grid{display:grid;grid-template-columns:repeat(var(--binder-cols,3),1fr);gap:6px}
+
+
+.slot{background:#0b0a08;border-radius:6px;cursor:pointer;transition:border-color .12s,transform .1s;position:relative;overflow:hidden;border:2px solid #252018}
+
+
+.slot:hover{transform:scale(1.04);z-index:5}
+
+
+.slot.empty{border:2px dashed #181614;cursor:default;background:transparent;overflow:hidden}
+
+
+.slot.empty:hover{transform:none;border-color:#181614}
+
+
+.slot.owned .cimg,.slot.owned .cph{opacity:.38;filter:brightness(.6)}
+
+
+.badge-owned{position:absolute;top:3px;right:3px;font-size:12px;font-weight:700;color:#4cff80;text-shadow:0 0 6px rgba(60,255,120,.5);pointer-events:none;z-index:4;line-height:1}
+
+
+.badge-star{position:absolute;top:3px;left:3px;font-size:11px;pointer-events:none;z-index:4;line-height:1}
+
+
+.badge-price{position:absolute;bottom:23px;left:0;right:0;font-size:8px;font-weight:700;color:#c89a3a;pointer-events:none;z-index:4;text-align:center;background:rgba(11,10,8,.85);padding:1px 0}
+
+
+.cimg{width:100%;aspect-ratio:63/88;object-fit:cover;display:block;background:#0d0c0a}
+
+
+.cph{width:100%;aspect-ratio:63/88;background:#0d0c0a;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:4px}
+
+
+.ph-n{font-size:10px;color:#2a2826;font-weight:600}
+
+
+.ph-nm{font-size:8px;color:#222;text-align:center}
+
+
+.clbl{padding:3px 4px 4px;background:#060504}
+
+
+.cnum{font-size:8px;color:#2a2826;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+
+.cnm{font-size:9px;font-weight:500;color:#888;line-height:1.25;margin:1px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+
+.vbg{display:inline-block;font-size:7px;padding:1px 4px;border-radius:999px;font-weight:600;line-height:1.5}
+
+
+
+
+
+/* ── Card detail modal ────────────────────────────────────────────────────── */
+
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
+
+
+.modal.open{display:flex}
+
+
+.mbox{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:340px;width:100%;margin:auto;text-align:center}
+
+
+.mbox .cimg{border-radius:8px;margin-bottom:10px;max-width:200px}
+
+
+.mph{display:none;width:200px;aspect-ratio:63/88;background:#111;border-radius:8px;margin:0 auto 10px;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:8px}
+
+
+.mname{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px}
+
+
+.mnum{font-size:11px;color:#555;margin-bottom:4px}
+
+
+.mbadge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:999px;font-weight:600;margin-bottom:14px}
+
+
+.price-area{background:#111;border-radius:8px;padding:12px;margin-bottom:12px;text-align:left}
+
+
+.price-area-title{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#444;margin-bottom:8px}
+
+
+.price-area-title a{font-size:11px;color:#5060a0;text-decoration:none}.price-area-title a:hover{color:#8090d0}
+
+
+.price-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+
+
+.pfield label{display:block;font-size:10px;color:#444;margin-bottom:3px;text-align:center}
+
+
+.pfield input{width:100%;background:#0b0a08;border:1px solid #222;border-radius:5px;padding:5px 6px;font-size:12px;color:#c89a3a;text-align:center;outline:none;font-family:inherit}
+
+
+.pfield input:focus{border-color:#5a3a10}
+
+
+.pfield input::placeholder{color:#252220}
+
+
+.save-prices-btn{width:100%;margin-top:8px;padding:7px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;background:#1e2a10;border:1px solid #3a5020;color:#80c040}
+
+
+.save-prices-btn:hover{background:#283814}
+
+
+.price-saved{font-size:11px;color:#4cff80;text-align:center;margin-top:4px;display:none}
+
+
+.m-btns{display:flex;gap:7px;margin-bottom:10px}
+
+
+.m-btn{flex:1;padding:8px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:none}
+
+
+.m-btn-own{background:#1e3a20;color:#4cff80}.m-btn-own:hover{background:#2a5030}
+
+
+.m-btn-unown{background:#3a2010;color:#ff8040}.m-btn-unown:hover{background:#502818}
+
+
+.m-btn-watch{background:#22183a;color:#9070e0}.m-btn-watch:hover{background:#2e2050}
+
+
+.m-btn-unwatch{background:#2a1220;color:#e07090}.m-btn-unwatch:hover{background:#3a1830}
+
+
+.m-btn-close{width:100%;padding:8px;border-radius:7px;font-size:13px;cursor:pointer;font-family:inherit;background:#1a1814;border:1px solid #2a2620;color:#888}.m-btn-close:hover{background:#222}
+
+
+
+
+
+/* ── Watchlist modal ──────────────────────────────────────────────────────── */
+
+
+.wl-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
+
+
+.wl-modal.open{display:flex}
+
+
+.wl-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
+
+
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+
+
+.modal-head-left .title{font-size:15px;font-weight:700;color:#fff}
+
+
+.modal-head-left .sub{font-size:11px;color:#555;margin-top:2px}
+
+
+.modal-head-right{display:flex;gap:6px;flex-wrap:wrap}
+
+
+table.wt{width:100%;border-collapse:collapse;font-size:12px}
+
+
+table.wt th{text-align:left;padding:6px 8px;color:#383430;font-weight:500;border-bottom:1px solid #1e1c18;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+
+
+table.wt td{padding:7px 8px;border-bottom:1px solid #141210;vertical-align:middle}
+
+
+table.wt tr:last-child td{border-bottom:none}
+
+
+table.wt tr:hover td{background:#111}
+
+
+.wt-num{color:#282420;font-size:11px;font-variant-numeric:tabular-nums}
+
+
+.wt-name{color:#888;cursor:pointer}.wt-name:hover{color:#ccc}
+
+
+.wt-badge{font-size:9px;padding:1px 5px;border-radius:999px;font-weight:600}
+
+
+.wt-p{font-weight:600;color:#c89a3a;font-variant-numeric:tabular-nums}.wt-p.na{color:#282420;font-weight:400;font-style:italic}
+
+
+.wt-rm{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid #282420;background:#1a1814;color:#444;cursor:pointer;font-family:inherit}.wt-rm:hover{background:#3a1010;border-color:#5a1010;color:#e07070}
+
+
+.wl-empty{text-align:center;padding:30px 10px;font-size:13px;color:#333}
+
+
+.wl-empty span{display:block;font-size:12px;color:#242220;margin-top:6px}
+
+
+
+
+
+/* ── Missing list modal ───────────────────────────────────────────────────── */
+
+
+.ml-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:flex-start;justify-content:center;padding:28px 12px;overflow-y:auto}
+
+
+.ml-modal.open{display:flex}
+
+
+.ml-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:20px;max-width:760px;width:100%;margin:auto}
+
+
+.ml-section{margin-bottom:12px}
+
+
+.ml-section-title{font-size:10px;color:#383430;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #1e1c18}
+
+
+.ml-chip{display:inline-block;font-size:11px;color:#777;background:#111;border:1px solid #1e1c18;border-radius:5px;padding:3px 8px;margin:2px;cursor:pointer}
+
+
+.ml-chip:hover{border-color:#333;color:#aaa}
+
+
+.ml-total{font-size:11px;color:#4cff80;margin-bottom:10px;padding:6px 10px;background:#0d1a0d;border-radius:6px;border:1px solid #1a3a1a}
+
+
+
+
+
+/* ── Nav bar (injected by nav_bar.html) ───────────────────────────────────── */
+
+
+#app-nav{position:sticky;top:0;z-index:500;background:#100e0c;border-bottom:1px solid #2a2418;padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.6)}
+
+
+.nav-back{background:#1e1c18;border:1px solid #2a2620;border-radius:7px;padding:6px 12px;font-size:12px;color:#888;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:background .12s,color .12s}
+
+
+.nav-back:hover{background:#2a2820;color:#ccc}
+
+
+.nav-title{flex:1;font-size:13px;font-weight:600;color:#c89a3a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+
+
+.nav-sync{background:#1e1c18;border:1px solid #2a2040;border-radius:7px;padding:6px 10px;font-size:11px;color:#7060c0;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
+
+
+.nav-sync:hover{background:#22183a}
+
+
+.sync-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:flex-start;justify-content:center;padding:30px 12px;overflow-y:auto}
+
+
+.sync-overlay.open{display:flex}
+
+
+.sync-box{background:#1a1814;border:1px solid #2a2620;border-radius:14px;padding:22px;max-width:480px;width:100%;margin:auto}
+
+
+.sync-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+
+
+.sync-desc{font-size:11px;color:#555;margin-bottom:16px;line-height:1.7}
+
+
+.sync-section{margin-bottom:14px}
+
+
+.sync-label{font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+
+
+.sync-ta{width:100%;height:80px;background:#0b0a08;border:1px solid #222;border-radius:7px;padding:8px;font-size:11px;color:#aaa;font-family:'Courier New',monospace;resize:vertical;outline:none;display:block}
+
+
+.sync-ta:focus{border-color:#5a3a10}
+
+
+.sync-row{display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap}
+
+
+.sync-btn-a{padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid}
+
+
+.sa-green{background:#1e2a10;border-color:#3a5020;color:#80c040}.sa-green:hover{background:#283814}
+
+
+.sa-purple{background:#1e1a38;border-color:#3a3060;color:#8070d0}.sa-purple:hover{background:#26224a}
+
+
+.sa-dim{background:#1a1814;border-color:#2a2620;color:#666}.sa-dim:hover{background:#222}
+
+
+.sync-warn{font-size:10px;color:#3a2820;margin-top:5px;line-height:1.5}
+
+
+
+
+
+/* ── Bottom nav ───────────────────────────────────────────────────────────── */
+
+
+#binder-bnav{position:fixed;bottom:0;left:0;right:0;z-index:600;background:#100e0c;border-top:1px solid #2a2418;display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:52px;box-shadow:0 -2px 14px rgba(0,0,0,.6)}
+
+
+#binder-bnav .bnav-btn{background:#2a2820;border:2px solid #c89a3a;border-radius:10px;padding:12px 28px;font-size:16px;font-weight:700;color:#c89a3a;cursor:pointer;font-family:inherit;min-width:110px;-webkit-tap-highlight-color:transparent;transition:background .12s,color .12s;letter-spacing:.5px}
+
+
+#binder-bnav .bnav-btn:hover:not(:disabled){background:#3a3020;color:#e8b84a}
+
+
+#binder-bnav .bnav-btn:active{background:#3a3020}
+
+
+#binder-bnav .bnav-btn:disabled{opacity:.25;cursor:default;border-color:#555;color:#555}
+
+
+#binder-bnav .bnav-info{font-size:12px;color:#555;text-align:center;flex:1;font-variant-numeric:tabular-nums}
+
+
+#gs-btn{bottom:60px!important}
+
+
+#gs-update-banner{bottom:60px!important}
+
+
+/* ── Elegant layout picker ───────────────────────────────────────────────── */
+
+
+.layout-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:8px;margin-bottom:6px;position:relative;z-index:50}
+
+
+.layout-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
+
+
+.layout-trigger{display:flex;align-items:center;gap:7px;padding:5px 12px;background:#1a1814;border:1px solid #2e2a24;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;color:#c89a3a;font-size:12px;font-weight:600;user-select:none}
+
+
+.layout-trigger:hover{border-color:#c89a3a55;background:#222018}
+
+
+.layout-trigger.open{border-color:#c89a3a88;background:#221e10}
+
+
+.lt-grid{display:grid;gap:2px;flex-shrink:0}
+
+
+.lt-grid .ltg-dot{width:5px;height:5px;border-radius:1px;background:#c89a3a;display:block}
+
+
+.lt-arrow{font-size:9px;color:#555;margin-left:2px;transition:transform .15s}
+
+
+.layout-trigger.open .lt-arrow{transform:rotate(180deg)}
+
+
+.lt-label{font-size:12px;font-weight:700;letter-spacing:.02em}
+
+
+.layout-panel{position:absolute;top:calc(100% + 4px);left:0;background:#1a1814;border:1px solid #2e2a24;border-radius:10px;padding:10px;display:none;grid-template-columns:repeat(3,1fr);gap:6px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:200}
+
+
+.layout-panel.open{display:grid}
+
+
+.lp-opt{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 6px;border-radius:7px;cursor:pointer;border:1px solid transparent;transition:all .12s;background:transparent}
+
+
+.lp-opt:hover{background:#22201a;border-color:#3a3428}
+
+
+.lp-opt.active{background:#2a2010;border-color:#c89a3a}
+
+
+.lp-mini{display:grid;gap:2px}
+
+
+.lp-mini-dot{width:5px;height:5px;border-radius:1px;background:#444;display:block}
+
+
+.lp-opt.active .lp-mini-dot{background:#c89a3a}
+
+
+.lp-opt:hover:not(.active) .lp-mini-dot{background:#666}
+
+
+.lp-name{font-size:10px;font-weight:700;color:#555;letter-spacing:.04em}
+
+
+.lp-opt.active .lp-name{color:#c89a3a}
+
+
+.lp-opt:hover:not(.active) .lp-name{color:#888}
+
+
+
+
+
+
+
+
+/* ── Section jump bar ────────────────────────────────────────────────────── */
+
+
+.section-bar{width:100%;max-width:1100px;display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+
+
+.section-lbl{font-size:11px;color:#444;white-space:nowrap;flex-shrink:0}
+
+
+.section-chip{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid #252220;background:#1a1814;color:#555;transition:all .12s;white-space:nowrap}
+
+
+.section-chip:hover{border-color:#555;color:#aaa;background:#222}
+
+
+.section-chip.active{border-color:#9070e0;background:#1e1040;color:#9070e0}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+
+
+<!-- ── Nav bar ── -->
+
+
+<div id="app-nav">
+
+
+  <a href="index.html" class="nav-back">← All Binders</a>
+
+
+  <div class="nav-title" id="nav-title"></div>
+
+
+  <button class="nav-sync" onclick="openSync()">⇅ Sync</button>
+
+
+</div>
+
+
+
+
+
+<!-- ── Manual sync modal (fallback when Gist not connected) ── -->
+
+
+<div class="sync-overlay" id="sync-overlay" onclick="if(event.target===this)closeSyncModal()">
+
+
+  <div class="sync-box">
+
+
+    <div class="sync-title">⇅ Sync Data Between Devices</div>
+
+
+    <div class="sync-desc">Data is saved locally per browser. Export your data on one device, paste it on the other.</div>
+
+
+    <div class="sync-section">
+
+
+      <div class="sync-label">Export — copy your data</div>
+
+
+      <textarea id="export-ta" class="sync-ta" readonly placeholder="Click Export to generate…"></textarea>
+
+
+      <div class="sync-row">
+
+
+        <button class="sync-btn-a sa-green" onclick="doManualExport()">Export & Copy</button>
+
+
+        <span id="export-flash" style="font-size:11px;color:#4cff80;display:none">✓ Copied!</span>
+
+
+      </div>
+
+
+    </div>
+
+
+    <div class="sync-section">
+
+
+      <div class="sync-label">Import — paste data from another device</div>
+
+
+      <textarea id="import-ta" class="sync-ta" placeholder="Paste exported data here…"></textarea>
+
+
+      <div class="sync-row">
+
+
+        <button class="sync-btn-a sa-purple" onclick="doManualImport()">Import Data</button>
+
+
+        <span id="import-flash" style="font-size:11px;display:none"></span>
+
+
+      </div>
+
+
+      <div class="sync-warn">⚠ Overwrites current data on this device.</div>
+
+
+    </div>
+
+
+    <button class="sync-btn-a sa-dim" onclick="closeSyncModal()" style="width:100%;margin-top:4px">Close</button>
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+<!-- ── Toolbar ── -->
+
+
+<div class="toolbar">
+
+
+  <div>
+
+
+    <div class="app-title" id="tb-title"></div>
+
+
+    <div class="app-sub" id="tb-sub"></div>
+
+
+  </div>
+
+
+  <div class="controls">
+
+
+    <div style="display:flex;align-items:center;gap:4px">
+
+
+      <input type="text" id="si" placeholder="Search…" oninput="findCard(this.value)">
+
+
+      <button class="clr" onclick="document.getElementById('si').value='';findCard('')">✕</button>
+
+
+    </div>
+
+
+    <div class="nav">
+
+
+      <button class="nb" id="bprev" onclick="go(-1)">← Prev</button>
+
+
+      <span class="pc">Spread</span>
+
+
+      <input type="number" id="pgn" min="1" value="1" onchange="goTo(+this.value)">
+
+
+      <span class="pc" id="of-lbl">of —</span>
+
+
+      <button class="nb" id="bnext" onclick="go(1)">Next →</button>
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+<!-- ── Action bar ── -->
+
+
+<div class="action-bar">
+
+
+  <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+
+
+  <span class="prog-text" id="prog-text">0 / —</span>
+
+
+  <label class="filter-lbl"><input type="checkbox" id="chk-miss" onchange="toggleMissing(this.checked)"> Missing only</label>
+
+
+  <button class="btn btn-purple" onclick="openWatchlist()">⭐ Watchlist</button>
+
+
+  <button class="btn btn-gold" onclick="openMissingList()">📋 Missing</button>
+
+
+  <button class="btn btn-dim" onclick="confirmClear()">Clear all</button>
+
+
+</div>
+
+
+
+
+
+<!-- ── Layout picker ── -->
+
+
+<div class="layout-bar">
+
+
+  <span class="layout-lbl">Layout:</span>
+
+
+  <div id="layout-btns"></div>
+
+
+</div>
+
+
+
+
+
+<!-- ── Section jump bar ── -->
+
+
+<div class="section-bar" id="section-bar" style="display:none">
+
+
+  <span class="section-lbl">Jump to:</span>
+
+
+</div>
+
+
+
+
+
+<!-- ── Legend (rendered from BINDER.legend) ── -->
+
+
+<div class="legend" id="legend-bar"></div>
+
+
+
+
+
+<!-- ── Spread ── -->
+
+
+<div class="alert" id="alert"></div>
+
+
+<div class="spread-info" id="sinfo"></div>
+
+
+<div class="spread" id="spread">
+
+
+  <div id="lp"></div>
+
+
+  <div class="spine"></div>
+
+
+  <div id="rp"></div>
+
+
+</div>
+
+
+
+
+
+<!-- ── Card detail modal ── -->
+
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+
+
+  <div class="mbox">
+
+
+    <img class="cimg" id="mimg" src="" alt="">
+
+
+    <div class="mph" id="mph"></div>
+
+
+    <div class="mname" id="mname"></div>
+
+
+    <div class="mnum" id="mnum"></div>
+
+
+    <div class="mbadge" id="mbadge"></div>
+
+
+    <div class="price-area">
+
+
+      <div class="price-area-title">
+
+
+        <span>Prices (USD)</span>
+
+
+        <a id="pc-link" href="#" target="_blank">Open PriceCharting ↗</a>
+
+
+      </div>
+
+
+      <div class="price-fields">
+
+
+        <div class="pfield"><label>Ungraded</label><input type="text" id="p-raw" placeholder="$0.00"></div>
+
+
+        <div class="pfield"><label>PSA 9</label><input type="text" id="p-9" placeholder="$0.00"></div>
+
+
+        <div class="pfield"><label>PSA 10</label><input type="text" id="p-10" placeholder="$0.00"></div>
+
+
+      </div>
+
+
+      <button class="save-prices-btn" onclick="savePriceFromModal()">Save prices</button>
+
+
+      <div class="price-saved" id="price-saved">✓ Saved!</div>
+
+
+    </div>
+
+
+    <div class="m-btns">
+
+
+      <button class="m-btn m-btn-own" id="m-own-btn" onclick="toggleOwnModal()">Mark as owned</button>
+
+
+      <button class="m-btn m-btn-watch" id="m-watch-btn" onclick="toggleWatchModal()">⭐ Watch</button>
+
+
+    </div>
+
+
+    <button class="m-btn-close" onclick="closeModal()">Close</button>
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+<!-- ── Watchlist modal ── -->
+
+
+<div class="wl-modal" id="wl-modal" onclick="if(event.target===this)this.classList.remove('open')">
+
+
+  <div class="wl-box">
+
+
+    <div class="modal-head">
+
+
+      <div class="modal-head-left"><div class="title">⭐ Watchlist</div><div class="sub" id="wl-sub"></div></div>
+
+
+      <div class="modal-head-right"><button class="btn btn-dim" onclick="document.getElementById('wl-modal').classList.remove('open')">Close</button></div>
+
+
+    </div>
+
+
+    <div id="wl-body"></div>
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+<!-- ── Missing list modal ── -->
+
+
+<div class="ml-modal" id="ml-modal" onclick="if(event.target===this)this.classList.remove('open')">
+
+
+  <div class="ml-box">
+
+
+    <div class="modal-head">
+
+
+      <div class="modal-head-left"><div class="title">Missing Cards</div><div class="sub" id="ml-stats"></div></div>
+
+
+      <div class="modal-head-right">
+
+
+        <button class="btn btn-purple" onclick="copyMissing()">Copy as text</button>
+
+
+        <button class="btn btn-dim" onclick="document.getElementById('ml-modal').classList.remove('open')">Close</button>
+
+
+      </div>
+
+
+    </div>
+
+
+    <div id="ml-total" class="ml-total" style="display:none"></div>
+
+
+    <div id="ml-body"></div>
+
+
+  </div>
+
+
+</div>
+
+
+
+
+
+<!-- ── Bottom nav ── -->
+
+
+<div id="binder-bnav">
+
+
+  <button class="bnav-btn" id="bn-prev" onclick="go(-1)">← Prev</button>
+
+
+  <div class="bnav-info" id="bn-info">Page 1</div>
+
+
+  <button class="bnav-btn" id="bn-next" onclick="go(1)">Next →</button>
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+// ════════════════════════════════════════════════════════════════════════════
+
+
+//  BINDER CONFIG — edit everything in this section for each new binder
+
+
+// ════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+const BINDER = {
+
+
+  title:    'SV2D Clay Burst',
+
+
+  subtitle: '99 cards · Master Set',
+
+
+  navTitle: 'SV2D Clay Burst · 99 cards',
+
+
+  lsOwned:  'sv2d_clay_burst_owned_v1',
+
+
+  lsWatched:'sv2d_clay_burst_watched_v1',
+
+
+  lsPrices: 'sv2d_clay_burst_prices_v1',
+
+
+  cols: 3,
+
+
+  legend: [
+
+
+    { label: 'Main Set',    color: '#666'    },
+
+
+    { label: 'Secret Rare', color: '#c89a3a' },
+
+
+    { label: 'MUR',         color: '#ff9940' },
+
+
+  ],
+
+
+};
+
+
+
+
+
+const BC = {
+
+
+  'main':   { bg: '#181410', col: '#666'    },
+
+
+  'secret': { bg: '#2a2010', col: '#c89a3a' },
+
+
+  'mur':    { bg: '#3a2000', col: '#ff9940' },
+
+
+};
+
+
+const BC_DEFAULT = { bg: '#181410', col: '#666' };
+
+
+
+
+
 const SLOTS = [
   {id:'SV2D-1',name:'Hoppip',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2D/SV2D_1_R_JP_LG.png'},
   {id:'SV2D-2',name:'Skiploom',v:'main',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2D/SV2D_2_R_JP_LG.png'},
@@ -554,577 +1562,1711 @@ const SLOTS = [
   {id:'SV2D-97',name:'Ting-Lu ex',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2D/SV2D_97_R_JP_LG.png'},
   {id:'SV2D-98',name:'Tinkaton ex',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2D/SV2D_98_R_JP_LG.png'},
   {id:'SV2D-99',name:'Iono',v:'ur',img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV2D/SV2D_99_R_JP_LG.png'},
-];
-
-function sk(s)       { return s.id; }
-function varLabel(s) {
-  return {main:'Main',secret:'Secret',mur:'MUR'}[s.v] || s.v;
-}
-function imgUrl(s)   { return s.img || ''; }
-function pcUrl(s)    { return s.pc  || '#'; }
-
-function makeCover() {
-  const d = document.createElement('div');
-  d.className = 'bpage cover-pg';
-  d.innerHTML = `
-    <div style="font-size:22px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
-      M4<br>
-      <span style="font-size:16px;font-weight:700;color:#ddd">Ninja Spinner</span><br>
-      <span style="font-size:11px;font-weight:400;color:#555">ニンジャスピナー</span>
-    </div>
-    <div class="cover-box">
-      📅 March 13, 2026<br>
-      ⭐ Flagship: Mega Greninja ex<br>
-      🇬🇧 EN: Chaos Rising (May 2026)<br>
-      <span style="color:#282420;font-size:10px">── 83 main · 37 secret rares · 120 total ──</span>
-    </div>
-    <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.7">
-      Left-click = mark owned · Right-click = price &amp; details
-    </div>`;
-  return d;
-}
-
+];
+
+
+
+
+
+function sk(s)       { return s.id; }
+
+
+function varLabel(s) {
+
+
+  return {main:'Main',secret:'Secret',mur:'MUR'}[s.v] || s.v;
+
+
+}
+
+
+function imgUrl(s)   { return s.img || ''; }
+
+
+function pcUrl(s)    { return s.pc  || '#'; }
+
+
+
+
+
+function makeCover() {
+
+
+  const d = document.createElement('div');
+
+
+  d.className = 'bpage cover-pg';
+
+
+  d.innerHTML = `
+
+
+    <div style="font-size:22px;font-weight:800;color:#c89a3a;text-align:center;line-height:1.3">
+
+
+      M4<br>
+
+
+      <span style="font-size:16px;font-weight:700;color:#ddd">Ninja Spinner</span><br>
+
+
+      <span style="font-size:11px;font-weight:400;color:#555">ニンジャスピナー</span>
+
+
+    </div>
+
+
+    <div class="cover-box">
+
+
+      📅 March 13, 2026<br>
+
+
+      ⭐ Flagship: Mega Greninja ex<br>
+
+
+      🇬🇧 EN: Chaos Rising (May 2026)<br>
+
+
+      <span style="color:#282420;font-size:10px">── 83 main · 37 secret rares · 120 total ──</span>
+
+
+    </div>
+
+
+    <div style="font-size:10px;color:#2a2420;text-align:center;line-height:1.7">
+
+
+      Left-click = mark owned · Right-click = price &amp; details
+
+
+    </div>`;
+
+
+  return d;
+
+
+}
+
+
+
+
+
 const SDEFS = [
   { label: '1-71 Main Set',       f: s => { const n=parseInt(s.id.split('-')[1]); return n>=1&&n<=71; } },
   { label: '72-83 Art Rares',     f: s => { const n=parseInt(s.id.split('-')[1]); return n>=72&&n<=83; } },
   { label: '84-91 Secret Rares',  f: s => { const n=parseInt(s.id.split('-')[1]); return n>=84&&n<=91; } },
   { label: '92-96 Special Art Rares', f: s => { const n=parseInt(s.id.split('-')[1]); return n>=92&&n<=96; } },
   { label: '97-99 Ultra Rares',   f: s => { const n=parseInt(s.id.split('-')[1]); return n>=97&&n<=99; } },
-];
-
-// ════════════════════════════════════════════════════════════════════════════
-//  TEMPLATE ENGINE — do not edit below this line
-// ════════════════════════════════════════════════════════════════════════════
-
-// Derived constants
-const TOTAL = SLOTS.length;
-// CARD_PAGES and TOTAL_SPREADS are computed dynamically in getLayout()
-
-// ── Apply BINDER config to DOM ────────────────────────────────────────────
-(function applyConfig() {
-  document.getElementById('page-title').textContent = BINDER.title;
-  document.title = BINDER.title;
-  document.getElementById('nav-title').textContent  = BINDER.navTitle;
-  document.getElementById('tb-title').textContent   = BINDER.title;
-  document.getElementById('tb-sub').textContent     = BINDER.subtitle;
-  // Legend
-  const bar = document.getElementById('legend-bar');
-  BINDER.legend.forEach(item => {
-    const span = document.createElement('span');
-    span.className = 'lv';
-    span.innerHTML = `<span class="ld" style="border-color:${item.color}"></span>${item.label}`;
-    bar.appendChild(span);
-  });
-  const suffix = document.createElement('span');
-  suffix.className = 'lv';
-  suffix.style.marginLeft = '4px';
-  suffix.innerHTML = `✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced`;
-  bar.appendChild(suffix);
-  // Initial layout applied by applyLayout() below
-})();
-
-
-// ── Elegant Layout Picker ─────────────────────────────────────────────────
-const LS_LAYOUT = (BINDER.lsOwned || 'binder').replace(/owned.*/, 'layout_v1');
-
-const LAYOUT_PRESETS = [
-  {cols:2,rows:2,label:'2×2'}, {cols:3,rows:2,label:'3×2'}, {cols:2,rows:3,label:'2×3'},
-  {cols:3,rows:3,label:'3×3'}, {cols:4,rows:3,label:'4×3'}, {cols:3,rows:4,label:'3×4'},
-  {cols:4,rows:4,label:'4×4'}, {cols:5,rows:4,label:'4×5'}, {cols:5,rows:5,label:'5×5'},
-];
-
-let currentCols = BINDER.cols || 3;
-let currentRows = BINDER.cols || 3;
-
-function getSPP()          { return currentCols * currentRows; }
-function getCardPages()    { return Math.ceil(TOTAL / getSPP()); }
-function getTotalSpreads() { return Math.ceil((getCardPages() + 1) / 2); }
-
-function _makeMiniGrid(cols, rows) {
-  const g = document.createElement('div');
-  g.className = 'lp-mini';
-  g.style.gridTemplateColumns = `repeat(${cols}, 5px)`;
-  for (let i = 0; i < cols * rows; i++) {
-    const d = document.createElement('div');
-    d.className = 'lp-mini-dot';
-    g.appendChild(d);
-  }
-  return g;
-}
-
-function _makeTriggerGrid(cols, rows) {
-  const g = document.createElement('div');
-  g.className = 'lt-grid';
-  g.style.gridTemplateColumns = `repeat(${cols}, 5px)`;
-  const max = Math.min(cols * rows, 9); // limit dots shown in trigger
-  for (let i = 0; i < max; i++) {
-    const d = document.createElement('div');
-    d.className = 'ltg-dot';
-    g.appendChild(d);
-  }
-  return g;
-}
-
-function applyLayout(cols, rows, save) {
-  currentCols = cols; currentRows = rows;
-  window._SLOTS_PER_PAGE = getSPP();
-  document.documentElement.style.setProperty('--binder-cols', cols);
-  if (save) localStorage.setItem(LS_LAYOUT, JSON.stringify({cols, rows}));
-  // Update trigger label + grid dots
-  const trig = document.getElementById('layout-trigger');
-  if (trig) {
-    const lbl = trig.querySelector('.lt-label');
-    if (lbl) lbl.textContent = cols + '×' + rows;
-    const old = trig.querySelector('.lt-grid');
-    if (old) trig.replaceChild(_makeTriggerGrid(cols, rows), old);
-  }
-  // Update active state in panel
-  document.querySelectorAll('.lp-opt').forEach(el => {
-    el.classList.toggle('active', +el.dataset.cols===cols && +el.dataset.rows===rows);
-  });
-}
-
-function loadLayout() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(LS_LAYOUT));
-    if (saved && saved.cols && saved.rows) { currentCols = saved.cols; currentRows = saved.rows; }
-    else { currentCols = currentRows = BINDER.cols || 3; }
-  } catch(e) { currentCols = currentRows = BINDER.cols || 3; }
-  applyLayout(currentCols, currentRows, false);
-}
-
-function buildLayoutPicker() {
-  const bar = document.querySelector('.layout-bar');
-  if (!bar) return;
-  // Clear old content except the label
-  while (bar.children.length > 1) bar.removeChild(bar.lastChild);
-
-  // Build trigger button
-  const trig = document.createElement('button');
-  trig.id = 'layout-trigger';
-  trig.className = 'layout-trigger';
-  trig.appendChild(_makeTriggerGrid(currentCols, currentRows));
-  const lbl = document.createElement('span'); lbl.className = 'lt-label';
-  lbl.textContent = currentCols + '×' + currentRows;
-  trig.appendChild(lbl);
-  const arr = document.createElement('span'); arr.className = 'lt-arrow'; arr.textContent = '▾';
-  trig.appendChild(arr);
-
-  // Build floating panel
-  const panel = document.createElement('div');
-  panel.className = 'layout-panel';
-  panel.id = 'layout-panel';
-
-  LAYOUT_PRESETS.forEach(p => {
-    const opt = document.createElement('div');
-    opt.className = 'lp-opt' + (p.cols===currentCols && p.rows===currentRows ? ' active' : '');
-    opt.dataset.cols = p.cols; opt.dataset.rows = p.rows;
-    opt.appendChild(_makeMiniGrid(p.cols, p.rows));
-    const nm = document.createElement('div'); nm.className = 'lp-name'; nm.textContent = p.label;
-    opt.appendChild(nm);
-    opt.onclick = (e) => {
-      e.stopPropagation();
-      applyLayout(p.cols, p.rows, true);
-      curSpread = 1; render();
-      trig.classList.remove('open'); panel.classList.remove('open');
-    };
-    panel.appendChild(opt);
-  });
-
-  trig.onclick = (e) => {
-    e.stopPropagation();
-    const isOpen = panel.classList.contains('open');
-    trig.classList.toggle('open', !isOpen);
-    panel.classList.toggle('open', !isOpen);
-  };
-
-  bar.appendChild(trig);
-  bar.appendChild(panel);
-
-  // Close panel when clicking elsewhere
-  document.addEventListener('click', () => {
-    trig.classList.remove('open'); panel.classList.remove('open');
-  });
-}
-
-
-function buildSectionBar() {
-  const bar = document.getElementById('section-bar');
-  if (!bar || !SDEFS || SDEFS.length<=1) return;
-  bar.style.display = 'flex';
-  while (bar.children.length > 1) bar.removeChild(bar.lastChild);
-  let activeChip = null;
-  SDEFS.forEach(def => {
-    const firstIdx = SLOTS.findIndex(s => def.f(s));
-    if (firstIdx < 0) return;
-    const count = SLOTS.filter(def.f).length;
-    const chip = document.createElement('button');
-    chip.className = 'section-chip';
-    chip.textContent = def.label + ' (' + count + ')';
-    chip.onclick = () => {
-      if (activeChip) activeChip.classList.remove('active');
-      chip.classList.add('active'); activeChip = chip;
-      const spp = getSPP();
-      curSpread = firstIdx < spp ? 1 : Math.ceil(Math.floor(firstIdx/spp)/2) + 1;
-      curSpread = Math.max(1, Math.min(getTotalSpreads(), curSpread));
-      render();
-    };
-    bar.appendChild(chip);
-  });
-}
-
-
-// ── Storage ────────────────────────────────────────────────────────────────
-let owned = new Set(), watched = new Set(), prices = {};
-function load() {
-  try { owned   = new Set(JSON.parse(localStorage.getItem(BINDER.lsOwned)   || '[]')); } catch(e) {}
-  try { watched = new Set(JSON.parse(localStorage.getItem(BINDER.lsWatched) || '[]')); } catch(e) {}
-  try { prices  = JSON.parse(localStorage.getItem(BINDER.lsPrices) || '{}');           } catch(e) {}
-}
-function saveOwned()      { localStorage.setItem(BINDER.lsOwned,   JSON.stringify([...owned])); }
-function saveWatched()    { localStorage.setItem(BINDER.lsWatched, JSON.stringify([...watched])); }
-function savePricesStore(){ localStorage.setItem(BINDER.lsPrices,  JSON.stringify(prices)); }
-
-// ── Progress ───────────────────────────────────────────────────────────────
-function updateProgress() {
-  const n = owned.size, p = TOTAL ? Math.round(n / TOTAL * 100) : 0;
-  document.getElementById('prog-bar').style.width = p + '%';
-  document.getElementById('prog-text').textContent = `${n} / ${TOTAL} (${p}%)`;
-}
-
-// ── Render ─────────────────────────────────────────────────────────────────
-let curSpread = 1, showMissing = false;
-
-function render() {
-  const TS = getTotalSpreads(), CP = getCardPages();
-  const lp = document.getElementById('lp'), rp = document.getElementById('rp');
-  lp.innerHTML = ''; rp.innerHTML = '';
-  let info;
-  if (curSpread === 1) {
-    lp.appendChild(makeCover());
-    rp.appendChild(makeCardPage(0, 'right', 1));
-    info = 'Cover · Page 1';
-  } else {
-    const ln = 2 * (curSpread - 1), rn = ln + 1;
-    lp.appendChild(ln - 1 < CP ? makeCardPage(ln - 1, 'left', ln)  : blankPage());
-    rp.appendChild(rn - 1 < CP ? makeCardPage(rn - 1, 'right', rn) : blankPage());
-    info = `Page ${ln}${rn <= CP ? ' · Page ' + rn : ''}`;
-  }
-  document.getElementById('sinfo').textContent     = info;
-  document.getElementById('pgn').value             = curSpread;
-  document.getElementById('pgn').max               = TS;
-  document.getElementById('of-lbl').textContent    = 'of ' + TS;
-  document.getElementById('bprev').disabled = curSpread <= 1;
-  document.getElementById('bnext').disabled        = curSpread >= TS;
-  document.getElementById('bn-prev').disabled      = curSpread <= 1;
-  document.getElementById('bn-next').disabled      = curSpread >= TS;
-  document.getElementById('bn-info').textContent   = `Page ${curSpread} of ${TS}`;
-  document.getElementById('spread').classList.toggle('hide-owned', showMissing);
-}
-
-function blankPage() {
-  const d = document.createElement('div'); d.className = 'bpage blank-pg'; return d;
-}
-
-function makeCardPage(idx0, side, num1) {
-  const wrap = document.createElement('div');
-  wrap.className = 'bpage';
-  wrap.style.background = side === 'left' ? '#13110e' : '#111009';
-  const lbl = document.createElement('div');
-  lbl.className = 'pg-lbl';
-  lbl.textContent = `— page ${num1} —`;
-  wrap.appendChild(lbl);
-  const grid = document.createElement('div');
-  grid.className = 'grid';
-  const spp = getSPP();
-  const start = idx0 * spp, end = Math.min(start + spp, TOTAL);
-  for (let i = start; i < end; i++) grid.appendChild(makeSlot(SLOTS[i]));
-  // Always pad with empty slot outlines to maintain grid shape
-  for (let i = end - start; i < spp; i++) {
-    const e = document.createElement('div');
-    e.className = 'slot empty';
-    // Same height structure as card slots but shows a ✕ mark
-    e.innerHTML = '<div style="width:100%;aspect-ratio:63/88;background:#0b0a08;display:flex;align-items:center;justify-content:center">' +
-      '<span style="font-size:22px;color:#1e1c18;user-select:none">✕</span></div>' +
-      '<div class="clbl"><div class="cnum" style="color:transparent">·</div>' +
-      '<div class="cnm" style="color:transparent">·</div>' +
-      '<span class="vbg" style="color:transparent">·</span></div>';
-    grid.appendChild(e);
-  }
-  wrap.appendChild(grid);
-  return wrap;
-}
-
-function go(d)    { curSpread = Math.max(1, Math.min(getTotalSpreads(), curSpread + d)); render(); }
-function goTo(n)  { if (!isNaN(n) && n >= 1 && n <= getTotalSpreads()) { curSpread = n; render(); } }
-function toggleMissing(on) { showMissing = on; document.getElementById('spread').classList.toggle('hide-owned', on); }
-
-// ── Find card ──────────────────────────────────────────────────────────────
-function findCard(q) {
-  q = q.trim().toLowerCase();
-  const al = document.getElementById('alert');
-  if (!q) { al.style.display = 'none'; return; }
-  const idx = SLOTS.findIndex(s =>
-    (s.name || '').toLowerCase().includes(q) ||
-    (s.id   || '').toLowerCase().includes(q) ||
-    (s.v    || '').toLowerCase().includes(q)
-  );
-  if (idx >= 0) {
-    al.style.display = 'none';
-    const spp=getSPP(); curSpread = idx < spp ? 1 : Math.ceil(Math.floor(idx/spp)/2)+1; curSpread=Math.max(1,Math.min(getTotalSpreads(),curSpread));
-    render();
-  } else {
-    al.style.display = 'block';
-    al.textContent = `"${q}" not found`;
-  }
-}
-
-// ── Slot DOM element ───────────────────────────────────────────────────────
-function makeSlot(s) {
-  const key = sk(s), bc = BC[s.v] || BC_DEFAULT;
-  const div = document.createElement('div');
-  div.className = 'slot' + (owned.has(key) ? ' owned' : '');
-  div.style.borderColor = bc.col + '44';
-  div.dataset.key = key;
-
-  const img = document.createElement('img');
-  img.className = 'cimg'; img.src = imgUrl(s); img.alt = s.name || ''; img.loading = 'lazy';
-  const ph  = document.createElement('div');
-  ph.className = 'cph';
-  ph.innerHTML = `<div class="ph-n">${s.id}</div><div class="ph-nm">${(s.name||'').substring(0,15)}</div>`;
-  img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
-  div.appendChild(img); div.appendChild(ph);
-
-  const lbl = document.createElement('div'); lbl.className = 'clbl';
-  lbl.innerHTML = `<div class="cnum">${s.id}</div>` +
-    `<div class="cnm">${s.set || s.name || ''}</div>` +
-    `<span class="vbg" style="background:${bc.bg};color:${bc.col}">${varLabel(s)}</span>`;
-  div.appendChild(lbl);
-
-  if (owned.has(key))   div.appendChild(badge('badge-owned', '✓'));
-  if (watched.has(key)) div.appendChild(badge('badge-star', '⭐'));
-  const p = prices[key];
-  if (p && p.raw) div.appendChild(badge('badge-price', p.raw));
-
-  div.addEventListener('click', e => {
-    e.preventDefault();
-    owned.has(key) ? owned.delete(key) : owned.add(key);
-    saveOwned(); updateProgress();
-    div.classList.toggle('owned');
-    syncBadge(div, 'badge-owned', '✓', owned.has(key));
-  });
-  div.addEventListener('contextmenu', e => { e.preventDefault(); openModal(s); });
-  return div;
-}
-
-function badge(cls, txt) {
-  const b = document.createElement('div'); b.className = cls; b.textContent = txt; return b;
-}
-function syncBadge(div, cls, txt, show) {
-  let b = div.querySelector('.' + cls);
-  if (show && !b) { b = badge(cls, txt); div.appendChild(b); }
-  else if (!show && b) b.remove();
-}
-
-// ── Card detail modal ──────────────────────────────────────────────────────
-let modalSlot = null;
-
-function openModal(s) {
-  modalSlot = s;
-  const key = sk(s), bc = BC[s.v] || BC_DEFAULT;
-  const mi = document.getElementById('mimg'), mph = document.getElementById('mph');
-  mi.style.display = 'block'; mph.style.display = 'none';
-  mi.src = imgUrl(s);
-  mi.onerror = () => { mi.style.display = 'none'; mph.style.display = 'flex'; mph.innerHTML = `<div style="color:#383430;font-size:11px;text-align:center">${s.id}<br>${varLabel(s)}</div>`; };
-  document.getElementById('mname').textContent   = s.name || s.id;
-  document.getElementById('mnum').textContent    = `${s.id} · ${varLabel(s)}`;
-  document.getElementById('mbadge').textContent  = varLabel(s);
-  document.getElementById('mbadge').style.background = bc.bg;
-  document.getElementById('mbadge').style.color      = bc.col;
-  document.getElementById('pc-link').href        = pcUrl(s);
-  const p = prices[key] || {};
-  document.getElementById('p-raw').value = p.raw  || '';
-  document.getElementById('p-9').value   = p.psa9 || '';
-  document.getElementById('p-10').value  = p.psa10|| '';
-  document.getElementById('price-saved').style.display = 'none';
-  syncModalBtns();
-  document.getElementById('modal').classList.add('open');
-}
-function closeModal() { document.getElementById('modal').classList.remove('open'); modalSlot = null; }
-
-function syncModalBtns() {
-  if (!modalSlot) return;
-  const key = sk(modalSlot), isOwned = owned.has(key), isWatched = watched.has(key);
-  const ob = document.getElementById('m-own-btn');
-  ob.textContent = isOwned ? '✓ Remove owned' : 'Mark as owned';
-  ob.className   = 'm-btn ' + (isOwned ? 'm-btn-unown' : 'm-btn-own');
-  const wb = document.getElementById('m-watch-btn');
-  wb.textContent = isWatched ? '★ Unwatch' : '⭐ Watch';
-  wb.className   = 'm-btn ' + (isWatched ? 'm-btn-unwatch' : 'm-btn-watch');
-}
-
-function toggleOwnModal() {
-  if (!modalSlot) return;
-  const key = sk(modalSlot);
-  owned.has(key) ? owned.delete(key) : owned.add(key);
-  saveOwned(); updateProgress();
-  const el = document.querySelector(`.slot[data-key="${key}"]`);
-  if (el) { el.classList.toggle('owned', owned.has(key)); syncBadge(el, 'badge-owned', '✓', owned.has(key)); }
-  syncModalBtns();
-}
-
-function toggleWatchModal() {
-  if (!modalSlot) return;
-  const key = sk(modalSlot);
-  watched.has(key) ? watched.delete(key) : watched.add(key);
-  saveWatched();
-  const el = document.querySelector(`.slot[data-key="${key}"]`);
-  if (el) syncBadge(el, 'badge-star', '⭐', watched.has(key));
-  syncModalBtns();
-}
-
-function savePriceFromModal() {
-  if (!modalSlot) return;
-  const key = sk(modalSlot);
-  const fmt = v => { v = v.replace(/[^0-9.]/g,''); return v ? '$' + parseFloat(v).toFixed(2) : ''; };
-  const raw  = fmt(document.getElementById('p-raw').value);
-  const psa9 = fmt(document.getElementById('p-9').value);
-  const psa10= fmt(document.getElementById('p-10').value);
-  prices[key] = { raw, psa9, psa10, date: new Date().toISOString().slice(0,10) };
-  savePricesStore();
-  document.getElementById('p-raw').value = raw;
-  document.getElementById('p-9').value   = psa9;
-  document.getElementById('p-10').value  = psa10;
-  const el = document.querySelector(`.slot[data-key="${key}"]`);
-  if (el) { let b = el.querySelector('.badge-price'); if (raw) { if (!b) { b = badge('badge-price', raw); el.appendChild(b); } else b.textContent = raw; } else if (b) b.remove(); }
-  const ps = document.getElementById('price-saved');
-  ps.style.display = 'block'; setTimeout(() => ps.style.display = 'none', 1800);
-}
-
-// ── Watchlist ──────────────────────────────────────────────────────────────
-function openWatchlist() {
-  const slots = SLOTS.filter(s => watched.has(sk(s)));
-  document.getElementById('wl-sub').textContent = `${slots.length} card${slots.length !== 1 ? 's' : ''} watched`;
-  renderWatchlist(slots);
-  document.getElementById('wl-modal').classList.add('open');
-}
-
-function renderWatchlist(slots) {
-  const body = document.getElementById('wl-body');
-  if (!slots.length) { body.innerHTML = '<div class="wl-empty">No cards watched yet.<span>Right-click any card → ⭐ Watch</span></div>'; return; }
-  const bc = s => BC[s.v] || BC_DEFAULT;
-  let h = `<table class="wt"><thead><tr><th>ID</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
-  slots.forEach(s => {
-    const key = sk(s), p = prices[key] || {}, b = bc(s);
-    const fv = v => v ? `<span class="wt-p">${v}</span>` : `<span class="wt-p na">—</span>`;
-    h += `<tr>
-      <td class="wt-num">${s.id}</td>
-      <td class="wt-name" onclick="jumpTo('${key}')">${s.name || s.id}</td>
-      <td><span class="wt-badge" style="background:${b.bg};color:${b.col}">${varLabel(s)}</span></td>
-      <td>${fv(p.raw)}</td><td>${fv(p.psa10)}</td>
-      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
-      <td><button class="wt-rm" onclick="unwatchRow('${key}')">✕</button></td>
-    </tr>`;
-  });
-  body.innerHTML = h + '</tbody></table>';
-}
-
-function jumpTo(key) {
-  document.getElementById('wl-modal').classList.remove('open');
-  document.getElementById('ml-modal').classList.remove('open');
-  const idx = SLOTS.findIndex(s => sk(s) === key);
-  if (idx >= 0) { const spp=getSPP(); curSpread=idx<spp?1:Math.ceil(Math.floor(idx/spp)/2)+1; curSpread=Math.max(1,Math.min(getTotalSpreads(),curSpread)); render(); }
-}
-
-function unwatchRow(key) {
-  watched.delete(key); saveWatched();
-  const el = document.querySelector(`.slot[data-key="${key}"]`);
-  if (el) syncBadge(el, 'badge-star', '⭐', false);
-  openWatchlist();
-}
-
-// ── Missing list ───────────────────────────────────────────────────────────
-function openMissingList() {
-  const miss = SLOTS.filter(s => !owned.has(sk(s)));
-  document.getElementById('ml-stats').textContent = `${miss.length} missing of ${TOTAL}`;
-  const tot = miss.reduce((sum, s) => { const p = prices[sk(s)]; return sum + (p && p.raw ? parseFloat(p.raw.replace(/[^0-9.]/g,'')) || 0 : 0); }, 0);
-  const totEl = document.getElementById('ml-total');
-  if (tot > 0) { totEl.style.display = 'block'; totEl.textContent = `Estimated ungraded value (priced cards only): $${tot.toFixed(2)}`; }
-  else totEl.style.display = 'none';
-  const body = document.getElementById('ml-body'); body.innerHTML = '';
-  SDEFS.forEach(def => {
-    const section = miss.filter(def.f);
-    if (!section.length) return;
-    const wrap = document.createElement('div'); wrap.className = 'ml-section';
-    const ttl  = document.createElement('div'); ttl.className = 'ml-section-title'; ttl.textContent = `${def.label} (${section.length})`;
-    wrap.appendChild(ttl);
-    section.forEach(s => {
-      const key = sk(s), p = prices[key];
-      const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
-      const sfx = ` — ${varLabel(s)}`;
-      const chip = document.createElement('span'); chip.className = 'ml-chip';
-      chip.textContent = `${s.id} ${s.name || ''}${sfx}${pt}`;
-      chip.onclick = () => jumpTo(key);
-      wrap.appendChild(chip);
-    });
-    body.appendChild(wrap);
-  });
-  document.getElementById('ml-modal').classList.add('open');
-}
-
-function copyMissing() {
-  const miss = SLOTS.filter(s => !owned.has(sk(s)));
-  let txt = `${BINDER.title} — Missing (${miss.length}/${TOTAL})\nGenerated ${new Date().toLocaleDateString()}\n${'─'.repeat(50)}\n`;
-  miss.forEach(s => {
-    const p = prices[sk(s)];
-    const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
-    txt += `  ${s.id}  ${s.name || ''}  — ${varLabel(s)}${pt}\n`;
-  });
-  navigator.clipboard.writeText(txt).then(() => {
-    const b = document.querySelector('#ml-modal .btn-purple');
-    const o = b.textContent; b.textContent = 'Copied!';
-    setTimeout(() => b.textContent = o, 1500);
-  });
-}
-
-function confirmClear() {
-  if (confirm('Clear all owned, watched and price data for this binder?')) {
-    owned.clear(); watched.clear(); prices = {};
-    saveOwned(); saveWatched(); savePricesStore();
-    render(); updateProgress();
-  }
-}
-
-// ── Manual sync (fallback) ─────────────────────────────────────────────────
-const SYNC_KEYS_LOCAL = [BINDER.lsOwned, BINDER.lsWatched, BINDER.lsPrices];
-function openSync() { document.getElementById('sync-overlay').classList.add('open'); }
-function closeSyncModal() { document.getElementById('sync-overlay').classList.remove('open'); }
-function doManualExport() {
-  const data = {}; SYNC_KEYS_LOCAL.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
-  const json = JSON.stringify(data, null, 2);
-  document.getElementById('export-ta').value = json;
-  navigator.clipboard.writeText(json).then(() => {
-    const f = document.getElementById('export-flash'); f.style.display = 'inline';
-    setTimeout(() => f.style.display = 'none', 2500);
-  }).catch(() => {});
-}
-function doManualImport() {
-  const raw = document.getElementById('import-ta').value.trim();
-  const f = document.getElementById('import-flash');
-  if (!raw) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Paste data first.'; return; }
-  try {
-    const data = JSON.parse(raw); let n = 0;
-    SYNC_KEYS_LOCAL.forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
-    f.style.display='inline'; f.style.color='#4cff80'; f.textContent=`✓ Imported ${n} keys — reloading…`;
-    setTimeout(() => { closeSyncModal(); location.reload(); }, 1200);
-  } catch(e) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Invalid data.'; }
-}
-
-
-// ── Init ───────────────────────────────────────────────────────────────────
-loadLayout(); buildLayoutPicker(); buildSectionBar(); loadLayout(); buildLayoutPicker(); buildSectionBar(); load(); updateProgress(); render();
-</script>
-
-
-</body>
+];
+
+
+
+
+
+// ════════════════════════════════════════════════════════════════════════════
+
+
+//  TEMPLATE ENGINE — do not edit below this line
+
+
+// ════════════════════════════════════════════════════════════════════════════
+
+
+
+
+
+// Derived constants
+
+
+const TOTAL = SLOTS.length;
+
+
+// CARD_PAGES and TOTAL_SPREADS are computed dynamically in getLayout()
+
+
+
+
+
+// ── Apply BINDER config to DOM ────────────────────────────────────────────
+
+
+(function applyConfig() {
+
+
+  document.getElementById('page-title').textContent = BINDER.title;
+
+
+  document.title = BINDER.title;
+
+
+  document.getElementById('nav-title').textContent  = BINDER.navTitle;
+
+
+  document.getElementById('tb-title').textContent   = BINDER.title;
+
+
+  document.getElementById('tb-sub').textContent     = BINDER.subtitle;
+
+
+  // Legend
+
+
+  const bar = document.getElementById('legend-bar');
+
+
+  BINDER.legend.forEach(item => {
+
+
+    const span = document.createElement('span');
+
+
+    span.className = 'lv';
+
+
+    span.innerHTML = `<span class="ld" style="border-color:${item.color}"></span>${item.label}`;
+
+
+    bar.appendChild(span);
+
+
+  });
+
+
+  const suffix = document.createElement('span');
+
+
+  suffix.className = 'lv';
+
+
+  suffix.style.marginLeft = '4px';
+
+
+  suffix.innerHTML = `✓ owned &nbsp; ⭐ watched &nbsp; <span style="color:#c89a3a">$</span> priced`;
+
+
+  bar.appendChild(suffix);
+
+
+  // Initial layout applied by applyLayout() below
+
+
+})();
+
+
+
+
+
+
+
+
+// ── Elegant Layout Picker ─────────────────────────────────────────────────
+
+
+const LS_LAYOUT = (BINDER.lsOwned || 'binder').replace(/owned.*/, 'layout_v1');
+
+
+
+
+
+const LAYOUT_PRESETS = [
+
+
+  {cols:2,rows:2,label:'2×2'}, {cols:3,rows:2,label:'3×2'}, {cols:2,rows:3,label:'2×3'},
+
+
+  {cols:3,rows:3,label:'3×3'}, {cols:4,rows:3,label:'4×3'}, {cols:3,rows:4,label:'3×4'},
+
+
+  {cols:4,rows:4,label:'4×4'}, {cols:5,rows:4,label:'4×5'}, {cols:5,rows:5,label:'5×5'},
+
+
+];
+
+
+
+
+
+let currentCols = BINDER.cols || 3;
+
+
+let currentRows = BINDER.cols || 3;
+
+
+
+
+
+function getSPP()          { return currentCols * currentRows; }
+
+
+function getCardPages()    { return Math.ceil(TOTAL / getSPP()); }
+
+
+function getTotalSpreads() { return Math.ceil((getCardPages() + 1) / 2); }
+
+
+
+
+
+function _makeMiniGrid(cols, rows) {
+
+
+  const g = document.createElement('div');
+
+
+  g.className = 'lp-mini';
+
+
+  g.style.gridTemplateColumns = `repeat(${cols}, 5px)`;
+
+
+  for (let i = 0; i < cols * rows; i++) {
+
+
+    const d = document.createElement('div');
+
+
+    d.className = 'lp-mini-dot';
+
+
+    g.appendChild(d);
+
+
+  }
+
+
+  return g;
+
+
+}
+
+
+
+
+
+function _makeTriggerGrid(cols, rows) {
+
+
+  const g = document.createElement('div');
+
+
+  g.className = 'lt-grid';
+
+
+  g.style.gridTemplateColumns = `repeat(${cols}, 5px)`;
+
+
+  const max = Math.min(cols * rows, 9); // limit dots shown in trigger
+
+
+  for (let i = 0; i < max; i++) {
+
+
+    const d = document.createElement('div');
+
+
+    d.className = 'ltg-dot';
+
+
+    g.appendChild(d);
+
+
+  }
+
+
+  return g;
+
+
+}
+
+
+
+
+
+function applyLayout(cols, rows, save) {
+
+
+  currentCols = cols; currentRows = rows;
+
+
+  window._SLOTS_PER_PAGE = getSPP();
+
+
+  document.documentElement.style.setProperty('--binder-cols', cols);
+
+
+  if (save) localStorage.setItem(LS_LAYOUT, JSON.stringify({cols, rows}));
+
+
+  // Update trigger label + grid dots
+
+
+  const trig = document.getElementById('layout-trigger');
+
+
+  if (trig) {
+
+
+    const lbl = trig.querySelector('.lt-label');
+
+
+    if (lbl) lbl.textContent = cols + '×' + rows;
+
+
+    const old = trig.querySelector('.lt-grid');
+
+
+    if (old) trig.replaceChild(_makeTriggerGrid(cols, rows), old);
+
+
+  }
+
+
+  // Update active state in panel
+
+
+  document.querySelectorAll('.lp-opt').forEach(el => {
+
+
+    el.classList.toggle('active', +el.dataset.cols===cols && +el.dataset.rows===rows);
+
+
+  });
+
+
+}
+
+
+
+
+
+function loadLayout() {
+
+
+  try {
+
+
+    const saved = JSON.parse(localStorage.getItem(LS_LAYOUT));
+
+
+    if (saved && saved.cols && saved.rows) { currentCols = saved.cols; currentRows = saved.rows; }
+
+
+    else { currentCols = currentRows = BINDER.cols || 3; }
+
+
+  } catch(e) { currentCols = currentRows = BINDER.cols || 3; }
+
+
+  applyLayout(currentCols, currentRows, false);
+
+
+}
+
+
+
+
+
+function buildLayoutPicker() {
+
+
+  const bar = document.querySelector('.layout-bar');
+
+
+  if (!bar) return;
+
+
+  // Clear old content except the label
+
+
+  while (bar.children.length > 1) bar.removeChild(bar.lastChild);
+
+
+
+
+
+  // Build trigger button
+
+
+  const trig = document.createElement('button');
+
+
+  trig.id = 'layout-trigger';
+
+
+  trig.className = 'layout-trigger';
+
+
+  trig.appendChild(_makeTriggerGrid(currentCols, currentRows));
+
+
+  const lbl = document.createElement('span'); lbl.className = 'lt-label';
+
+
+  lbl.textContent = currentCols + '×' + currentRows;
+
+
+  trig.appendChild(lbl);
+
+
+  const arr = document.createElement('span'); arr.className = 'lt-arrow'; arr.textContent = '▾';
+
+
+  trig.appendChild(arr);
+
+
+
+
+
+  // Build floating panel
+
+
+  const panel = document.createElement('div');
+
+
+  panel.className = 'layout-panel';
+
+
+  panel.id = 'layout-panel';
+
+
+
+
+
+  LAYOUT_PRESETS.forEach(p => {
+
+
+    const opt = document.createElement('div');
+
+
+    opt.className = 'lp-opt' + (p.cols===currentCols && p.rows===currentRows ? ' active' : '');
+
+
+    opt.dataset.cols = p.cols; opt.dataset.rows = p.rows;
+
+
+    opt.appendChild(_makeMiniGrid(p.cols, p.rows));
+
+
+    const nm = document.createElement('div'); nm.className = 'lp-name'; nm.textContent = p.label;
+
+
+    opt.appendChild(nm);
+
+
+    opt.onclick = (e) => {
+
+
+      e.stopPropagation();
+
+
+      applyLayout(p.cols, p.rows, true);
+
+
+      curSpread = 1; render();
+
+
+      trig.classList.remove('open'); panel.classList.remove('open');
+
+
+    };
+
+
+    panel.appendChild(opt);
+
+
+  });
+
+
+
+
+
+  trig.onclick = (e) => {
+
+
+    e.stopPropagation();
+
+
+    const isOpen = panel.classList.contains('open');
+
+
+    trig.classList.toggle('open', !isOpen);
+
+
+    panel.classList.toggle('open', !isOpen);
+
+
+  };
+
+
+
+
+
+  bar.appendChild(trig);
+
+
+  bar.appendChild(panel);
+
+
+
+
+
+  // Close panel when clicking elsewhere
+
+
+  document.addEventListener('click', () => {
+
+
+    trig.classList.remove('open'); panel.classList.remove('open');
+
+
+  });
+
+
+}
+
+
+
+
+
+
+
+
+function buildSectionBar() {
+
+
+  const bar = document.getElementById('section-bar');
+
+
+  if (!bar || !SDEFS || SDEFS.length<=1) return;
+
+
+  bar.style.display = 'flex';
+
+
+  while (bar.children.length > 1) bar.removeChild(bar.lastChild);
+
+
+  let activeChip = null;
+
+
+  SDEFS.forEach(def => {
+
+
+    const firstIdx = SLOTS.findIndex(s => def.f(s));
+
+
+    if (firstIdx < 0) return;
+
+
+    const count = SLOTS.filter(def.f).length;
+
+
+    const chip = document.createElement('button');
+
+
+    chip.className = 'section-chip';
+
+
+    chip.textContent = def.label + ' (' + count + ')';
+
+
+    chip.onclick = () => {
+
+
+      if (activeChip) activeChip.classList.remove('active');
+
+
+      chip.classList.add('active'); activeChip = chip;
+
+
+      const spp = getSPP();
+
+
+      curSpread = firstIdx < spp ? 1 : Math.ceil(Math.floor(firstIdx/spp)/2) + 1;
+
+
+      curSpread = Math.max(1, Math.min(getTotalSpreads(), curSpread));
+
+
+      render();
+
+
+    };
+
+
+    bar.appendChild(chip);
+
+
+  });
+
+
+}
+
+
+
+
+
+
+
+
+// ── Storage ────────────────────────────────────────────────────────────────
+
+
+let owned = new Set(), watched = new Set(), prices = {};
+
+
+function load() {
+
+
+  try { owned   = new Set(JSON.parse(localStorage.getItem(BINDER.lsOwned)   || '[]')); } catch(e) {}
+
+
+  try { watched = new Set(JSON.parse(localStorage.getItem(BINDER.lsWatched) || '[]')); } catch(e) {}
+
+
+  try { prices  = JSON.parse(localStorage.getItem(BINDER.lsPrices) || '{}');           } catch(e) {}
+
+
+}
+
+
+function saveOwned()      { localStorage.setItem(BINDER.lsOwned,   JSON.stringify([...owned])); }
+
+
+function saveWatched()    { localStorage.setItem(BINDER.lsWatched, JSON.stringify([...watched])); }
+
+
+function savePricesStore(){ localStorage.setItem(BINDER.lsPrices,  JSON.stringify(prices)); }
+
+
+
+
+
+// ── Progress ───────────────────────────────────────────────────────────────
+
+
+function updateProgress() {
+
+
+  const n = owned.size, p = TOTAL ? Math.round(n / TOTAL * 100) : 0;
+
+
+  document.getElementById('prog-bar').style.width = p + '%';
+
+
+  document.getElementById('prog-text').textContent = `${n} / ${TOTAL} (${p}%)`;
+
+
+}
+
+
+
+
+
+// ── Render ─────────────────────────────────────────────────────────────────
+
+
+let curSpread = 1, showMissing = false;
+
+
+
+
+
+function render() {
+
+
+  const TS = getTotalSpreads(), CP = getCardPages();
+
+
+  const lp = document.getElementById('lp'), rp = document.getElementById('rp');
+
+
+  lp.innerHTML = ''; rp.innerHTML = '';
+
+
+  let info;
+
+
+  if (curSpread === 1) {
+
+
+    lp.appendChild(makeCover());
+
+
+    rp.appendChild(makeCardPage(0, 'right', 1));
+
+
+    info = 'Cover · Page 1';
+
+
+  } else {
+
+
+    const ln = 2 * (curSpread - 1), rn = ln + 1;
+
+
+    lp.appendChild(ln - 1 < CP ? makeCardPage(ln - 1, 'left', ln)  : blankPage());
+
+
+    rp.appendChild(rn - 1 < CP ? makeCardPage(rn - 1, 'right', rn) : blankPage());
+
+
+    info = `Page ${ln}${rn <= CP ? ' · Page ' + rn : ''}`;
+
+
+  }
+
+
+  document.getElementById('sinfo').textContent     = info;
+
+
+  document.getElementById('pgn').value             = curSpread;
+
+
+  document.getElementById('pgn').max               = TS;
+
+
+  document.getElementById('of-lbl').textContent    = 'of ' + TS;
+
+
+  document.getElementById('bprev').disabled = curSpread <= 1;
+
+
+  document.getElementById('bnext').disabled        = curSpread >= TS;
+
+
+  document.getElementById('bn-prev').disabled      = curSpread <= 1;
+
+
+  document.getElementById('bn-next').disabled      = curSpread >= TS;
+
+
+  document.getElementById('bn-info').textContent   = `Page ${curSpread} of ${TS}`;
+
+
+  document.getElementById('spread').classList.toggle('hide-owned', showMissing);
+
+
+}
+
+
+
+
+
+function blankPage() {
+
+
+  const d = document.createElement('div'); d.className = 'bpage blank-pg'; return d;
+
+
+}
+
+
+
+
+
+function makeCardPage(idx0, side, num1) {
+
+
+  const wrap = document.createElement('div');
+
+
+  wrap.className = 'bpage';
+
+
+  wrap.style.background = side === 'left' ? '#13110e' : '#111009';
+
+
+  const lbl = document.createElement('div');
+
+
+  lbl.className = 'pg-lbl';
+
+
+  lbl.textContent = `— page ${num1} —`;
+
+
+  wrap.appendChild(lbl);
+
+
+  const grid = document.createElement('div');
+
+
+  grid.className = 'grid';
+
+
+  const spp = getSPP();
+
+
+  const start = idx0 * spp, end = Math.min(start + spp, TOTAL);
+
+
+  for (let i = start; i < end; i++) grid.appendChild(makeSlot(SLOTS[i]));
+
+
+  // Always pad with empty slot outlines to maintain grid shape
+
+
+  for (let i = end - start; i < spp; i++) {
+
+
+    const e = document.createElement('div');
+
+
+    e.className = 'slot empty';
+
+
+    // Same height structure as card slots but shows a ✕ mark
+
+
+    e.innerHTML = '<div style="width:100%;aspect-ratio:63/88;background:#0b0a08;display:flex;align-items:center;justify-content:center">' +
+
+
+      '<span style="font-size:22px;color:#1e1c18;user-select:none">✕</span></div>' +
+
+
+      '<div class="clbl"><div class="cnum" style="color:transparent">·</div>' +
+
+
+      '<div class="cnm" style="color:transparent">·</div>' +
+
+
+      '<span class="vbg" style="color:transparent">·</span></div>';
+
+
+    grid.appendChild(e);
+
+
+  }
+
+
+  wrap.appendChild(grid);
+
+
+  return wrap;
+
+
+}
+
+
+
+
+
+function go(d)    { curSpread = Math.max(1, Math.min(getTotalSpreads(), curSpread + d)); render(); }
+
+
+function goTo(n)  { if (!isNaN(n) && n >= 1 && n <= getTotalSpreads()) { curSpread = n; render(); } }
+
+
+function toggleMissing(on) { showMissing = on; document.getElementById('spread').classList.toggle('hide-owned', on); }
+
+
+
+
+
+// ── Find card ──────────────────────────────────────────────────────────────
+
+
+function findCard(q) {
+
+
+  q = q.trim().toLowerCase();
+
+
+  const al = document.getElementById('alert');
+
+
+  if (!q) { al.style.display = 'none'; return; }
+
+
+  const idx = SLOTS.findIndex(s =>
+
+
+    (s.name || '').toLowerCase().includes(q) ||
+
+
+    (s.id   || '').toLowerCase().includes(q) ||
+
+
+    (s.v    || '').toLowerCase().includes(q)
+
+
+  );
+
+
+  if (idx >= 0) {
+
+
+    al.style.display = 'none';
+
+
+    const spp=getSPP(); curSpread = idx < spp ? 1 : Math.ceil(Math.floor(idx/spp)/2)+1; curSpread=Math.max(1,Math.min(getTotalSpreads(),curSpread));
+
+
+    render();
+
+
+  } else {
+
+
+    al.style.display = 'block';
+
+
+    al.textContent = `"${q}" not found`;
+
+
+  }
+
+
+}
+
+
+
+
+
+// ── Slot DOM element ───────────────────────────────────────────────────────
+
+
+function makeSlot(s) {
+
+
+  const key = sk(s), bc = BC[s.v] || BC_DEFAULT;
+
+
+  const div = document.createElement('div');
+
+
+  div.className = 'slot' + (owned.has(key) ? ' owned' : '');
+
+
+  div.style.borderColor = bc.col + '44';
+
+
+  div.dataset.key = key;
+
+
+
+
+
+  const img = document.createElement('img');
+
+
+  img.className = 'cimg'; img.src = imgUrl(s); img.alt = s.name || ''; img.loading = 'lazy';
+
+
+  const ph  = document.createElement('div');
+
+
+  ph.className = 'cph';
+
+
+  ph.innerHTML = `<div class="ph-n">${s.id}</div><div class="ph-nm">${(s.name||'').substring(0,15)}</div>`;
+
+
+  img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+
+
+  div.appendChild(img); div.appendChild(ph);
+
+
+
+
+
+  const lbl = document.createElement('div'); lbl.className = 'clbl';
+
+
+  lbl.innerHTML = `<div class="cnum">${s.id}</div>` +
+
+
+    `<div class="cnm">${s.set || s.name || ''}</div>` +
+
+
+    `<span class="vbg" style="background:${bc.bg};color:${bc.col}">${varLabel(s)}</span>`;
+
+
+  div.appendChild(lbl);
+
+
+
+
+
+  if (owned.has(key))   div.appendChild(badge('badge-owned', '✓'));
+
+
+  if (watched.has(key)) div.appendChild(badge('badge-star', '⭐'));
+
+
+  const p = prices[key];
+
+
+  if (p && p.raw) div.appendChild(badge('badge-price', p.raw));
+
+
+
+
+
+  div.addEventListener('click', e => {
+
+
+    e.preventDefault();
+
+
+    owned.has(key) ? owned.delete(key) : owned.add(key);
+
+
+    saveOwned(); updateProgress();
+
+
+    div.classList.toggle('owned');
+
+
+    syncBadge(div, 'badge-owned', '✓', owned.has(key));
+
+
+  });
+
+
+  div.addEventListener('contextmenu', e => { e.preventDefault(); openModal(s); });
+
+
+  return div;
+
+
+}
+
+
+
+
+
+function badge(cls, txt) {
+
+
+  const b = document.createElement('div'); b.className = cls; b.textContent = txt; return b;
+
+
+}
+
+
+function syncBadge(div, cls, txt, show) {
+
+
+  let b = div.querySelector('.' + cls);
+
+
+  if (show && !b) { b = badge(cls, txt); div.appendChild(b); }
+
+
+  else if (!show && b) b.remove();
+
+
+}
+
+
+
+
+
+// ── Card detail modal ──────────────────────────────────────────────────────
+
+
+let modalSlot = null;
+
+
+
+
+
+function openModal(s) {
+
+
+  modalSlot = s;
+
+
+  const key = sk(s), bc = BC[s.v] || BC_DEFAULT;
+
+
+  const mi = document.getElementById('mimg'), mph = document.getElementById('mph');
+
+
+  mi.style.display = 'block'; mph.style.display = 'none';
+
+
+  mi.src = imgUrl(s);
+
+
+  mi.onerror = () => { mi.style.display = 'none'; mph.style.display = 'flex'; mph.innerHTML = `<div style="color:#383430;font-size:11px;text-align:center">${s.id}<br>${varLabel(s)}</div>`; };
+
+
+  document.getElementById('mname').textContent   = s.name || s.id;
+
+
+  document.getElementById('mnum').textContent    = `${s.id} · ${varLabel(s)}`;
+
+
+  document.getElementById('mbadge').textContent  = varLabel(s);
+
+
+  document.getElementById('mbadge').style.background = bc.bg;
+
+
+  document.getElementById('mbadge').style.color      = bc.col;
+
+
+  document.getElementById('pc-link').href        = pcUrl(s);
+
+
+  const p = prices[key] || {};
+
+
+  document.getElementById('p-raw').value = p.raw  || '';
+
+
+  document.getElementById('p-9').value   = p.psa9 || '';
+
+
+  document.getElementById('p-10').value  = p.psa10|| '';
+
+
+  document.getElementById('price-saved').style.display = 'none';
+
+
+  syncModalBtns();
+
+
+  document.getElementById('modal').classList.add('open');
+
+
+}
+
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); modalSlot = null; }
+
+
+
+
+
+function syncModalBtns() {
+
+
+  if (!modalSlot) return;
+
+
+  const key = sk(modalSlot), isOwned = owned.has(key), isWatched = watched.has(key);
+
+
+  const ob = document.getElementById('m-own-btn');
+
+
+  ob.textContent = isOwned ? '✓ Remove owned' : 'Mark as owned';
+
+
+  ob.className   = 'm-btn ' + (isOwned ? 'm-btn-unown' : 'm-btn-own');
+
+
+  const wb = document.getElementById('m-watch-btn');
+
+
+  wb.textContent = isWatched ? '★ Unwatch' : '⭐ Watch';
+
+
+  wb.className   = 'm-btn ' + (isWatched ? 'm-btn-unwatch' : 'm-btn-watch');
+
+
+}
+
+
+
+
+
+function toggleOwnModal() {
+
+
+  if (!modalSlot) return;
+
+
+  const key = sk(modalSlot);
+
+
+  owned.has(key) ? owned.delete(key) : owned.add(key);
+
+
+  saveOwned(); updateProgress();
+
+
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+
+
+  if (el) { el.classList.toggle('owned', owned.has(key)); syncBadge(el, 'badge-owned', '✓', owned.has(key)); }
+
+
+  syncModalBtns();
+
+
+}
+
+
+
+
+
+function toggleWatchModal() {
+
+
+  if (!modalSlot) return;
+
+
+  const key = sk(modalSlot);
+
+
+  watched.has(key) ? watched.delete(key) : watched.add(key);
+
+
+  saveWatched();
+
+
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+
+
+  if (el) syncBadge(el, 'badge-star', '⭐', watched.has(key));
+
+
+  syncModalBtns();
+
+
+}
+
+
+
+
+
+function savePriceFromModal() {
+
+
+  if (!modalSlot) return;
+
+
+  const key = sk(modalSlot);
+
+
+  const fmt = v => { v = v.replace(/[^0-9.]/g,''); return v ? '$' + parseFloat(v).toFixed(2) : ''; };
+
+
+  const raw  = fmt(document.getElementById('p-raw').value);
+
+
+  const psa9 = fmt(document.getElementById('p-9').value);
+
+
+  const psa10= fmt(document.getElementById('p-10').value);
+
+
+  prices[key] = { raw, psa9, psa10, date: new Date().toISOString().slice(0,10) };
+
+
+  savePricesStore();
+
+
+  document.getElementById('p-raw').value = raw;
+
+
+  document.getElementById('p-9').value   = psa9;
+
+
+  document.getElementById('p-10').value  = psa10;
+
+
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+
+
+  if (el) { let b = el.querySelector('.badge-price'); if (raw) { if (!b) { b = badge('badge-price', raw); el.appendChild(b); } else b.textContent = raw; } else if (b) b.remove(); }
+
+
+  const ps = document.getElementById('price-saved');
+
+
+  ps.style.display = 'block'; setTimeout(() => ps.style.display = 'none', 1800);
+
+
+}
+
+
+
+
+
+// ── Watchlist ──────────────────────────────────────────────────────────────
+
+
+function openWatchlist() {
+
+
+  const slots = SLOTS.filter(s => watched.has(sk(s)));
+
+
+  document.getElementById('wl-sub').textContent = `${slots.length} card${slots.length !== 1 ? 's' : ''} watched`;
+
+
+  renderWatchlist(slots);
+
+
+  document.getElementById('wl-modal').classList.add('open');
+
+
+}
+
+
+
+
+
+function renderWatchlist(slots) {
+
+
+  const body = document.getElementById('wl-body');
+
+
+  if (!slots.length) { body.innerHTML = '<div class="wl-empty">No cards watched yet.<span>Right-click any card → ⭐ Watch</span></div>'; return; }
+
+
+  const bc = s => BC[s.v] || BC_DEFAULT;
+
+
+  let h = `<table class="wt"><thead><tr><th>ID</th><th>Name</th><th>Variant</th><th>Ungraded</th><th>PSA 10</th><th>Updated</th><th></th></tr></thead><tbody>`;
+
+
+  slots.forEach(s => {
+
+
+    const key = sk(s), p = prices[key] || {}, b = bc(s);
+
+
+    const fv = v => v ? `<span class="wt-p">${v}</span>` : `<span class="wt-p na">—</span>`;
+
+
+    h += `<tr>
+
+
+      <td class="wt-num">${s.id}</td>
+
+
+      <td class="wt-name" onclick="jumpTo('${key}')">${s.name || s.id}</td>
+
+
+      <td><span class="wt-badge" style="background:${b.bg};color:${b.col}">${varLabel(s)}</span></td>
+
+
+      <td>${fv(p.raw)}</td><td>${fv(p.psa10)}</td>
+
+
+      <td style="font-size:10px;color:#282420">${p.date||'—'}</td>
+
+
+      <td><button class="wt-rm" onclick="unwatchRow('${key}')">✕</button></td>
+
+
+    </tr>`;
+
+
+  });
+
+
+  body.innerHTML = h + '</tbody></table>';
+
+
+}
+
+
+
+
+
+function jumpTo(key) {
+
+
+  document.getElementById('wl-modal').classList.remove('open');
+
+
+  document.getElementById('ml-modal').classList.remove('open');
+
+
+  const idx = SLOTS.findIndex(s => sk(s) === key);
+
+
+  if (idx >= 0) { const spp=getSPP(); curSpread=idx<spp?1:Math.ceil(Math.floor(idx/spp)/2)+1; curSpread=Math.max(1,Math.min(getTotalSpreads(),curSpread)); render(); }
+
+
+}
+
+
+
+
+
+function unwatchRow(key) {
+
+
+  watched.delete(key); saveWatched();
+
+
+  const el = document.querySelector(`.slot[data-key="${key}"]`);
+
+
+  if (el) syncBadge(el, 'badge-star', '⭐', false);
+
+
+  openWatchlist();
+
+
+}
+
+
+
+
+
+// ── Missing list ───────────────────────────────────────────────────────────
+
+
+function openMissingList() {
+
+
+  const miss = SLOTS.filter(s => !owned.has(sk(s)));
+
+
+  document.getElementById('ml-stats').textContent = `${miss.length} missing of ${TOTAL}`;
+
+
+  const tot = miss.reduce((sum, s) => { const p = prices[sk(s)]; return sum + (p && p.raw ? parseFloat(p.raw.replace(/[^0-9.]/g,'')) || 0 : 0); }, 0);
+
+
+  const totEl = document.getElementById('ml-total');
+
+
+  if (tot > 0) { totEl.style.display = 'block'; totEl.textContent = `Estimated ungraded value (priced cards only): $${tot.toFixed(2)}`; }
+
+
+  else totEl.style.display = 'none';
+
+
+  const body = document.getElementById('ml-body'); body.innerHTML = '';
+
+
+  SDEFS.forEach(def => {
+
+
+    const section = miss.filter(def.f);
+
+
+    if (!section.length) return;
+
+
+    const wrap = document.createElement('div'); wrap.className = 'ml-section';
+
+
+    const ttl  = document.createElement('div'); ttl.className = 'ml-section-title'; ttl.textContent = `${def.label} (${section.length})`;
+
+
+    wrap.appendChild(ttl);
+
+
+    section.forEach(s => {
+
+
+      const key = sk(s), p = prices[key];
+
+
+      const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
+
+
+      const sfx = ` — ${varLabel(s)}`;
+
+
+      const chip = document.createElement('span'); chip.className = 'ml-chip';
+
+
+      chip.textContent = `${s.id} ${s.name || ''}${sfx}${pt}`;
+
+
+      chip.onclick = () => jumpTo(key);
+
+
+      wrap.appendChild(chip);
+
+
+    });
+
+
+    body.appendChild(wrap);
+
+
+  });
+
+
+  document.getElementById('ml-modal').classList.add('open');
+
+
+}
+
+
+
+
+
+function copyMissing() {
+
+
+  const miss = SLOTS.filter(s => !owned.has(sk(s)));
+
+
+  let txt = `${BINDER.title} — Missing (${miss.length}/${TOTAL})\nGenerated ${new Date().toLocaleDateString()}\n${'─'.repeat(50)}\n`;
+
+
+  miss.forEach(s => {
+
+
+    const p = prices[sk(s)];
+
+
+    const pt = p && p.raw ? `  ${p.raw}${p.psa10 ? ' / PSA10 ' + p.psa10 : ''}` : '';
+
+
+    txt += `  ${s.id}  ${s.name || ''}  — ${varLabel(s)}${pt}\n`;
+
+
+  });
+
+
+  navigator.clipboard.writeText(txt).then(() => {
+
+
+    const b = document.querySelector('#ml-modal .btn-purple');
+
+
+    const o = b.textContent; b.textContent = 'Copied!';
+
+
+    setTimeout(() => b.textContent = o, 1500);
+
+
+  });
+
+
+}
+
+
+
+
+
+function confirmClear() {
+
+
+  if (confirm('Clear all owned, watched and price data for this binder?')) {
+
+
+    owned.clear(); watched.clear(); prices = {};
+
+
+    saveOwned(); saveWatched(); savePricesStore();
+
+
+    render(); updateProgress();
+
+
+  }
+
+
+}
+
+
+
+
+
+// ── Manual sync (fallback) ─────────────────────────────────────────────────
+
+
+const SYNC_KEYS_LOCAL = [BINDER.lsOwned, BINDER.lsWatched, BINDER.lsPrices];
+
+
+function openSync() { document.getElementById('sync-overlay').classList.add('open'); }
+
+
+function closeSyncModal() { document.getElementById('sync-overlay').classList.remove('open'); }
+
+
+function doManualExport() {
+
+
+  const data = {}; SYNC_KEYS_LOCAL.forEach(k => { const v = localStorage.getItem(k); if (v) data[k] = v; });
+
+
+  const json = JSON.stringify(data, null, 2);
+
+
+  document.getElementById('export-ta').value = json;
+
+
+  navigator.clipboard.writeText(json).then(() => {
+
+
+    const f = document.getElementById('export-flash'); f.style.display = 'inline';
+
+
+    setTimeout(() => f.style.display = 'none', 2500);
+
+
+  }).catch(() => {});
+
+
+}
+
+
+function doManualImport() {
+
+
+  const raw = document.getElementById('import-ta').value.trim();
+
+
+  const f = document.getElementById('import-flash');
+
+
+  if (!raw) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Paste data first.'; return; }
+
+
+  try {
+
+
+    const data = JSON.parse(raw); let n = 0;
+
+
+    SYNC_KEYS_LOCAL.forEach(k => { if (data[k] !== undefined) { localStorage.setItem(k, data[k]); n++; } });
+
+
+    f.style.display='inline'; f.style.color='#4cff80'; f.textContent=`✓ Imported ${n} keys — reloading…`;
+
+
+    setTimeout(() => { closeSyncModal(); location.reload(); }, 1200);
+
+
+  } catch(e) { f.style.display='inline'; f.style.color='#c07040'; f.textContent='Invalid data.'; }
+
+
+}
+
+
+
+
+
+
+
+
+// ── Init ───────────────────────────────────────────────────────────────────
+
+
+loadLayout(); buildLayoutPicker(); buildSectionBar(); loadLayout(); buildLayoutPicker(); buildSectionBar(); load(); updateProgress(); render();
+
+
+</script>
+
+
+
+
+
+
+
+
+</body>
+
+
 </html>
