@@ -225,7 +225,10 @@ function init(SET) {
       } else {
         pg.appendChild(el('div', 'page-label', `Page ${p} / ${pageCount()}`));
         const g = el('div', 'page-grid');
-        pageSlots(p).forEach(s => g.appendChild(makeSlot(s)));
+        const slots = pageSlots(p);
+        slots.forEach(s => g.appendChild(makeSlot(s)));
+        // pad a partially-filled page with empty pockets
+        for (let i = slots.length; i < spp(); i++) g.appendChild(el('div', 'pocket-empty'));
         pg.appendChild(g);
       }
       wrap.appendChild(pg);
