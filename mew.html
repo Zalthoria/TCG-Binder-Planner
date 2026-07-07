@@ -310,6 +310,18 @@ table.wt tr:hover td{background:#111}
 .section-chip:hover{border-color:#555;color:#aaa;background:#222}
 .section-chip.active{border-color:#9070e0;background:#1e1040;color:#9070e0}
 .v-rh .card-img-wrap{position:relative}.v-rh .card-img-wrap::after{content:'RH';position:absolute;top:4px;right:4px;background:linear-gradient(135deg,#b06aff,#ff6ab0);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:.5px;pointer-events:none}
+
+/* ── Progress breakdown ── */
+.prog-breakdown{width:100%;max-width:1100px;margin:6px auto 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;padding:0 8px}
+.prog-cat{background:#181410;border:1px solid #2a2418;border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:5px}
+.prog-cat.done{border-color:#5c9a6a;background:#152018}
+.prog-cat-header{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.prog-cat-label{color:#8a7a5a;font-weight:600;letter-spacing:.3px;text-transform:uppercase;font-size:10px}
+.prog-cat-count{color:#c89a3a;font-weight:700;font-variant-numeric:tabular-nums}
+.prog-cat-bar{height:5px;background:#0f0d0a;border-radius:3px;overflow:hidden;position:relative}
+.prog-cat-bar-fill{height:100%;background:linear-gradient(90deg,#c89a3a,#e8b84a);border-radius:3px;transition:width .3s ease}
+.prog-cat.done .prog-cat-bar-fill{background:linear-gradient(90deg,#5c9a6a,#7ac48a)}
+.prog-cat.done .prog-cat-count{color:#7ac48a}
 </style>
 </head>
 <body>
@@ -382,6 +394,7 @@ table.wt tr:hover td{background:#111}
 <div class="layout-bar">
   <span class="layout-lbl">Layout:</span>
   <div id="layout-btns"></div>
+<div id="prog-breakdown" class="prog-breakdown"></div>
 </div>
 
 <!-- ── Section jump bar ── -->
