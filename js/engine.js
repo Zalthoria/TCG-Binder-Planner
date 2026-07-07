@@ -151,6 +151,7 @@ function init(SET) {
       const full = got === slots.length;
       if (full) done++;
       const d = el('div', 'pm-page' + (full ? ' done' : ''));
+      d.dataset.p = p;
       if (view === 'binder' && spreadOf(p) === curSpread) d.classList.add('cur');
       d.title = `Page ${p} — ${got}/${slots.length}`;
       d.appendChild(el('span', 'pn', p));
@@ -158,6 +159,15 @@ function init(SET) {
       f.style.height = (got / slots.length * 100) + '%';
       d.appendChild(f);
       d.addEventListener('click', () => { setView('binder'); goTo(spreadOf(p)); });
+      // hover: highlight both pages of the spread this page belongs to
+      d.addEventListener('mouseenter', () => {
+        const partner = p % 2 === 0 ? p + 1 : p - 1;   // pages pair as (2,3),(4,5)…; 1 pairs with the cover
+        [p, partner].forEach(n => {
+          const m = row.querySelector(`.pm-page[data-p="${n}"]`);
+          if (m) m.classList.add('hl');
+        });
+      });
+      d.addEventListener('mouseleave', () => row.querySelectorAll('.pm-page.hl').forEach(m => m.classList.remove('hl')));
       row.appendChild(d);
     }
     $('pm-sub').textContent = `${done}/${P} pages complete · ${cols}×${rows} pockets`;
@@ -195,7 +205,16 @@ function init(SET) {
     wrap.classList.toggle('hide-owned', hideOwned);
     const leftP = 2 * curSpread - 2, rightP = 2 * curSpread - 1;   // 0 = cover
     [ [leftP, 'left'], [rightP, 'right'] ].forEach(([p, side]) => {
-      if (p > pageCount()) return;
+      if (p > pageCount()) {
+        // keep the spread symmetrical: render an empty sleeve page
+        const pg = el('div', 'page ' + side);
+        pg.appendChild(el('div', 'page-label', 'Empty'));
+        const g = el('div', 'page-grid');
+        for (let i = 0; i < spp(); i++) g.appendChild(el('div', 'pocket-empty'));
+        pg.appendChild(g);
+        wrap.appendChild(pg);
+        return;
+      }
       const pg = el('div', 'page ' + side);
       if (p === 0) {
         const cv = el('div', 'page-cover');

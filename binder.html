@@ -44,6 +44,10 @@
 .pm-page .pn { position: absolute; top: 2px; left: 0; right: 0; text-align: center; font-size: 8px; font-weight: 700; color: var(--dim); }
 .pm-page.done .pn { display: none; }
 .pm-page.cur { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.pm-page.hl { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 55%, transparent); }
+
+/* empty sleeve pockets on the last spread */
+.pocket-empty { aspect-ratio: 733 / 1024; border-radius: 8px; border: 1.5px dashed rgba(255,255,255,.07); background: rgba(0,0,0,.18); }
 
 /* Sections bar */
 .secbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
