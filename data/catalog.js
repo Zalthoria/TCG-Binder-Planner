@@ -55,7 +55,7 @@ window.CATALOG = [
   { id:'par',  era:'EN — Scarlet & Violet', name:'Paradox Rift (PAR)', desc:'Nov 2023',
     file:null, lsOwned:'par_owned_v1', lsPrices:'par_prices_v1', total:292, release:'2023-11', cover:`logos/PAR.png`, icon:'⏳' },
   { id:'sv4a', era:'JP — Scarlet & Violet', name:'SV4a Shiny Treasure ex', desc:'シャイニートレジャーex · High Class Pack · Dec 2023',
-    file:'sv4a.html', page:'binder.html?set=sv4a', lsOwned:'sv4a_shiny_treasure_owned_v1', lsPrices:'sv4a_shiny_treasure_prices_v1', total:360, release:'2023-12', cover:`logos/SV4a.png`, icon:'✨' },
+    file:'sv4a.html', page:'binder.html?set=sv4a', lsOwned:'sv4a_shiny_treasure_owned_v1', lsPrices:'sv4a_shiny_treasure_prices_v1', total:360, release:'2023-12', cover:`logos/SV4A.png`, icon:'✨' },
   { id:'paf',  era:'EN — Scarlet & Violet', name:'Paldean Fates (PAF)', desc:'Shiny Vault · Jan 2024',
     file:null, lsOwned:'paf_owned_v1', lsPrices:'paf_prices_v1', total:245, release:'2024-01', cover:`logos/PAF.png`, icon:'✨' },
   { id:'tef',  era:'EN — Scarlet & Violet', name:'Temporal Forces (TEF)', desc:'Mar 2024',
