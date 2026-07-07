@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+/* ── Binder page layout ─────────────────────────────────────────────── */
+.wrap { max-width: 1400px; margin: 0 auto; padding: 18px 22px 80px; }
+
+/* Top nav */
+.nav { display: flex; align-items: center; gap: 14px; padding: 10px 0 18px; }
+.nav .back { font-size: 13px; font-weight: 700; color: var(--dim); display: flex; align-items: center; gap: 6px; transition: color .15s; }
+.nav .back:hover { color: var(--accent); }
+.nav .nav-name { flex: 1; text-align: right; font-size: 12px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Hero header */
+.hero { display: flex; align-items: center; gap: 22px; padding: 22px 26px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(600px 220px at 12% 50%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%); pointer-events: none; }
+.hero-logo { height: 84px; max-width: 220px; object-fit: contain; filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--accent) 45%, transparent)); flex-shrink: 0; }
+.hero-info { flex: 1; min-width: 0; }
+.hero-title { font-size: 24px; font-weight: 800; letter-spacing: -.4px; }
+.hero-sub { font-size: 13px; color: var(--dim); margin-top: 3px; }
+.hero-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.hero-stats { display: flex; align-items: center; gap: 22px; flex-shrink: 0; }
+.hstat { text-align: center; }
+.hstat .v { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+.hstat .l { font-size: 9.5px; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px; }
+
+/* Page map — completion at a glance */
+.pagemap { padding: 14px 18px 12px; margin-bottom: 16px; }
+.pm-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.pm-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.4px; color: var(--dim); }
+.pm-sub { font-size: 11px; color: var(--faint); }
+.pm-row { display: flex; flex-wrap: wrap; gap: 5px; }
+.pm-page { width: 26px; height: 34px; border-radius: 5px; border: 1px solid var(--line); background: rgba(0,0,0,.3); position: relative; cursor: pointer; overflow: hidden; transition: transform .15s, border-color .15s; }
+.pm-page:hover { transform: translateY(-2px); border-color: var(--accent); }
+.pm-page .fill { position: absolute; left: 0; right: 0; bottom: 0; background: color-mix(in srgb, var(--accent) 55%, transparent); transition: height .4s ease; }
+.pm-page.done .fill { background: var(--accent); }
+.pm-page.done::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #14100a; }
+.pm-page .pn { position: absolute; top: 2px; left: 0; right: 0; text-align: center; font-size: 8px; font-weight: 700; color: var(--dim); }
+.pm-page.done .pn { display: none; }
+.pm-page.cur { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+/* Sections bar */
+.secbar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.sec-chip { cursor: pointer; transition: all .15s; }
+.sec-chip:hover, .sec-chip.active { border-color: var(--accent); color: var(--accent); }
+.sec-chip .pct { color: var(--accent); font-weight: 800; }
+.sec-chip .bar { width: 44px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.08); overflow: hidden; }
+.sec-chip .bar i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+
+/* Toolbar */
+.toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.viewtabs { display: flex; background: var(--panel); border: 1px solid var(--line); border-radius: 11px; padding: 3px; gap: 2px; }
+.viewtabs .vt { border: none; background: transparent; color: var(--dim); font-size: 12.5px; font-weight: 700; padding: 6px 16px; border-radius: 8px; cursor: pointer; transition: all .15s; }
+.viewtabs .vt.active { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
+.toolbar .spacer { flex: 1; }
+#search { width: 210px; }
+
+/* Layout picker */
+.lp-wrap { position: relative; }
+.lp-panel { position: absolute; top: calc(100% + 8px); right: 0; z-index: 50; padding: 10px; display: none; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #14110fe8; }
+.lp-panel.open { display: grid; }
+.lp-opt { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 8px 12px; border-radius: 9px; border: 1px solid transparent; cursor: pointer; font-size: 11px; font-weight: 700; color: var(--dim); transition: all .15s; }
+.lp-opt:hover { background: var(--panel2); }
+.lp-opt.active { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.lp-mini { display: grid; gap: 2px; }
+.lp-mini i { width: 5px; height: 7px; border-radius: 1px; background: currentColor; opacity: .65; display: block; }
+
+/* ── Binder (spread) view ───────────────────────────────────────────── */
+.spread-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 6px 0 16px; }
+.spread-nav .sn-btn { width: 40px; height: 40px; border-radius: 50%; font-size: 16px; display: flex; align-items: center; justify-content: center; padding: 0; }
+.spread-nav .sn-pos { font-size: 13px; font-weight: 700; color: var(--dim); min-width: 130px; text-align: center; }
+.spread-nav .sn-pos input { width: 44px; text-align: center; padding: 4px 4px; margin: 0 4px; }
+
+.spread { display: flex; justify-content: center; gap: 0; perspective: 2200px; }
+.page {
+  width: min(46vw, 620px); padding: 16px; border-radius: 4px 14px 14px 4px;
+  background: linear-gradient(160deg, #1b1713, #131009);
+  border: 1px solid var(--line); position: relative;
+}
+.page.left { border-radius: 14px 4px 4px 14px; box-shadow: inset -22px 0 34px -26px #000, 0 16px 40px rgba(0,0,0,.5); }
+.page.right { box-shadow: inset 22px 0 34px -26px #000, 0 16px 40px rgba(0,0,0,.5); }
+.page-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.6px; color: var(--faint); text-align: center; margin-bottom: 10px; }
+.page-grid { display: grid; grid-template-columns: repeat(var(--binder-cols, 3), 1fr); gap: 8px; }
+.page-cover { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; min-height: 420px; }
+.page-cover img { max-width: 70%; max-height: 180px; object-fit: contain; filter: drop-shadow(0 10px 30px color-mix(in srgb, var(--accent) 50%, transparent)); }
+.page-cover .cv-t { font-size: 19px; font-weight: 800; text-align: center; }
+.page-cover .cv-s { font-size: 12px; color: var(--dim); text-align: center; }
+
+/* ── Gallery view ───────────────────────────────────────────────────── */
+.gal-sec { margin-bottom: 26px; }
+.gal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.gal-head h3 { font-size: 14px; font-weight: 800; letter-spacing: -.2px; }
+.gal-head .gh-n { font-size: 11.5px; font-weight: 700; color: var(--dim); }
+.gal-head .gh-bar { flex: 1; max-width: 220px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.07); overflow: hidden; }
+.gal-head .gh-bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .5s; }
+.gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 9px; }
+
+/* ── Card modal ─────────────────────────────────────────────────────── */
+.cm { display: flex; gap: 22px; padding: 24px; }
+.cm-img { width: 260px; flex-shrink: 0; border-radius: 12px; box-shadow: 0 14px 44px rgba(0,0,0,.6); }
+.cm-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.cm-name { font-size: 20px; font-weight: 800; letter-spacing: -.3px; }
+.cm-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.cm-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cm-prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.cm-prices label { font-size: 10px; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+.cm-prices input { width: 100%; }
+.cm-links { display: flex; gap: 14px; font-size: 12.5px; font-weight: 600; }
+.cm-close { position: absolute; top: 12px; right: 14px; font-size: 20px; color: var(--faint); background: none; border: none; cursor: pointer; }
+.cm-close:hover { color: var(--txt); }
+.sheet { position: relative; }
+
+/* ── Watchlist drawer ───────────────────────────────────────────────── */
+.wl-body { padding: 18px 22px 26px; }
+.wl-title { font-size: 17px; font-weight: 800; margin-bottom: 2px; }
+.wl-sub { font-size: 12px; color: var(--dim); margin-bottom: 14px; }
+.wl-row { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 10px; cursor: pointer; transition: background .15s; }
+.wl-row:hover { background: var(--panel2); }
+.wl-row img { width: 38px; border-radius: 4px; }
+.wl-row .wr-n { flex: 1; font-size: 13px; font-weight: 600; }
+.wl-row .wr-n span { display: block; font-size: 10.5px; color: var(--faint); font-weight: 600; }
+.wl-row .wr-p { font-size: 12.5px; font-weight: 700; color: var(--star); }
+.wl-empty { text-align: center; color: var(--faint); font-size: 13px; padding: 30px 0; }
+
+.err { max-width: 520px; margin: 120px auto; text-align: center; padding: 40px; }
+
+@media (max-width: 900px) {
+  .hero { flex-direction: column; text-align: center; }
+  .hero-legend { justify-content: center; }
+  .spread { flex-direction: column; align-items: center; gap: 14px; }
+  .page { width: 100%; border-radius: 14px !important; }
+  .cm { flex-direction: column; }
+  .cm-img { width: 100%; max-width: 300px; margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app" style="display:none">
+
+  <div class="nav">
+    <a class="back" href="index.html">← All binders</a>
+    <div class="nav-name" id="nav-name"></div>
+  </div>
+
+  <header class="hero glass">
+    <img class="hero-logo" id="hero-logo" alt="" hidden>
+    <div class="hero-info">
+      <div class="hero-title" id="hero-title"></div>
+      <div class="hero-sub" id="hero-sub"></div>
+      <div class="hero-legend" id="hero-legend"></div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="v" id="st-owned">0</div><div class="l">Owned</div></div>
+      <div class="hstat"><div class="v" id="st-missing">0</div><div class="l">Missing</div></div>
+      <div class="hstat"><div class="v" id="st-watched">0</div><div class="l">Watched</div></div>
+      <div class="ring" id="ring"></div>
+    </div>
+  </header>
+
+  <section class="pagemap glass">
+    <div class="pm-head">
+      <span class="pm-title">Page map</span>
+      <span class="pm-sub" id="pm-sub"></span>
+    </div>
+    <div class="pm-row" id="pm-row"></div>
+  </section>
+
+  <div class="secbar" id="secbar"></div>
+
+  <div class="toolbar">
+    <div class="viewtabs">
+      <button class="vt active" data-view="binder">📖 Binder</button>
+      <button class="vt" data-view="gallery">🃏 All cards</button>
+    </div>
+    <div class="spacer"></div>
+    <input type="search" id="search" placeholder="Search name or number…">
+    <label class="switch"><input type="checkbox" id="hide-owned"><span class="track"></span>Missing only</label>
+    <button class="btn" id="btn-watchlist">⭐ Watchlist</button>
+    <div class="lp-wrap">
+      <button class="btn" id="lp-trigger">⊞ <span id="lp-label">3×3</span></button>
+      <div class="lp-panel glass" id="lp-panel"></div>
+    </div>
+  </div>
+
+  <div id="view-binder">
+    <div class="spread-nav">
+      <button class="btn sn-btn" id="sn-prev">‹</button>
+      <div class="sn-pos">Spread <input type="text" id="sn-cur" value="1"> / <span id="sn-max"></span></div>
+      <button class="btn sn-btn" id="sn-next">›</button>
+    </div>
+    <div class="spread" id="spread"></div>
+  </div>
+
+  <div id="view-gallery" style="display:none"></div>
+</div>
+
+<!-- Card modal -->
+<div class="overlay" id="modal">
+  <div class="sheet" style="max-width:640px">
+    <button class="cm-close" id="cm-close">✕</button>
+    <div class="cm">
+      <img class="cm-img" id="cm-img" alt="">
+      <div class="cm-body">
+        <div>
+          <div class="cm-name" id="cm-name"></div>
+          <div class="cm-meta" id="cm-meta" style="margin-top:8px"></div>
+        </div>
+        <div class="cm-actions">
+          <button class="btn primary" id="cm-own"></button>
+          <button class="btn" id="cm-watch"></button>
+          <button class="btn ghost" id="cm-jump">Show in binder</button>
+        </div>
+        <div class="cm-prices">
+          <div><label>Raw $</label><input type="number" id="cm-raw" step="0.01" min="0"></div>
+          <div><label>PSA 9 $</label><input type="number" id="cm-psa9" step="0.01" min="0"></div>
+          <div><label>PSA 10 $</label><input type="number" id="cm-psa10" step="0.01" min="0"></div>
+        </div>
+        <button class="btn" id="cm-save-price" style="align-self:flex-start">💾 Save prices</button>
+        <div class="cm-links" id="cm-links"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Watchlist -->
+<div class="overlay" id="wl">
+  <div class="sheet" style="max-width:560px">
+    <button class="cm-close" id="wl-close">✕</button>
+    <div class="wl-body">
+      <div class="wl-title">⭐ Watchlist</div>
+      <div class="wl-sub" id="wl-sub"></div>
+      <div id="wl-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="data/catalog.js"></script>
+<script src="data/themes.js"></script>
+<script src="js/registry.js"></script>
+<script src="js/engine.js"></script>
+</body>
+</html>

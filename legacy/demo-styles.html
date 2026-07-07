@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owned-card style demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+:root { --accent: #e54952; --deep: #260c0e; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 30px 24px 100px; }
+h1 { font-size: 24px; font-weight: 900; letter-spacing: -.5px; margin-bottom: 6px; }
+.tag { color: var(--dim); font-size: 13px; margin-bottom: 30px; }
+.demo { margin-bottom: 40px; padding: 22px 24px; }
+.demo h2 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.demo h2 .k { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:7px; background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); font-size: 13px; margin-right: 9px; }
+.demo .note { font-size: 12px; color: var(--dim); margin-bottom: 16px; }
+.row { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+
+.card { position: relative; aspect-ratio: 733/1024; border-radius: 9px; overflow: hidden; cursor: pointer; user-select: none; transition: transform .16s ease, box-shadow .16s ease; }
+.card:hover { transform: translateY(-4px); z-index: 2; }
+.card img.art { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card .nm { position: absolute; left:0; right:0; bottom:0; padding: 14px 6px 5px; font-size: 10px; font-weight: 700; text-align: center; color: #eee; background: linear-gradient(transparent, rgba(0,0,0,.9) 60%); pointer-events: none; }
+
+/* ── A: Empty pockets ─────────────────────────────────────────────── */
+.sA .card { border: 1.5px solid transparent; }
+.sA .card.owned { border-color: color-mix(in srgb, var(--accent) 70%, transparent); box-shadow: 0 3px 14px rgba(0,0,0,.45); }
+.sA .card:not(.owned) { border: 2px dashed #3a352e; background: repeating-linear-gradient(45deg, #14110e, #14110e 8px, #171310 8px, #171310 16px); }
+.sA .card:not(.owned) img.art { opacity: 0; transition: opacity .25s; }
+.sA .card:not(.owned):hover img.art { opacity: .35; }
+.sA .card:not(.owned) .pocket {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; pointer-events: none;
+}
+.sA .pocket .num { font-size: 17px; font-weight: 900; color: #4a443c; letter-spacing: .5px; }
+.sA .pocket .pnm { font-size: 10.5px; font-weight: 700; color: #3c3730; max-width: 90%; text-align: center; }
+.sA .pocket .slot-ic { width: 30px; height: 30px; border-radius: 50%; border: 2px dashed #35302a; display:flex; align-items:center; justify-content:center; color:#35302a; font-size: 15px; }
+.sA .card.owned .pocket { display: none; }
+.sA .card.owned .nm { display: block; }
+.sA .card:not(.owned) .nm { display: none; }
+
+/* ── B: Big OWNED stamp ───────────────────────────────────────────── */
+.sB .card { border: 1.5px solid #2c2822; }
+.sB .card:not(.owned) img.art { filter: brightness(.75) saturate(.85); }
+.sB .card.owned { border-color: var(--accent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent), 0 6px 18px color-mix(in srgb, var(--accent) 22%, transparent); }
+.sB .card.owned .sash {
+  position: absolute; top: 14px; left: -34px; transform: rotate(-45deg);
+  width: 120px; text-align: center; font-size: 9.5px; font-weight: 900; letter-spacing: 1.5px;
+  padding: 4px 0; background: var(--accent); color: #180b0c; box-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+.sB .card.owned .bigchk {
+  position: absolute; right: 7px; top: 7px; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent); color: #180b0c; font-size: 17px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 80%, transparent), 0 2px 6px rgba(0,0,0,.5);
+}
+.sB .card:not(.owned) .sash, .sB .card:not(.owned) .bigchk { display: none; }
+
+/* ── C: MISSING overlay ───────────────────────────────────────────── */
+.sC .card { border: 1.5px solid #2c2822; }
+.sC .card.owned { border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+.sC .card:not(.owned)::after {
+  content: 'MISSING'; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.55);
+  background: rgba(8,6,5,.72); transform: rotate(-24deg) scale(1.5);
+  text-shadow: 0 2px 8px #000;
+}
+.sC .card:not(.owned) .mnum {
+  position: absolute; top: 7px; left: 7px; z-index: 2; font-size: 10px; font-weight: 800;
+  background: rgba(0,0,0,.75); border: 1px solid #444; color: #bbb; padding: 3px 7px; border-radius: 999px;
+}
+.sC .card.owned .mnum { display: none; }
+
+/* ── D: Card-back pockets ─────────────────────────────────────────── */
+.sD .card { border: 1.5px solid #2c2822; }
+.sD .card.owned { border-color: color-mix(in srgb, var(--accent) 70%, transparent); box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+.sD .card:not(.owned) img.art { display: none; }
+.sD .card:not(.owned) .back {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  background:
+    radial-gradient(circle at 50% 50%, #2a5aa8 0%, #1b3f7e 45%, #142f60 70%, #0f2549 100%);
+  border: 6px solid #10203e; border-radius: 7px;
+}
+.sD .back .ball { width: 44%; aspect-ratio: 1; border-radius: 50%;
+  background: linear-gradient(180deg, #e34b4b 0 47%, #111 47% 53%, #f2f0ea 53% 100%);
+  position: relative; box-shadow: 0 4px 14px rgba(0,0,0,.5), inset 0 -4px 10px rgba(0,0,0,.3); }
+.sD .back .ball::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width: 26%; height: 26%; border-radius:50%; background:#f2f0ea; border: 3.5px solid #111; }
+.sD .back .bnum { font-size: 11px; font-weight: 800; color: rgba(255,255,255,.75); background: rgba(0,0,0,.35); padding: 3px 10px; border-radius: 999px; }
+.sD .card.owned .back { display: none; }
+
+.pickbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(12,10,9,.92); backdrop-filter: blur(12px); border-top: 1px solid var(--line); padding: 12px 24px; text-align: center; font-size: 13px; color: var(--dim); }
+.pickbar b { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Owned-card styles — pick your favourite</h1>
+  <div class="tag">Click any card to toggle owned ⇄ missing and see how each style feels. Same 6 cards in every row, first 3 start owned.</div>
+
+  <section class="demo glass sA">
+    <h2><span class="k">A</span>Empty pockets</h2>
+    <div class="note">Missing = empty dashed pocket with just the number &amp; name (hover peeks the art). Owned = full art. If you see a card, you own it.</div>
+    <div class="row"></div>
+  </section>
+
+  <section class="demo glass sB">
+    <h2><span class="k">B</span>Big OWNED stamp</h2>
+    <div class="note">Everything shows art. Owned cards get a corner sash + glowing check + accent frame.</div>
+    <div class="row"></div>
+  </section>
+
+  <section class="demo glass sC">
+    <h2><span class="k">C</span>MISSING overlay</h2>
+    <div class="note">Everything shows art. Missing cards get a dark diagonal “MISSING” watermark + number chip.</div>
+    <div class="row"></div>
+  </section>
+
+  <section class="demo glass sD">
+    <h2><span class="k">D</span>Card-back pockets</h2>
+    <div class="note">Missing slots show a card back, like an unfilled binder sleeve. Owned = real art.</div>
+    <div class="row"></div>
+  </section>
+</div>
+
+<div class="pickbar">Tell Claude: <b>A</b>, <b>B</b>, <b>C</b> or <b>D</b> — (or mix, e.g. “A but with B’s checkmark”)</div>
+
+<script>
+const CARDS = [
+  { n:'001', name:'Bulbasaur',    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_001_R_EN_SM.png' },
+  { n:'004', name:'Charmander',   img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_004_R_EN_SM.png' },
+  { n:'006', name:'Charizard ex', img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_006_R_EN_SM.png' },
+  { n:'007', name:'Squirtle',     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_007_R_EN_SM.png' },
+  { n:'025', name:'Pikachu',      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_025_R_EN_SM.png' },
+  { n:'151', name:'Mew ex',       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_151_R_EN_SM.png' },
+];
+document.querySelectorAll('.demo .row').forEach(row => {
+  CARDS.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'card' + (i < 3 ? ' owned' : '');
+    d.innerHTML = `
+      <img class="art" src="${c.img}" loading="lazy">
+      <div class="nm">#${c.n} ${c.name}</div>
+      <div class="pocket"><div class="slot-ic">+</div><div class="num">#${c.n}</div><div class="pnm">${c.name}</div></div>
+      <div class="sash">OWNED</div><div class="bigchk">✓</div>
+      <span class="mnum">#${c.n}</span>
+      <div class="back"><div class="ball"></div><div class="bnum">#${c.n}</div></div>`;
+    d.addEventListener('click', () => d.classList.toggle('owned'));
+    row.appendChild(d);
+  });
+});
+</script>
+</body>
+</html>

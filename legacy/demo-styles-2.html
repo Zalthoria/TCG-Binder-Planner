@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owned-card styles v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+:root { --accent: #e54952; --deep: #260c0e; --own: #35d07a; --need: #6b6257; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 30px 24px 100px; }
+h1 { font-size: 24px; font-weight: 900; letter-spacing: -.5px; margin-bottom: 6px; }
+.tag { color: var(--dim); font-size: 13px; margin-bottom: 30px; }
+.demo { margin-bottom: 40px; padding: 22px 24px; }
+.demo h2 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.demo h2 .k { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:7px; background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); font-size: 13px; margin-right: 9px; }
+.demo .note { font-size: 12px; color: var(--dim); margin-bottom: 16px; }
+.row { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+
+.card { position: relative; cursor: pointer; user-select: none; transition: transform .16s ease; }
+.card:hover { transform: translateY(-4px); z-index: 2; }
+.card .art-box { position: relative; aspect-ratio: 733/1024; border-radius: 9px; overflow: hidden; }
+.card img.art { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── E: Status footer strip ───────────────────────────────────────── */
+.sE .art-box { border-radius: 9px 9px 0 0; }
+.sE .foot {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 10.5px; font-weight: 900; letter-spacing: 1.2px;
+  padding: 6px 4px; border-radius: 0 0 9px 9px;
+  background: #17130f; color: var(--need); border-top: none;
+}
+.sE .card.owned .foot { background: color-mix(in srgb, var(--own) 22%, #101d14); color: var(--own); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--own) 40%, transparent); }
+.sE .card .art-box { border: 1.5px solid #2c2822; border-bottom: none; }
+.sE .card.owned .art-box { border-color: color-mix(in srgb, var(--own) 55%, transparent); }
+
+/* ── F: Dual corner badges (explicit both ways) ───────────────────── */
+.sF .art-box { border: 1.5px solid #2c2822; }
+.sF .badge {
+  position: absolute; top: 7px; right: 7px; width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900;
+  box-shadow: 0 2px 8px rgba(0,0,0,.6);
+}
+.sF .card.owned .badge { background: var(--own); color: #08170e; box-shadow: 0 0 14px color-mix(in srgb, var(--own) 70%, transparent); }
+.sF .card.owned .badge::after { content: '✓'; }
+.sF .card:not(.owned) .badge { background: rgba(10,8,7,.8); border: 2px dashed #7a6f60; color: #7a6f60; }
+.sF .card:not(.owned) .badge::after { content: '+'; }
+.sF .card.owned .art-box { border-color: color-mix(in srgb, var(--own) 50%, transparent); }
+
+/* ── G: Colored frames ────────────────────────────────────────────── */
+.sG .art-box { border: 3px solid transparent; }
+.sG .card.owned .art-box {
+  border-color: var(--own);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--own) 45%, transparent), 0 5px 18px color-mix(in srgb, var(--own) 25%, transparent);
+}
+.sG .card:not(.owned) .art-box { border: 3px dashed #4a4238; }
+.sG .gtag {
+  position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+  font-size: 9px; font-weight: 900; letter-spacing: 1.5px; padding: 3px 10px; border-radius: 999px;
+}
+.sG .card.owned .gtag { background: var(--own); color: #08170e; }
+.sG .card:not(.owned) .gtag { background: rgba(10,8,7,.8); color: #8a7f70; border: 1px dashed #4a4238; }
+
+/* ── H: Sleeve shine (owned = holo-sleeved) ───────────────────────── */
+.sH .art-box { border: 1.5px solid #2c2822; }
+.sH .card.owned .art-box { border-color: color-mix(in srgb, var(--accent) 75%, #fff 10%); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent), 0 6px 20px rgba(0,0,0,.5); }
+.sH .card.owned .shine {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.22) 45%, rgba(255,255,255,.05) 52%, transparent 60%);
+  background-size: 260% 100%; animation: sheen 3.2s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+@keyframes sheen { 0%, 55% { background-position: 120% 0; } 90%, 100% { background-position: -60% 0; } }
+.sH .card.owned .corner {
+  position: absolute; top: 0; right: 0; border-style: solid; border-width: 0 34px 34px 0;
+  border-color: transparent var(--accent) transparent transparent;
+}
+.sH .card.owned .corner::after { content: '✓'; position: absolute; top: 1px; right: -30px; font-size: 13px; font-weight: 900; color: #1c0e0f; }
+.sH .card:not(.owned) .shine, .sH .card:not(.owned) .corner { display: none; }
+.sH .card:not(.owned) .art-box::after { content: ''; position: absolute; inset: 0; background: rgba(10,8,6,.18); }
+
+.pickbar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(12,10,9,.92); backdrop-filter: blur(12px); border-top: 1px solid var(--line); padding: 12px 24px; text-align: center; font-size: 13px; color: var(--dim); }
+.pickbar b { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Round 2 — art always visible, both states</h1>
+  <div class="tag">Click any card to toggle owned ⇄ missing. First 3 in each row start owned. Missing cards keep their full art in every option.</div>
+
+  <section class="demo glass sE">
+    <h2><span class="k">E</span>Status footer strip</h2>
+    <div class="note">Every card gets a little LED bar underneath — green “✓ OWNED” vs dark “+ NEEDED”. Art is 100% untouched; you scan the strips like a checklist.</div>
+    <div class="row"></div>
+  </section>
+
+  <section class="demo glass sF">
+    <h2><span class="k">F</span>Dual corner badges</h2>
+    <div class="note">Both states are explicit: owned = solid green ✓ badge, missing = dashed hollow + badge. Nothing else changes.</div>
+    <div class="row"></div>
+  </section>
+
+  <section class="demo glass sG">
+    <h2><span class="k">G</span>Colored frames + tag</h2>
+    <div class="note">Owned = solid glowing green frame with an OWNED pill. Missing = dashed frame with a NEEDED pill. Reads at any zoom level.</div>
+    <div class="row"></div>
+  </section>
+
+  <section class="demo glass sH">
+    <h2><span class="k">H</span>Sleeve shine</h2>
+    <div class="note">Owned cards look “sleeved”: subtle animated holo sheen + folded check corner + accent frame. Missing are matte with a whisper of shade.</div>
+    <div class="row"></div>
+  </section>
+</div>
+
+<div class="pickbar">Tell Claude: <b>E</b>, <b>F</b>, <b>G</b> or <b>H</b> — mixes welcome (e.g. “E’s strip + H’s shine”)</div>
+
+<script>
+const CARDS = [
+  { n:'001', name:'Bulbasaur',    img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_001_R_EN_SM.png' },
+  { n:'004', name:'Charmander',   img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_004_R_EN_SM.png' },
+  { n:'006', name:'Charizard ex', img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_006_R_EN_SM.png' },
+  { n:'007', name:'Squirtle',     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_007_R_EN_SM.png' },
+  { n:'025', name:'Pikachu',      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_025_R_EN_SM.png' },
+  { n:'151', name:'Mew ex',       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/MEW/MEW_151_R_EN_SM.png' },
+];
+document.querySelectorAll('.demo .row').forEach((row, ri) => {
+  CARDS.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'card' + (i < 3 ? ' owned' : '');
+    d.innerHTML = `
+      <div class="art-box">
+        <img class="art" src="${c.img}" loading="lazy">
+        <div class="shine"></div><div class="corner"></div>
+        <div class="badge"></div>
+        <div class="gtag"></div>
+      </div>
+      <div class="foot"></div>`;
+    const sync = () => {
+      const own = d.classList.contains('owned');
+      d.querySelector('.foot').textContent = own ? '✓ OWNED' : '+ NEEDED';
+      d.querySelector('.gtag').textContent = own ? 'OWNED' : 'NEEDED';
+    };
+    sync();
+    d.addEventListener('click', () => { d.classList.toggle('owned'); sync(); });
+    row.appendChild(d);
+  });
+});
+</script>
+</body>
+</html>
