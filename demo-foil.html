@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulated foil patterns — demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+:root { --accent: #c89a3a; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 30px 24px 80px; }
+h1 { font-size: 24px; font-weight: 900; letter-spacing: -.5px; margin-bottom: 6px; }
+.tag { color: var(--dim); font-size: 13px; margin-bottom: 26px; }
+.row { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.card { position: relative; border-radius: 10px; overflow: hidden; border: 1.5px solid #2c2822; aspect-ratio: 733/1024; }
+.card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card .foil { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; }
+.card .sheen { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: .5;
+  background: linear-gradient(115deg, rgba(255,60,160,.14), rgba(80,255,220,.12) 28%, rgba(255,240,80,.13) 52%, rgba(80,160,255,.15) 76%, rgba(255,80,255,.12)); }
+.card .lbl { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 6px 6px; text-align: center;
+  font-size: 11px; font-weight: 800; color: #eee; background: linear-gradient(transparent, rgba(0,0,0,.9) 60%); }
+.note { margin-top: 26px; padding: 16px 20px; font-size: 13px; color: var(--dim); }
+.note b { color: var(--txt); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Simulated foil patterns</h1>
+  <div class="tag">Same base scan every time — the tiled emblem layer + sheen fakes the mirror foil. This is what variant slots would look like in the binder.</div>
+  <div class="row" id="row"></div>
+  <div class="note glass"><b>How it works:</b> the real JP reverse holos are the identical artwork with a repeating foil emblem stamped over it. Since no one scans foil, we tile the matching emblem (Poké Ball, Quick Ball, energy symbol…) over the base scan at low opacity. Zero extra images needed — works for every variant in every set, driven by the ball name already in your card data.</div>
+</div>
+
+<script>
+const IMG = 'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M2a/M2a_2_R_JP_SM.png'; // Yanma
+
+// ── tiny SVG emblem builders ──────────────────────────────────────────────
+function ballSVG(top, extra = '') {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" fill="rgba(255,255,255,.9)"/>
+    <path d="M3 12 a9 9 0 0 1 18 0 Z" fill="${top}"/>
+    <rect x="3" y="11" width="18" height="2" fill="#222"/>
+    <circle cx="12" cy="12" r="3.2" fill="#fff" stroke="#222" stroke-width="1.4"/>
+    ${extra}
+  </svg>`;
+}
+const EMBLEMS = {
+  'Poké Ball':   ballSVG('#e34b4b'),
+  'Master Ball': ballSVG('#8a4bd0', '<circle cx="7" cy="7.5" r="1.6" fill="#f2a" /><circle cx="17" cy="7.5" r="1.6" fill="#f2a"/>'),
+  'Quick Ball':  ballSVG('#3f7fd4', '<path d="M12 3 L14 8 L10 8 Z" fill="#ffd23f"/>'),
+  'Dusk Ball':   ballSVG('#2a4038', '<path d="M4.5 8 a9 9 0 0 1 15 0" fill="none" stroke="#e34b4b" stroke-width="2"/>'),
+  'Love Ball':   ballSVG('#f27bb6', '<path d="M12 9 C11 6.8 8.4 6.8 8.4 8.6 C8.4 10 12 12 12 12 C12 12 15.6 10 15.6 8.6 C15.6 6.8 13 6.8 12 9 Z" fill="#fff"/>'),
+  'Friend Ball': ballSVG('#57b85c'),
+  'Bug Ball':    ballSVG('#3fae9e', '<path d="M5 6 L19 6 M5 9 L19 9 M8 3.6 L8 9 M12 3 L12 9 M16 3.6 L16 9" stroke="#125a52" stroke-width=".9" fill="none"/>'),
+  'Energy':      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+     <circle cx="12" cy="12" r="9" fill="#57b85c"/>
+     <path d="M12 5 C16 9 16 14 12 18 C8 14 8 9 12 5 Z" fill="#fff"/></svg>`,
+};
+
+const row = document.getElementById('row');
+function addCard(label, emblem) {
+  const d = document.createElement('div');
+  d.className = 'card';
+  let foil = '';
+  if (emblem) {
+    const uri = 'data:image/svg+xml,' + encodeURIComponent(emblem);
+    foil = `<div class="foil" style="
+      background-image:url('${uri}'),url('${uri}');
+      background-size:26px 26px,26px 26px;
+      background-position:0 0,13px 13px;
+      opacity:.34;"></div><div class="sheen"></div>`;
+  }
+  d.innerHTML = `<img src="${IMG}">${foil}<div class="lbl">${label}</div>`;
+  row.appendChild(d);
+}
+
+addCard('Base card — no variant', null);
+addCard('Energy RH', EMBLEMS['Energy']);
+Object.entries(EMBLEMS).forEach(([name, svg]) => {
+  if (name !== 'Energy') addCard(name + ' RH', svg);
+});
+</script>
+</body>
+</html>

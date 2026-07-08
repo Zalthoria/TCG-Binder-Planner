@@ -92,6 +92,7 @@ function init(SET) {
     d.dataset.key = key;
     const img = el('img');
     img.loading = 'lazy'; img.src = s.img; img.alt = s.name;
+    if (s.img2) img.onerror = () => { img.onerror = null; img.src = s.img2; };  // fallback scan
     d.appendChild(img);
     // reverse-holo variants share the base card's image — differentiate visually
     if ((SET.reverseVs || []).includes(s.v)) {
