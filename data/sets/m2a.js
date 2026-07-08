@@ -8,6 +8,7 @@ registerSet('m2a', {
     lsWatched: 'M2a_watched_v1',
     lsPrices: 'M2a_prices_v2',
     cols: 3,
+    sheets: 30,   // physical MEGA Dream binder is 30 sheets (60 pages)
     legend: [
       { label:'Holo', color:'#c89a3a' }, { label:'ex', color:'#5090d0' },
       { label:'AR', color:'#9080d8' }, { label:'SAR', color:'#40a880' }, { label:'MUR', color:'#b03030' },
