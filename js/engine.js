@@ -93,6 +93,15 @@ function init(SET) {
     const img = el('img');
     img.loading = 'lazy'; img.src = s.img; img.alt = s.name;
     d.appendChild(img);
+    // reverse-holo variants share the base card's image — differentiate visually
+    if ((SET.reverseVs || []).includes(s.v)) {
+      d.appendChild(el('div', 'holo'));
+      const m = s.name.match(/\(([^)]+)\)\s*$/);
+      const label = m ? m[1].replace(/\s*RH$/i, '') || 'RH' : 'RH';
+      const chip = el('span', 'vchip', label === '' ? 'RH' : label);
+      chip.style.setProperty('--bc', c.col);
+      d.appendChild(chip);
+    }
     d.appendChild(el('div', 'cap', `<span class="cid">${s.id}</span>${s.name}`));
     if (watched.has(key)) d.appendChild(el('span', 'bdg wat', '⭐'));
     if (prices[key] && prices[key].raw) d.appendChild(el('span', 'bdg prc', '$'));

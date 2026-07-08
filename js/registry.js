@@ -41,6 +41,7 @@ window.DEFAULT_SET = {
   sdefs: [],                 // sections: [{label, f(slot) => bool}]
   slots: [],                 // [{id, name, v, img, pc, ...}]
   sk: s => s.id,             // slot → storage key (must match legacy keys!)
+  reverseVs: ['rh', 'erh', 'brh', 'pb', 'mb', 'mirror'],  // variants drawn with a holo sheen + chip
 };
 
 // ── Register a set (merges over the default binder) ────────────────────
