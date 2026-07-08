@@ -68,8 +68,11 @@ function init(SET) {
   } catch (e) {}
 
   const spp        = () => cols * rows;
-  const pageCount  = () => Math.ceil(TOTAL / spp());
-  const spreadMax  = () => Math.ceil((pageCount() + 1) / 2);   // page 0 = cover
+  const pageCount  = () => Math.ceil(TOTAL / spp());           // pages that hold cards
+  const pagesPerBinder = () => (B.sheets || 20) * 2;           // 20 sheets = 40 pages
+  const binderCount = () => Math.max(1, Math.ceil(pageCount() / pagesPerBinder()));
+  const capacity   = () => binderCount() * pagesPerBinder();   // physical pages incl. empty
+  const spreadMax  = () => Math.ceil((capacity() + 1) / 2);    // page 0 = cover
   const pageSlots  = p => SLOTS.slice((p - 1) * spp(), p * spp());
   const spreadOf   = p => Math.ceil((p + 1) / 2);              // which spread shows page p
 
@@ -142,22 +145,28 @@ function init(SET) {
 
   // ── Page map: one mini-page per binder page, filled by completion ─────
   function renderPageMap() {
-    const P = pageCount(), row = $('pm-row');
+    const P = pageCount(), CAP = capacity(), PPB = pagesPerBinder(), row = $('pm-row');
     row.innerHTML = '';
     let done = 0;
-    for (let p = 1; p <= P; p++) {
-      const slots = pageSlots(p);
+    for (let p = 1; p <= CAP; p++) {
+      // label each physical binder when the set spans more than one
+      if (binderCount() > 1 && (p - 1) % PPB === 0)
+        row.appendChild(el('div', 'pm-binder-label', `Binder ${Math.ceil(p / PPB)}`));
+      const blank = p > P;
+      const slots = blank ? [] : pageSlots(p);
       const got = slots.filter(s => owned.has(sk(s))).length;
-      const full = got === slots.length;
+      const full = !blank && got === slots.length;
       if (full) done++;
-      const d = el('div', 'pm-page' + (full ? ' done' : ''));
+      const d = el('div', 'pm-page' + (full ? ' done' : '') + (blank ? ' blank' : ''));
       d.dataset.p = p;
       if (view === 'binder' && spreadOf(p) === curSpread) d.classList.add('cur');
-      d.title = `Page ${p} — ${got}/${slots.length}`;
+      d.title = blank ? `Page ${p} — empty` : `Page ${p} — ${got}/${slots.length}`;
       d.appendChild(el('span', 'pn', p));
-      const f = el('div', 'fill');
-      f.style.height = (got / slots.length * 100) + '%';
-      d.appendChild(f);
+      if (!blank) {
+        const f = el('div', 'fill');
+        f.style.height = (got / slots.length * 100) + '%';
+        d.appendChild(f);
+      }
       d.addEventListener('click', () => { setView('binder'); goTo(spreadOf(p)); });
       // hover: highlight both pages of the spread this page belongs to
       d.addEventListener('mouseenter', () => {
@@ -170,7 +179,8 @@ function init(SET) {
       d.addEventListener('mouseleave', () => row.querySelectorAll('.pm-page.hl').forEach(m => m.classList.remove('hl')));
       row.appendChild(d);
     }
-    $('pm-sub').textContent = `${done}/${P} pages complete · ${cols}×${rows} pockets`;
+    $('pm-sub').textContent = `${done}/${P} card pages complete · ${cols}×${rows} pockets · ` +
+      (binderCount() > 1 ? `${binderCount()} × ${B.sheets || 20}-sheet binders` : `${B.sheets || 20}-sheet binder`);
   }
 
   // ── Section chips with per-section completion ─────────────────────────

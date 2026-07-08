@@ -15,6 +15,7 @@ window.DEFAULT_SET = {
     lsWatched: null,         // derived from lsOwned when missing
     lsPrices:  null,         // derived from lsOwned when missing
     cols: 3,                 // default pocket layout (cols × cols)
+    sheets: 20,              // physical sheets per binder (×2 = pages)
     legend: [],              // [{label, color}]
   },
   // Variant colors every binder inherits — a set's own bc{} overrides these.
