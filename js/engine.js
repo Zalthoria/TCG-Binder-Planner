@@ -61,15 +61,17 @@ function init(SET) {
   const PRESETS = [
     {c:2,r:2},{c:3,r:2},{c:2,r:3},{c:3,r:3},{c:4,r:3},{c:3,r:4},{c:4,r:4},{c:5,r:4},{c:5,r:5},
   ];
-  let cols = B.cols || 3, rows = B.cols || 3;
+  let cols = B.cols || 3, rows = B.cols || 3, sheets = B.sheets || 20;
   try {
     const sv = JSON.parse(localStorage.getItem(LS_LAYOUT));
     if (sv && sv.cols && sv.rows) { cols = sv.cols; rows = sv.rows; }
+    if (sv && sv.sheets) sheets = sv.sheets;
   } catch (e) {}
+  const saveLayout = () => localStorage.setItem(LS_LAYOUT, JSON.stringify({ cols, rows, sheets }));
 
   const spp        = () => cols * rows;
   const pageCount  = () => Math.ceil(TOTAL / spp());           // pages that hold cards
-  const pagesPerBinder = () => (B.sheets || 20) * 2;           // 20 sheets = 40 pages
+  const pagesPerBinder = () => sheets * 2;                     // each sheet holds cards front & back
   const binderCount = () => Math.max(1, Math.ceil(pageCount() / pagesPerBinder()));
   const capacity   = () => binderCount() * pagesPerBinder();   // physical pages incl. empty
   const spreadMax  = () => Math.ceil((capacity() + 1) / 2);    // page 0 = cover
@@ -180,7 +182,7 @@ function init(SET) {
       row.appendChild(d);
     }
     $('pm-sub').textContent = `${done}/${P} card pages complete · ${cols}×${rows} pockets · ` +
-      (binderCount() > 1 ? `${binderCount()} × ${B.sheets || 20}-sheet binders` : `${B.sheets || 20}-sheet binder`);
+      (binderCount() > 1 ? `${binderCount()} × ${sheets}-sheet binders` : `${sheets}-sheet binder`);
   }
 
   // ── Section chips with per-section completion ─────────────────────────
@@ -311,7 +313,7 @@ function init(SET) {
       o.appendChild(el('span', null, `${p.c}×${p.r}`));
       o.addEventListener('click', () => {
         cols = p.c; rows = p.r;
-        localStorage.setItem(LS_LAYOUT, JSON.stringify({ cols, rows }));
+        saveLayout();
         document.documentElement.style.setProperty('--binder-cols', cols);
         $('lp-label').textContent = `${cols}×${rows}`;
         panel.classList.remove('open');
@@ -399,6 +401,20 @@ function init(SET) {
   $('wl-close').addEventListener('click', () => $('wl').classList.remove('open'));
   $('wl').addEventListener('click', e => { if (e.target === $('wl')) $('wl').classList.remove('open'); });
 
+  // ── Sheets dropdown ───────────────────────────────────────────────────
+  function buildSheetPicker() {
+    const sel = $('sheet-sel');
+    const opts = [...new Set([10, 15, 20, 25, 30, 40, 50, sheets])].sort((a, b) => a - b);
+    sel.innerHTML = opts.map(n => `<option value="${n}" ${n === sheets ? 'selected' : ''}>${n} sheets</option>`).join('');
+    sel.addEventListener('change', () => {
+      sheets = parseInt(sel.value) || 20;
+      saveLayout();
+      curSpread = Math.min(curSpread, spreadMax());
+      updateProgress();
+      if (view === 'binder') renderSpread();
+    });
+  }
+
   // ── Toolbar wiring ────────────────────────────────────────────────────
   document.querySelectorAll('.vt').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
   $('sn-prev').addEventListener('click', () => goTo(curSpread - 1));
@@ -439,6 +455,7 @@ function init(SET) {
   document.documentElement.style.setProperty('--binder-cols', cols);
   $('lp-label').textContent = `${cols}×${rows}`;
   buildLayoutPicker();
+  buildSheetPicker();
   updateProgress();
   setView('binder');
   $('app').style.display = '';
