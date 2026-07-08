@@ -217,8 +217,21 @@ function init(SET) {
     wrap.classList.toggle('hide-owned', hideOwned);
     const leftP = 2 * curSpread - 2, rightP = 2 * curSpread - 1;   // 0 = cover
     [ [leftP, 'left'], [rightP, 'right'] ].forEach(([p, side]) => {
+      if (p > capacity()) {
+        // past the last sheet = inside back cover: no pockets, just a summary
+        const pg = el('div', 'page ' + side);
+        const cv = el('div', 'page-cover back');
+        if (entry && entry.cover) { const i = el('img'); i.src = entry.cover; cv.appendChild(i); }
+        const n = owned.size, pct = TOTAL ? Math.round(n / TOTAL * 100) : 0;
+        cv.appendChild(el('div', 'cv-t', B.title));
+        cv.appendChild(el('div', 'cv-stats', `${n} / ${TOTAL} collected · ${pct}%`));
+        cv.appendChild(el('div', 'cv-s', pct >= 100 ? '★ Master set complete!' : 'End of binder'));
+        pg.appendChild(cv);
+        wrap.appendChild(pg);
+        return;
+      }
       if (p > pageCount()) {
-        // keep the spread symmetrical: render an empty sleeve page
+        // real sheet, no cards assigned yet: empty sleeve page
         const pg = el('div', 'page ' + side);
         pg.appendChild(el('div', 'page-label', 'Empty'));
         const g = el('div', 'page-grid');
