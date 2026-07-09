@@ -61,7 +61,7 @@ window.CATALOG = [
   { id:'tef',  era:'EN — Scarlet & Violet', name:'Temporal Forces (TEF)', desc:'Mar 2024',
     file:null, lsOwned:'tef_owned_v1', lsPrices:'tef_prices_v1', total:218, release:'2024-03', cover:`logos/TEF.png`, icon:'⏱' },
   { id:'twm',  era:'EN — Scarlet & Violet', name:'Twilight Masquerade (TWM)', desc:'May 2024',
-    file:null, lsOwned:'twm_owned_v1', lsPrices:'twm_prices_v1', total:226, release:'2024-05', cover:`logos/TWM.png`, icon:'🎭' },
+    file:null, page:'binder.html?set=twm', lsOwned:'twm_owned_v1', lsPrices:'twm_prices_v1', total:373, release:'2024-05', cover:`logos/TWM.png`, icon:'🎭' },
   { id:'sfa',  era:'EN — Scarlet & Violet', name:'Shrouded Fable (SFA)', desc:'Special set · Aug 2024',
     file:null, lsOwned:'sfa_owned_v1', lsPrices:'sfa_prices_v1', total:99, release:'2024-08', cover:`logos/SFA.png`, icon:'🦊' },
   { id:'scr',  era:'EN — Scarlet & Violet', name:'Stellar Crown (SCR)', desc:'Sep 2024',
