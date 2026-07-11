@@ -269,6 +269,10 @@ function init(SET) {
       if (p > capacity()) {
         // past the last sheet = inside back cover: no pockets, just a summary
         const pg = el('div', 'page ' + side);
+        pg.appendChild(el('div', 'page-label', 'Back cover'));
+        const gg = el('div', 'page-grid');
+        for (let i = 0; i < spp(); i++) gg.appendChild(el('div', 'pocket-empty ghost'));
+        pg.appendChild(gg);
         const cv = el('div', 'page-cover back');
         if (entry && entry.cover) { const i = el('img'); i.src = entry.cover; cv.appendChild(i); }
         const n = owned.size, pct = TOTAL ? Math.round(n / TOTAL * 100) : 0;
@@ -291,6 +295,11 @@ function init(SET) {
       }
       const pg = el('div', 'page ' + side);
       if (p === 0) {
+        // ghost pocket grid keeps the cover exactly the size of a card page
+        pg.appendChild(el('div', 'page-label', 'Cover'));
+        const gg = el('div', 'page-grid');
+        for (let i = 0; i < spp(); i++) gg.appendChild(el('div', 'pocket-empty ghost'));
+        pg.appendChild(gg);
         const cv = el('div', 'page-cover');
         if (entry && entry.cover) { const i = el('img'); i.src = entry.cover; cv.appendChild(i); }
         cv.appendChild(el('div', 'cv-t', B.title));
@@ -597,6 +606,10 @@ function init(SET) {
       if (e.key === 'End') goToPage(maxPage());
     }
   });
+
+  // overlays must not inherit the mobile auto-zoom (they size themselves in vw/vh)
+  const uz = window.__uiZoom || 1;
+  if (uz > 1) ['peek', 'modal', 'wl'].forEach(id => { const n = $(id); if (n) n.style.zoom = 1 / uz; });
 
   // ── Go ────────────────────────────────────────────────────────────────
   load();
