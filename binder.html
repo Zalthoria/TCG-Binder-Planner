@@ -12,7 +12,7 @@
 // Scale the whole UI so the effective width feels phone-sized. No-op on real phone viewports.
 (function () {
   if (!matchMedia('(pointer: coarse)').matches) return;
-  const z = Math.min(2, Math.max(1, window.innerWidth / 520));
+  const z = Math.min(2.6, Math.max(1, window.innerWidth / 430));
   if (z > 1.08) { document.documentElement.style.zoom = z; window.__uiZoom = z; }
 })();
 </script>
