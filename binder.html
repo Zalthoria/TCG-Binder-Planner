@@ -6,7 +6,7 @@
 <title>Binder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=6">
+<link rel="stylesheet" href="css/app.css?v=7">
 <style>
 /* ── Binder page layout ─────────────────────────────────────────────── */
 .wrap { max-width: 1400px; margin: 0 auto; padding: 18px 22px 80px; }
@@ -193,7 +193,9 @@ select.btn option { background: #161311; color: var(--txt); }
 }
 .peek.open { display: flex; }
 .peek img {
-  max-width: 94vw; max-height: 78vh; border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.8);
+  /* fill the screen: 92% of width, or height-limited equivalent (card ratio 733:1024) */
+  width: min(92vw, calc(76vh * 0.7158)); height: auto;
+  border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.8);
   pointer-events: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
 .peek .pk-name { font-size: 15px; font-weight: 800; text-align: center; padding: 0 20px; }
@@ -205,13 +207,16 @@ select.btn option { background: #161311; color: var(--txt); }
   .pagemap { padding: 10px 10px 8px; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .hero { flex-direction: column; text-align: center; }
   .hero-legend { justify-content: center; }
   .spread { flex-direction: column; align-items: center; gap: 14px; }
   .page { width: 100%; border-radius: 14px !important; }
-  .cm { flex-direction: column; }
-  .cm-img { width: 100%; max-width: 300px; margin: 0 auto; }
+  .cm { flex-direction: column; padding: 18px; gap: 14px; }
+  .cm-img { width: min(80vw, 480px); max-width: none; margin: 0 auto; }
+  .cm-name { text-align: center; font-size: 24px; }
+  .cm-meta, .cm-actions, .cm-links { justify-content: center; }
+  .sheet { max-height: 96vh; }
 }
 </style>
 </head>
@@ -325,10 +330,10 @@ select.btn option { background: #161311; color: var(--txt); }
   </div>
 </div>
 
-<script src="js/sync.js?v=6"></script>
-<script src="data/catalog.js?v=6"></script>
-<script src="data/themes.js?v=6"></script>
-<script src="js/registry.js?v=6"></script>
-<script src="js/engine.js?v=6"></script>
+<script src="js/sync.js?v=7"></script>
+<script src="data/catalog.js?v=7"></script>
+<script src="data/themes.js?v=7"></script>
+<script src="js/registry.js?v=7"></script>
+<script src="js/engine.js?v=7"></script>
 </body>
 </html>
