@@ -146,6 +146,8 @@ select.btn option { background: #161311; color: var(--txt); }
 
 .err { max-width: 520px; margin: 120px auto; text-align: center; padding: 40px; }
 
+.page.single { width: min(96vw, 620px); border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+
 @media (max-width: 900px) {
   .hero { flex-direction: column; text-align: center; }
   .hero-legend { justify-content: center; }
@@ -208,7 +210,7 @@ select.btn option { background: #161311; color: var(--txt); }
   <div id="view-binder">
     <div class="spread-nav">
       <button class="btn sn-btn" id="sn-prev">‹</button>
-      <div class="sn-pos">Spread <input type="text" id="sn-cur" value="1"> / <span id="sn-max"></span></div>
+      <div class="sn-pos"><span id="sn-label">Spread</span> <input type="text" id="sn-cur" value="1"> / <span id="sn-max"></span></div>
       <button class="btn sn-btn" id="sn-next">›</button>
     </div>
     <div class="spread" id="spread"></div>

@@ -79,7 +79,25 @@ function init(SET) {
   const spreadOf   = p => Math.ceil((p + 1) / 2);              // which spread shows page p
 
   // ── State ─────────────────────────────────────────────────────────────
-  let curSpread = 1, view = 'binder', q = '', hideOwned = false, secFilter = -1;
+  let curSpread = 1, curPage = 0, view = 'binder', q = '', hideOwned = false, secFilter = -1;
+
+  // Mobile: navigate one page at a time instead of two-page spreads
+  const mq = window.matchMedia('(max-width: 700px)');
+  const isSingle = () => mq.matches;
+  const maxPage = () => capacity() + 1;                    // + inside back cover
+  mq.addEventListener('change', () => {
+    if (isSingle()) curPage = Math.max(0, 2 * curSpread - 2);
+    else curSpread = Math.ceil((curPage + 1) / 2);
+    if (view === 'binder') renderSpread();
+  });
+
+  // Remember reading position per binder (per device)
+  const LS_POS = (B.lsOwned || 'binder').replace(/owned.*/, 'binderpos_v1');
+  try {
+    const pos = JSON.parse(localStorage.getItem(LS_POS));
+    if (pos) { curSpread = pos.s || 1; curPage = pos.p || 0; }
+  } catch (e) {}
+  const savePos = () => { try { localStorage.setItem(LS_POS, JSON.stringify({ s: curSpread, p: curPage })); } catch (e) {} };
 
   // ═════════════════════════════ RENDERERS ═════════════════════════════
 
@@ -171,7 +189,8 @@ function init(SET) {
       if (full) done++;
       const d = el('div', 'pm-page' + (full ? ' done' : '') + (blank ? ' blank' : ''));
       d.dataset.p = p;
-      if (view === 'binder' && spreadOf(p) === curSpread) d.classList.add('cur');
+      const isCur = isSingle() ? p === curPage : spreadOf(p) === curSpread;
+      if (view === 'binder' && isCur) d.classList.add('cur');
       d.title = blank ? `Page ${p} — empty` : `Page ${p} — ${got}/${slots.length}`;
       d.appendChild(el('span', 'pn', p));
       if (!blank) {
@@ -179,7 +198,7 @@ function init(SET) {
         f.style.height = (got / slots.length * 100) + '%';
         d.appendChild(f);
       }
-      d.addEventListener('click', () => { setView('binder'); goTo(spreadOf(p)); });
+      d.addEventListener('click', () => { setView('binder'); goToPage(p); });
       // hover: highlight both pages of the spread this page belongs to
       d.addEventListener('mouseenter', () => {
         const partner = p % 2 === 0 ? p + 1 : p - 1;   // pages pair as (2,3),(4,5)…; 1 pairs with the cover
@@ -213,7 +232,7 @@ function init(SET) {
           renderSections(); renderGallery();
         } else {
           const first = SLOTS.findIndex(sd.f);
-          if (first >= 0) goTo(spreadOf(Math.floor(first / spp()) + 1));
+          if (first >= 0) goToPage(Math.floor(first / spp()) + 1);
         }
       });
       bar.appendChild(chip);
@@ -225,8 +244,10 @@ function init(SET) {
     const wrap = $('spread');
     wrap.innerHTML = '';
     wrap.classList.toggle('hide-owned', hideOwned);
-    const leftP = 2 * curSpread - 2, rightP = 2 * curSpread - 1;   // 0 = cover
-    [ [leftP, 'left'], [rightP, 'right'] ].forEach(([p, side]) => {
+    let leftP = 2 * curSpread - 2, rightP = 2 * curSpread - 1;     // 0 = cover
+    let pagePairs = [ [leftP, 'left'], [rightP, 'right'] ];
+    if (isSingle()) pagePairs = [ [curPage, 'single'] ];           // mobile: one page
+    pagePairs.forEach(([p, side]) => {
       if (p > capacity()) {
         // past the last sheet = inside back cover: no pockets, just a summary
         const pg = el('div', 'page ' + side);
@@ -268,13 +289,32 @@ function init(SET) {
       }
       wrap.appendChild(pg);
     });
-    $('sn-cur').value = curSpread;
-    $('sn-max').textContent = spreadMax();
+    if (isSingle()) {
+      $('sn-cur').value = curPage === 0 ? 'C' : curPage;
+      $('sn-max').textContent = maxPage() - 1;
+      $('sn-label').textContent = 'Page';
+    } else {
+      $('sn-cur').value = curSpread;
+      $('sn-max').textContent = spreadMax();
+      $('sn-label').textContent = 'Spread';
+    }
+    savePos();
     renderPageMap();
   }
 
-  function goTo(n) {
+  function go(d) {
+    if (isSingle()) curPage = Math.max(0, Math.min(maxPage(), curPage + d));
+    else curSpread = Math.max(1, Math.min(spreadMax(), curSpread + d));
+    renderSpread();
+  }
+  function goTo(n) {          // n = spread number (desktop semantics)
     curSpread = Math.max(1, Math.min(spreadMax(), n));
+    curPage = Math.max(0, 2 * curSpread - 2);
+    renderSpread();
+  }
+  function goToPage(p) {      // exact page (used by page map / jumps)
+    curPage = Math.max(0, Math.min(maxPage(), p));
+    curSpread = Math.ceil((p + 1) / 2);
     renderSpread();
   }
 
@@ -394,7 +434,7 @@ function init(SET) {
     const idx = SLOTS.findIndex(s => sk(s) === sk(modalSlot));
     closeModal();
     setView('binder');
-    goTo(spreadOf(Math.floor(idx / spp()) + 1));
+    goToPage(Math.floor(idx / spp()) + 1);
     setTimeout(() => {
       const d = document.querySelector(`#spread .slot[data-key="${CSS.escape(sk(modalSlot))}"]`);
       if (d) { d.scrollIntoView({ behavior: 'smooth', block: 'center' }); d.classList.add('flash'); setTimeout(() => d.classList.remove('flash'), 2200); }
@@ -440,9 +480,23 @@ function init(SET) {
 
   // ── Toolbar wiring ────────────────────────────────────────────────────
   document.querySelectorAll('.vt').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
-  $('sn-prev').addEventListener('click', () => goTo(curSpread - 1));
-  $('sn-next').addEventListener('click', () => goTo(curSpread + 1));
-  $('sn-cur').addEventListener('change', e => goTo(parseInt(e.target.value) || 1));
+  $('sn-prev').addEventListener('click', () => go(-1));
+  $('sn-next').addEventListener('click', () => go(1));
+  $('sn-cur').addEventListener('change', e => {
+    const v = e.target.value.trim().toLowerCase();
+    if (isSingle()) goToPage(v === 'c' ? 0 : (parseInt(v) || 1));
+    else goTo(parseInt(v) || 1);
+  });
+
+  // Swipe navigation (mobile)
+  let tX = null, tY = null;
+  $('view-binder').addEventListener('touchstart', e => { tX = e.touches[0].clientX; tY = e.touches[0].clientY; }, { passive: true });
+  $('view-binder').addEventListener('touchend', e => {
+    if (tX === null) return;
+    const dx = e.changedTouches[0].clientX - tX, dy = e.changedTouches[0].clientY - tY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+    tX = tY = null;
+  }, { passive: true });
   $('lp-trigger').addEventListener('click', e => { e.stopPropagation(); $('lp-panel').classList.toggle('open'); });
   document.addEventListener('click', () => $('lp-panel').classList.remove('open'));
   $('lp-panel').addEventListener('click', e => e.stopPropagation());
@@ -468,8 +522,10 @@ function init(SET) {
       return;
     }
     if (view === 'binder') {
-      if (e.key === 'ArrowLeft') goTo(curSpread - 1);
-      if (e.key === 'ArrowRight') goTo(curSpread + 1);
+      if (e.key === 'ArrowLeft') go(-1);
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'Home') goToPage(0);
+      if (e.key === 'End') goToPage(maxPage());
     }
   });
 
