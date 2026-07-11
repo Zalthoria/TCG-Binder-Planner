@@ -183,7 +183,24 @@ select.btn option { background: #161311; color: var(--txt); }
 
 .err { max-width: 520px; margin: 120px auto; text-align: center; padding: 40px; }
 
-.page.single { width: min(98vw, 720px); border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,.5); padding: 10px; }
+.page.single { width: 100%; border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,.5); padding: 8px; }
+
+/* almost-fullscreen card peek (hold a card on touch devices) */
+.peek {
+  position: fixed; inset: 0; z-index: 130; display: none;
+  flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  background: rgba(4,3,2,.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.peek.open { display: flex; }
+.peek img { max-width: 94vw; max-height: 78vh; border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.8); }
+.peek .pk-name { font-size: 15px; font-weight: 800; text-align: center; padding: 0 20px; }
+.peek .pk-name span { display: block; font-size: 11px; color: var(--dim); font-weight: 600; margin-top: 2px; }
+
+@media (max-width: 1000px) {
+  .wrap { padding: 12px 8px 70px; }
+  .hero { padding: 16px 14px; gap: 12px; }
+  .pagemap { padding: 10px 10px 8px; }
+}
 
 @media (max-width: 900px) {
   .hero { flex-direction: column; text-align: center; }
@@ -258,6 +275,13 @@ select.btn option { background: #161311; color: var(--txt); }
   <div id="view-gallery" style="display:none"></div>
 </div>
 
+<!-- Hold-to-peek preview -->
+<div class="peek" id="peek">
+  <img id="peek-img" alt="">
+  <div class="pk-name" id="peek-name"></div>
+  <button class="btn primary" id="peek-details">Details & prices</button>
+</div>
+
 <!-- Card modal -->
 <div class="overlay" id="modal">
   <div class="sheet" style="max-width:640px">
@@ -298,10 +322,10 @@ select.btn option { background: #161311; color: var(--txt); }
   </div>
 </div>
 
-<script src="js/sync.js?v=4"></script>
-<script src="data/catalog.js?v=4"></script>
-<script src="data/themes.js?v=4"></script>
-<script src="js/registry.js?v=4"></script>
-<script src="js/engine.js?v=4"></script>
+<script src="js/sync.js?v=5"></script>
+<script src="data/catalog.js?v=5"></script>
+<script src="data/themes.js?v=5"></script>
+<script src="js/registry.js?v=5"></script>
+<script src="js/engine.js?v=5"></script>
 </body>
 </html>

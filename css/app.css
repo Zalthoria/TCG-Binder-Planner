@@ -104,6 +104,7 @@ input::placeholder { color: var(--faint); }
   container-type: inline-size;   /* lets overlays scale with card size */
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s;
   user-select: none;
+  -webkit-touch-callout: none;   /* no OS menu on long-press; we use hold-to-peek */
 }
 .slot img {
   width: 100%; height: 100%; object-fit: cover; display: block;
@@ -111,18 +112,22 @@ input::placeholder { color: var(--faint); }
   filter: saturate(.52) brightness(.6) contrast(.92);
   transition: filter .25s ease;
 }
-/* hover = the pure card: full art, no border, no caption, no tags */
-.slot:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 30px rgba(0,0,0,.6); z-index: 2; border-color: transparent; }
-.slot:hover img { filter: none; }
-.slot:hover .cap, .slot:hover .bdg { opacity: 0; }
-.slot:hover::after { opacity: 0; }
+/* hover = the pure card: full art, no border, no caption, no tags (mouse only;
+   touch devices use hold-to-peek instead) */
+@media (hover: hover) and (pointer: fine) {
+  .slot:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 30px rgba(0,0,0,.6); z-index: 2; border-color: transparent; }
+  .slot:hover img { filter: none; }
+  .slot:hover .cap, .slot:hover .bdg { opacity: 0; }
+  .slot:hover::after { opacity: 0; }
+  .slot.owned:hover { border-color: transparent; box-shadow: 0 12px 30px rgba(0,0,0,.6); }
+  .slot:hover .holo, .slot:hover .vchip { opacity: 0; }
+}
 .slot.owned {
   /* owned: solid glowing green frame, art untouched */
   border-color: var(--own);
   box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--own) 55%, transparent),
               0 5px 18px color-mix(in srgb, var(--own) 22%, transparent);
 }
-.slot.owned:hover { border-color: transparent; box-shadow: 0 12px 30px rgba(0,0,0,.6); }
 .slot.owned img { filter: none; }
 
 /* owned: green tag at the bottom of the card */
@@ -174,7 +179,6 @@ input::placeholder { color: var(--faint); }
   background: rgba(0,0,0,.75); border: 1px solid var(--bc, #888); color: var(--bc, #aaa);
   transition: opacity .2s ease; max-width: 70%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.slot:hover .holo, .slot:hover .vchip { opacity: 0; }
 .slot .bdg.own { right: 4px; background: var(--accent); color: #14100a; box-shadow: 0 1px 6px rgba(0,0,0,.6); }
 .slot .bdg.wat { left: 4px; background: rgba(0,0,0,.65); }
 .slot .bdg.prc { right: 4px; top: 26px; background: rgba(0,0,0,.65); color: var(--star); font-size: 9px; }

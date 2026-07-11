@@ -125,7 +125,20 @@ function init(SET) {
     d.appendChild(el('div', 'cap', `<span class="cid">${s.id}</span>${s.name}`));
     if (watched.has(key)) d.appendChild(el('span', 'bdg wat', '⭐'));
     if (prices[key] && prices[key].raw) d.appendChild(el('span', 'bdg prc', '$'));
+    // hold (long-press) = big preview; guards the click toggle afterwards
+    let lpTimer = null, lpFired = false;
+    d.addEventListener('touchstart', () => {
+      lpFired = false;
+      lpTimer = setTimeout(() => { lpFired = true; openPeek(s); }, 420);
+    }, { passive: true });
+    d.addEventListener('touchmove', () => clearTimeout(lpTimer), { passive: true });
+    d.addEventListener('touchend', e => {
+      clearTimeout(lpTimer);
+      if (lpFired) e.preventDefault();     // swallow the synthetic click
+    }, { passive: false });
+
     d.addEventListener('click', () => {
+      if (lpFired) { lpFired = false; return; }
       // flip animation: state swaps at the halfway point (card edge-on)
       d.classList.add('flipping');
       setTimeout(() => {
@@ -138,7 +151,11 @@ function init(SET) {
         if (hideOwned) view === 'gallery' ? renderGallery() : renderSpread();
       }, { once: true });
     });
-    d.addEventListener('contextmenu', e => { e.preventDefault(); openModal(s); });
+    d.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      if (lpFired || $('peek').classList.contains('open')) return;  // long-press already handled it
+      openModal(s);
+    });
     return d;
   }
 
@@ -414,6 +431,26 @@ function init(SET) {
       panel.appendChild(o);
     });
   }
+
+  // ── Hold-to-peek preview ──────────────────────────────────────────────
+  let peekSlot = null;
+  function openPeek(s) {
+    peekSlot = s;
+    const big = (s.img || '').replace('_SM.png', '_LG.png');
+    const pi = $('peek-img');
+    pi.onerror = () => { pi.onerror = null; pi.src = s.img; };
+    pi.src = big !== s.img ? big : s.img;
+    $('peek-name').innerHTML = `${s.name}<span>${s.id}</span>`;
+    $('peek').classList.add('open');
+    if (navigator.vibrate) navigator.vibrate(12);
+  }
+  $('peek').addEventListener('click', e => {
+    if (e.target.id !== 'peek-details') $('peek').classList.remove('open');
+  });
+  $('peek-details').addEventListener('click', () => {
+    $('peek').classList.remove('open');
+    if (peekSlot) openModal(peekSlot);
+  });
 
   // ── Card modal ────────────────────────────────────────────────────────
   let modalSlot = null;
