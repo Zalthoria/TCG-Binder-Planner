@@ -6,7 +6,7 @@
 <title>Binder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=5">
+<link rel="stylesheet" href="css/app.css?v=6">
 <style>
 /* ── Binder page layout ─────────────────────────────────────────────── */
 .wrap { max-width: 1400px; margin: 0 auto; padding: 18px 22px 80px; }
@@ -192,7 +192,10 @@ select.btn option { background: #161311; color: var(--txt); }
   background: rgba(4,3,2,.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .peek.open { display: flex; }
-.peek img { max-width: 94vw; max-height: 78vh; border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.8); }
+.peek img {
+  max-width: 94vw; max-height: 78vh; border-radius: 18px; box-shadow: 0 30px 90px rgba(0,0,0,.8);
+  pointer-events: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
 .peek .pk-name { font-size: 15px; font-weight: 800; text-align: center; padding: 0 20px; }
 .peek .pk-name span { display: block; font-size: 11px; color: var(--dim); font-weight: 600; margin-top: 2px; }
 
@@ -322,10 +325,10 @@ select.btn option { background: #161311; color: var(--txt); }
   </div>
 </div>
 
-<script src="js/sync.js?v=5"></script>
-<script src="data/catalog.js?v=5"></script>
-<script src="data/themes.js?v=5"></script>
-<script src="js/registry.js?v=5"></script>
-<script src="js/engine.js?v=5"></script>
+<script src="js/sync.js?v=6"></script>
+<script src="data/catalog.js?v=6"></script>
+<script src="data/themes.js?v=6"></script>
+<script src="js/registry.js?v=6"></script>
+<script src="js/engine.js?v=6"></script>
 </body>
 </html>

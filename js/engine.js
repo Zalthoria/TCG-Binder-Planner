@@ -447,6 +447,8 @@ function init(SET) {
   $('peek').addEventListener('click', e => {
     if (e.target.id !== 'peek-details') $('peek').classList.remove('open');
   });
+  $('peek').addEventListener('contextmenu', e => e.preventDefault());  // no native image menu
+  $('peek-img').draggable = false;
   $('peek-details').addEventListener('click', () => {
     $('peek').classList.remove('open');
     if (peekSlot) openModal(peekSlot);
