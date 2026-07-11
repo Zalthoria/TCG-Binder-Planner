@@ -267,6 +267,7 @@ function init(SET) {
         const pg = el('div', 'page ' + side);
         pg.appendChild(el('div', 'page-label', 'Empty'));
         const g = el('div', 'page-grid');
+        if (isSingle()) g.style.gridTemplateColumns = `repeat(${Math.min(cols, window.innerWidth <= 520 ? 2 : 3)}, 1fr)`;
         for (let i = 0; i < spp(); i++) g.appendChild(el('div', 'pocket-empty'));
         pg.appendChild(g);
         wrap.appendChild(pg);
@@ -282,6 +283,8 @@ function init(SET) {
       } else {
         pg.appendChild(el('div', 'page-label', `Page ${p} / ${pageCount()}`));
         const g = el('div', 'page-grid');
+        // mobile: same pockets per page, but fewer/bigger columns
+        if (isSingle()) g.style.gridTemplateColumns = `repeat(${Math.min(cols, window.innerWidth <= 520 ? 2 : 3)}, 1fr)`;
         const slots = pageSlots(p);
         slots.forEach(s => g.appendChild(makeSlot(s)));
         // pad a partially-filled page with empty pockets
