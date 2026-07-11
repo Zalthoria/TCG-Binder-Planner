@@ -7,6 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css?v=5">
+<script>
+// Touch devices stuck on a desktop-width viewport (~980px) render everything tiny.
+// Scale the whole UI so the effective width feels phone-sized. No-op on real phone viewports.
+(function () {
+  if (!matchMedia('(pointer: coarse)').matches) return;
+  const z = Math.min(2, Math.max(1, window.innerWidth / 520));
+  if (z > 1.08) document.documentElement.style.zoom = z;
+})();
+</script>
 <style>
 .wrap { max-width: 1280px; margin: 0 auto; padding: 26px 24px 90px; }
 
