@@ -299,23 +299,50 @@ function init(SET) {
       $('sn-label').textContent = 'Spread';
     }
     savePos();
+    // edge arrows: dim when at the ends
+    const atStart = isSingle() ? curPage === 0 : curSpread === 1;
+    const atEnd = isSingle() ? curPage >= maxPage() : curSpread >= spreadMax();
+    $('edge-prev').classList.toggle('off', atStart);
+    $('edge-next').classList.toggle('off', atEnd);
     renderPageMap();
   }
 
+  // Page-turn animation: swap content at the midpoint of the turn
+  let turning = false;
+  function turnTo(dir) {
+    if (turning) return;
+    if (!dir) return renderSpread();
+    const wrap = $('spread');
+    turning = true;
+    wrap.classList.remove('turn-f', 'turn-b');
+    void wrap.offsetWidth;
+    wrap.classList.add(dir > 0 ? 'turn-f' : 'turn-b');
+    setTimeout(renderSpread, 190);
+    wrap.addEventListener('animationend', () => {
+      wrap.classList.remove('turn-f', 'turn-b');
+      turning = false;
+    }, { once: true });
+    setTimeout(() => turning = false, 700);   // safety net
+  }
+
   function go(d) {
+    const before = isSingle() ? curPage : curSpread;
     if (isSingle()) curPage = Math.max(0, Math.min(maxPage(), curPage + d));
     else curSpread = Math.max(1, Math.min(spreadMax(), curSpread + d));
-    renderSpread();
+    const after = isSingle() ? curPage : curSpread;
+    if (after !== before) turnTo(d); else renderSpread();
   }
   function goTo(n) {          // n = spread number (desktop semantics)
+    const dir = Math.sign(n - curSpread);
     curSpread = Math.max(1, Math.min(spreadMax(), n));
     curPage = Math.max(0, 2 * curSpread - 2);
-    renderSpread();
+    turnTo(dir);
   }
   function goToPage(p) {      // exact page (used by page map / jumps)
+    const dir = Math.sign(p - curPage);
     curPage = Math.max(0, Math.min(maxPage(), p));
     curSpread = Math.ceil((p + 1) / 2);
-    renderSpread();
+    turnTo(dir);
   }
 
   // ── Gallery view: every card, grouped by section ──────────────────────
@@ -482,6 +509,8 @@ function init(SET) {
   document.querySelectorAll('.vt').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
   $('sn-prev').addEventListener('click', () => go(-1));
   $('sn-next').addEventListener('click', () => go(1));
+  $('edge-prev').addEventListener('click', () => go(-1));
+  $('edge-next').addEventListener('click', () => go(1));
   $('sn-cur').addEventListener('change', e => {
     const v = e.target.value.trim().toLowerCase();
     if (isSingle()) goToPage(v === 'c' ? 0 : (parseInt(v) || 1));

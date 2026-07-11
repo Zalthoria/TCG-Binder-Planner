@@ -85,12 +85,49 @@ select.btn option { background: #161311; color: var(--txt); }
 .lp-mini i { width: 5px; height: 7px; border-radius: 1px; background: currentColor; opacity: .65; display: block; }
 
 /* ── Binder (spread) view ───────────────────────────────────────────── */
-.spread-nav { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 6px 0 16px; }
-.spread-nav .sn-btn { width: 40px; height: 40px; border-radius: 50%; font-size: 16px; display: flex; align-items: center; justify-content: center; padding: 0; }
+.spread-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 6px 0 16px; }
+.spread-nav .sn-btn {
+  width: 56px; height: 56px; border-radius: 50%; font-size: 26px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; padding: 0 0 3px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent); color: var(--accent);
+}
+.spread-nav .sn-btn:hover { background: color-mix(in srgb, var(--accent) 26%, transparent); transform: scale(1.07); }
+.spread-nav .sn-btn:active { transform: scale(.94); }
 .spread-nav .sn-pos { font-size: 13px; font-weight: 700; color: var(--dim); min-width: 130px; text-align: center; }
 .spread-nav .sn-pos input { width: 44px; text-align: center; padding: 4px 4px; margin: 0 4px; }
 
+/* floating edge arrows — big friendly tap targets */
+.edge-nav {
+  position: fixed; top: 55%; transform: translateY(-50%); left: 10px; z-index: 40;
+  width: 52px; height: 76px; border-radius: 14px; border: 1px solid var(--line);
+  background: rgba(15,13,11,.72); backdrop-filter: blur(8px);
+  color: var(--accent); font-size: 30px; font-weight: 800; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding-bottom: 4px;
+  transition: all .18s ease; opacity: .65;
+}
+.edge-nav.next { left: auto; right: 10px; }
+.edge-nav:hover { opacity: 1; border-color: var(--accent); transform: translateY(-50%) scale(1.06); }
+.edge-nav:active { transform: translateY(-50%) scale(.92); }
+.edge-nav.off { opacity: .15; pointer-events: none; }
+
 .spread { display: flex; justify-content: center; gap: 0; perspective: 2200px; }
+
+/* page-turn animation */
+.spread.turn-f { animation: pturnF .42s cubic-bezier(.32,.08,.24,1); }
+.spread.turn-b { animation: pturnB .42s cubic-bezier(.32,.08,.24,1); }
+@keyframes pturnF {
+  0%   { transform: perspective(1800px) rotateY(0); }
+  46%  { transform: perspective(1800px) rotateY(-14deg) scale(.985); opacity: .45; }
+  54%  { transform: perspective(1800px) rotateY(12deg) scale(.985); opacity: .45; }
+  100% { transform: perspective(1800px) rotateY(0); }
+}
+@keyframes pturnB {
+  0%   { transform: perspective(1800px) rotateY(0); }
+  46%  { transform: perspective(1800px) rotateY(14deg) scale(.985); opacity: .45; }
+  54%  { transform: perspective(1800px) rotateY(-12deg) scale(.985); opacity: .45; }
+  100% { transform: perspective(1800px) rotateY(0); }
+}
 .page {
   width: min(46vw, 620px); padding: 16px; border-radius: 4px 14px 14px 4px;
   background: linear-gradient(160deg, #1b1713, #131009);
@@ -209,11 +246,13 @@ select.btn option { background: #161311; color: var(--txt); }
 
   <div id="view-binder">
     <div class="spread-nav">
-      <button class="btn sn-btn" id="sn-prev">‹</button>
+      <button class="btn sn-btn" id="sn-prev" title="Previous">‹</button>
       <div class="sn-pos"><span id="sn-label">Spread</span> <input type="text" id="sn-cur" value="1"> / <span id="sn-max"></span></div>
-      <button class="btn sn-btn" id="sn-next">›</button>
+      <button class="btn sn-btn" id="sn-next" title="Next">›</button>
     </div>
     <div class="spread" id="spread"></div>
+    <button class="edge-nav" id="edge-prev" title="Previous page">‹</button>
+    <button class="edge-nav next" id="edge-next" title="Next page">›</button>
   </div>
 
   <div id="view-gallery" style="display:none"></div>
