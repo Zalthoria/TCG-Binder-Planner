@@ -82,7 +82,8 @@ function init(SET) {
   let curSpread = 1, curPage = 0, view = 'binder', q = '', hideOwned = false, secFilter = -1;
 
   // Mobile: navigate one page at a time instead of two-page spreads
-  const mq = window.matchMedia('(max-width: 700px)');
+  // phones portrait OR any coarse-pointer device up to 1000px (landscape phones, small tablets)
+  const mq = window.matchMedia('(max-width: 700px), ((pointer: coarse) and (max-width: 1000px))');
   const isSingle = () => mq.matches;
   const maxPage = () => capacity() + 1;                    // + inside back cover
   mq.addEventListener('change', () => {
