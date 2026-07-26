@@ -326,6 +326,12 @@ function init(SET) {
       $('sn-label').textContent = 'Spread';
     }
     savePos();
+    // prefetch neighbouring pages so turns feel instant
+    const near = isSingle() ? [curPage - 1, curPage + 1]
+                            : [2 * curSpread - 4, 2 * curSpread - 3, 2 * curSpread, 2 * curSpread + 1];
+    near.forEach(p => {
+      if (p >= 1 && p <= pageCount()) pageSlots(p).forEach(s => { const i = new Image(); i.src = s.img; });
+    });
     // edge arrows: dim when at the ends
     const atStart = isSingle() ? curPage === 0 : curSpread === 1;
     const atEnd = isSingle() ? curPage >= maxPage() : curSpread >= spreadMax();
@@ -545,7 +551,7 @@ function init(SET) {
     const sel = $('sheet-sel');
     const opts = [...new Set([10, 15, 20, 25, 30, 40, 50, sheets])].sort((a, b) => a - b);
     sel.innerHTML = opts.map(n => `<option value="${n}" ${n === sheets ? 'selected' : ''}>${n} sheets</option>`).join('');
-    sel.addEventListener('change', () => {
+    sel.onchange = (() => {
       sheets = parseInt(sel.value) || 20;
       saveLayout();
       curSpread = Math.min(curSpread, spreadMax());
@@ -605,6 +611,18 @@ function init(SET) {
       if (e.key === 'Home') goToPage(0);
       if (e.key === 'End') goToPage(maxPage());
     }
+  });
+
+  // cloud sync finished pulling: refresh state in place (no page reload)
+  document.addEventListener('cloud-sync-applied', () => {
+    try {
+      const sv = JSON.parse(localStorage.getItem(LS_LAYOUT));
+      if (sv) { cols = sv.cols || cols; rows = sv.rows || rows; sheets = sv.sheets || sheets; }
+    } catch (e) {}
+    document.documentElement.style.setProperty('--binder-cols', cols);
+    $('lp-label').textContent = `${cols}×${rows}`;
+    buildLayoutPicker(); buildSheetPicker();
+    load(); updateProgress(); setView(view);
   });
 
   // overlays must not inherit the mobile auto-zoom (they size themselves in vw/vh)

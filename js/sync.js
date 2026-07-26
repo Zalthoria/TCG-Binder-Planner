@@ -83,11 +83,8 @@
         rawSet(TS_KEY, String(cloud.updated));
         applying = false;
         status('✓ Loaded from cloud', '#38d47e', 2500);
-        // Freshest data may change what's on screen — reload once to render it
-        if (!sessionStorage.getItem('sync_reloaded')) {
-          sessionStorage.setItem('sync_reloaded', '1');
-          setTimeout(() => location.reload(), 350);
-        }
+        // re-render in place — no page reload
+        document.dispatchEvent(new CustomEvent('cloud-sync-applied'));
       } else if (localTs > cloud.updated) {
         await push();
       } else {

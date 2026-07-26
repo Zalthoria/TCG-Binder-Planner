@@ -141,3 +141,4 @@ $('filter').addEventListener('input', e => {
 // ── Go ──────────────────────────────────────────────────────────────────
 ensureDefaults();
 render();
+document.addEventListener('cloud-sync-applied', render);   // refresh in place, no reload
