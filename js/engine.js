@@ -340,22 +340,43 @@ function init(SET) {
     renderPageMap();
   }
 
-  // Page-turn animation: swap content at the midpoint of the turn
+  // Page-turn animation: a real leaf pivots on the spine and sweeps across,
+  // revealing the new page underneath (its blank reverse shows past 90°).
   let turning = false;
   function turnTo(dir) {
-    if (turning) return;
     if (!dir) return renderSpread();
+    if (turning) return renderSpread();
     const wrap = $('spread');
+    const single = isSingle();
+    const pages = [...wrap.querySelectorAll('.page')];
+    // forward: the right-hand page (or the single page) flips left
+    // backward: the left-hand page flips right
+    const outgoing = single ? pages[0] : (dir > 0 ? (pages[1] || pages[0]) : pages[0]);
+    if (!outgoing) return renderSpread();
+
+    const r = outgoing.getBoundingClientRect();
+    const wr = wrap.getBoundingClientRect();
+    const clone = outgoing.cloneNode(true);
+
     turning = true;
-    wrap.classList.remove('turn-f', 'turn-b');
-    void wrap.offsetWidth;
-    wrap.classList.add(dir > 0 ? 'turn-f' : 'turn-b');
-    setTimeout(renderSpread, 190);
-    wrap.addEventListener('animationend', () => {
-      wrap.classList.remove('turn-f', 'turn-b');
-      turning = false;
-    }, { once: true });
-    setTimeout(() => turning = false, 700);   // safety net
+    renderSpread();                       // new page lands underneath immediately
+
+    const leaf = el('div', 'leaf ' + (dir > 0 ? 'fwd' : 'back'));
+    leaf.style.left = (r.left - wr.left) + 'px';
+    leaf.style.top = (r.top - wr.top) + 'px';
+    leaf.style.width = r.width + 'px';
+    leaf.style.height = r.height + 'px';
+    clone.style.cssText += ';width:100%;height:100%;margin:0;';
+    const face = el('div', 'leaf-face');
+    face.appendChild(clone);
+    leaf.appendChild(face);
+    leaf.appendChild(el('div', 'leaf-back'));   // blank reverse of the sheet
+    leaf.appendChild(el('div', 'leaf-shade'));
+    wrap.appendChild(leaf);
+
+    const done = () => { leaf.remove(); turning = false; };
+    leaf.addEventListener('animationend', done, { once: true });
+    setTimeout(() => { if (leaf.parentNode) done(); }, 1000);   // safety net
   }
 
   function go(d) {
