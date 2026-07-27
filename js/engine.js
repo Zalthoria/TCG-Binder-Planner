@@ -110,8 +110,9 @@ function init(SET) {
     d.style.setProperty('--bcbg', c.bg);
     d.dataset.key = key;
     const img = el('img');
-    img.loading = 'lazy'; img.src = s.img; img.alt = s.name;
+    img.loading = 'lazy'; img.alt = s.name;
     if (s.img2) img.onerror = () => { img.onerror = null; img.src = s.img2; };  // fallback scan
+    img.src = s.img;                                                            // set src last
     d.appendChild(img);
     // reverse-holo variants share the base card's image — differentiate visually
     if ((SET.reverseVs || []).includes(s.v)) {

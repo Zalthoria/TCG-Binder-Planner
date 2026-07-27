@@ -1,0 +1,7 @@
+to fetch: 124
+progress 20/124 ok=20 fail=0
+progress 40/124 ok=40 fail=0
+progress 60/124 ok=60 fail=0
+progress 80/124 ok=77 fail=0
+FAIL 500385: The read operation timed out
+DONE total=124 ok=86 skip=37 fail=1
