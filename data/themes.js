@@ -1,5 +1,9 @@
 // Auto-generated: dominant accent per logo (keyed by logo filename stem)
 window.LOGO_THEMES = {
+ "PBL": {
+  "accent": "#9645d2",
+  "deep": "#1b0c26"
+ },
  "ASC": {
   "accent": "#f4d546",
   "deep": "#26210c"

@@ -8,7 +8,7 @@ const el = (tag, cls, html) => { const d = document.createElement(tag); if (cls)
 
 // ── Active binder list (legacy-compatible) ──────────────────────────────
 const LS_ACTIVE = 'tcgplanner_active_binders_v1';
-const DEFAULT_IDS = ['gardevoir','penny','m1l','m1s','m2','m2a','m3','m4','mew','sv9','m5','sv2d','sv2p','cbb5c','sv4a','twm'];
+const DEFAULT_IDS = ['gardevoir','penny','m1l','m1s','m2','m2a','m3','m4','mew','sv9','m5','sv2d','sv2p','cbb5c','sv4a','twm','pbl'];
 
 function getActive() {
   try { return JSON.parse(localStorage.getItem(LS_ACTIVE)) || null; } catch (e) { return null; }

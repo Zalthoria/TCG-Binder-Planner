@@ -105,5 +105,7 @@ window.CATALOG = [
   { id:'m5',   era:'JP — Mega Era', name:'M5 Abyss Eye',         desc:'アビスアイ · Mega Darkrai ex · May 2026',
     file:'m5.html', page:'binder.html?set=m5', lsOwned:'m5_abyss_eye_owned_v1', lsPrices:'m5_abyss_eye_prices_v1', total:117, release:'2026-05', cover:`logos/M5.png`, icon:'🌑' },
   { id:'cri',  era:'EN — Mega Era', name:'Chaos Rising (CRI)', desc:'May 2026',
-    file:null, lsOwned:'cri_owned_v1', lsPrices:'cri_prices_v1', total:124, release:'2026-05', cover:`https://s3.limitlesstcg.com/sets/en/CRI_MD.png`, icon:'💧' }
+    file:null, lsOwned:'cri_owned_v1', lsPrices:'cri_prices_v1', total:124, release:'2026-05', cover:`https://s3.limitlesstcg.com/sets/en/CRI_MD.png`, icon:'💧' },
+  { id:'pbl',  era:'EN — Mega Era', name:'Pitch Black (PBL)', desc:'ME05 · Mega Darkrai ex · Jul 2026',
+    file:null, page:'binder.html?set=pbl', lsOwned:'pbl_owned_v1', lsPrices:'pbl_prices_v1', total:194, release:'2026-07', cover:`logos/PBL.png`, icon:'🌑' }
 ];
