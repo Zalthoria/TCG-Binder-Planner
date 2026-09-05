@@ -2,8 +2,8 @@
 window.CATALOG = [
   { id:'gardevoir', era:'Custom',   name:'Gardevoir — All Prints',       desc:'All 57 EN prints across every era',
     file:'gardevoir.html', page:'binder.html?set=gardevoir', lsOwned:'gardevoir_owned_v1',   lsPrices:'gardevoir_prices_v1',   total:57,   release:'0000-00', cover:`logos/GARDEVOIR.png`, icon:'🌸' },
-  { id:'penny', era:'Custom',       name:'Penny (ボタン) — All Prints',   desc:'JP + EN prints, all 16 cards',
-    file:'penny.html', page:'binder.html?set=penny',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:16,   release:'0000-01', cover:`logos/PENNY.png`, icon:'👓' },
+  { id:'penny', era:'Custom',       name:'Penny (ボタン) — All Prints',   desc:'JP + EN prints + extras, 27 slots',
+    file:'penny.html', page:'binder.html?set=penny',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:27,   release:'0000-01', cover:`logos/PENNY.png`, icon:'👓' },
   { id:'prc',  era:'EN — XY', name:'Primal Clash (PRC)',    desc:'M Gardevoir EX · Feb 2015',
     file:null, lsOwned:'prc_owned_v1', lsPrices:'prc_prices_v1', total:160, release:'2015-02', cover:`logos/PRC.png`, icon:'🌊' },
   { id:'sts',  era:'EN — XY', name:'Steam Siege (STS)',     desc:'M Gardevoir EX · Aug 2016',
