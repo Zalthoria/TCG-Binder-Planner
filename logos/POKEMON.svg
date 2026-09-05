@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 132" width="470" height="132" role="img" aria-label="Pokémon Trading Card Game">
+  <defs>
+    <linearGradient id="pk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#ffe98a"/>
+      <stop offset="0.5" stop-color="#f5c518"/>
+      <stop offset="1"   stop-color="#c9930a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- card-stack emblem with a poke ball face -->
+  <g transform="translate(6,14)">
+    <rect x="14" y="8" width="60" height="86" rx="9" fill="none" stroke="#c9930a" stroke-width="3" opacity="0.45" transform="rotate(-9 44 51)"/>
+    <rect x="22" y="4" width="60" height="86" rx="9" fill="none" stroke="url(#pk)" stroke-width="3.4"/>
+    <circle cx="52" cy="47" r="19" fill="none" stroke="url(#pk)" stroke-width="3.4"/>
+    <path d="M33 47h38" stroke="url(#pk)" stroke-width="3.4"/>
+    <circle cx="52" cy="47" r="6.4" fill="url(#pk)"/>
+  </g>
+
+  <text x="108" y="62" font-family="Outfit, Segoe UI, system-ui, sans-serif"
+        font-size="44" font-weight="900" letter-spacing="-0.5" fill="url(#pk)">POKÉMON</text>
+  <text x="110" y="94" font-family="Outfit, Segoe UI, system-ui, sans-serif"
+        font-size="15" font-weight="700" letter-spacing="6.2" fill="#9a8c5e">TRADING CARD GAME</text>
+</svg>

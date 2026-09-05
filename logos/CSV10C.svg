@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 150" width="470" height="150" role="img" aria-label="Chasing Glory Together, CSV10C">
+  <defs>
+    <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#ffd9c2"/>
+      <stop offset="0.5" stop-color="#e0673f"/>
+      <stop offset="1"   stop-color="#9b3a1e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- laurel-ish arcs around a star: chasing glory -->
+  <g fill="none" stroke="url(#cg)" stroke-linecap="round">
+    <path d="M186 78 A54 54 0 0 1 235 34" stroke-width="3"/>
+    <path d="M284 78 A54 54 0 0 0 235 34" stroke-width="3"/>
+    <path d="M196 92 A44 44 0 0 0 274 92" stroke-width="2.2" opacity="0.55"/>
+  </g>
+  <path d="M235 40 l7.4 15.6 17 2.4 -12.3 12.2 2.9 17.1 -15-8.1 -15 8.1 2.9-17.1 -12.3-12.2 17-2.4Z"
+        fill="url(#cg)"/>
+
+  <text x="235" y="124" text-anchor="middle"
+        font-family="Outfit, Segoe UI, system-ui, sans-serif" font-size="27" font-weight="800"
+        letter-spacing="2.4" fill="url(#cg)">CHASING GLORY</text>
+  <text x="235" y="145" text-anchor="middle"
+        font-family="Outfit, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="700"
+        letter-spacing="7" fill="#8f6a5a">共逐荣光</text>
+
+  <text x="96" y="24" font-family="Outfit, Segoe UI, system-ui, sans-serif"
+        font-size="13" font-weight="700" letter-spacing="4.5" fill="#8f6a5a">CSV10C</text>
+  <text x="374" y="24" text-anchor="end" font-family="Outfit, Segoe UI, system-ui, sans-serif"
+        font-size="13" font-weight="700" letter-spacing="2.6" fill="#8f6a5a">222 + 65</text>
+</svg>

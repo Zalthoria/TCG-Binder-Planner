@@ -1,5 +1,17 @@
 // Auto-generated: dominant accent per logo (keyed by logo filename stem)
 window.LOGO_THEMES = {
+ "CSV10C": {
+  "accent": "#e0673f",
+  "deep": "#2a1109"
+ },
+ "CSV4C": {
+  "accent": "#d4a843",
+  "deep": "#241c0a"
+ },
+ "POKEMON": {
+  "accent": "#f5c518",
+  "deep": "#241f06"
+ },
  "BP01": {
   "accent": "#cfae74",
   "deep": "#241c0e"

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 150" width="470" height="150" role="img" aria-label="Reward Round, CSV4C">
+  <defs>
+    <linearGradient id="rr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#f7e3a8"/>
+      <stop offset="0.5" stop-color="#d4a843"/>
+      <stop offset="1"   stop-color="#9d7420"/>
+    </linearGradient>
+  </defs>
+
+  <!-- a coin, for the gold-rush theme -->
+  <g transform="translate(235,58)">
+    <circle r="25" fill="none" stroke="url(#rr)" stroke-width="3.2"/>
+    <circle r="16" fill="none" stroke="url(#rr)" stroke-width="1.6" opacity="0.6"/>
+    <path d="M-7 -8h14M-7 8h14M0 -13v26" stroke="url(#rr)" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <path d="M96 96h268" stroke="#d4a843" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+
+  <text x="235" y="122" text-anchor="middle"
+        font-family="Outfit, Segoe UI, system-ui, sans-serif" font-size="31" font-weight="800"
+        letter-spacing="3.2" fill="url(#rr)">REWARD ROUND</text>
+  <text x="235" y="144" text-anchor="middle"
+        font-family="Outfit, Segoe UI, system-ui, sans-serif" font-size="14" font-weight="700"
+        letter-spacing="7" fill="#8a7550">嘉奖回合</text>
+
+  <text x="96" y="24" font-family="Outfit, Segoe UI, system-ui, sans-serif"
+        font-size="13" font-weight="700" letter-spacing="4.5" fill="#8a7550">CSV4C</text>
+  <text x="364" y="24" text-anchor="end" font-family="Outfit, Segoe UI, system-ui, sans-serif"
+        font-size="13" font-weight="700" letter-spacing="2.6" fill="#8a7550">129 + 36</text>
+</svg>

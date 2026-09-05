@@ -10,7 +10,7 @@ const el = (tag, cls, html) => { const d = document.createElement(tag); if (cls)
 const LS_ACTIVE = 'tcgplanner_active_binders_v1';
 const IP = new URLSearchParams(location.search).get('ip') || 'pokemon';
 const IPDEF = (window.IPS || []).find(i => i.id === IP) || { id: IP, name: IP, accent: null, blurb: '' };
-const DEFAULT_IDS = ['gardevoir','penny','m1l','m1s','m2','m2a','m3','m4','mew','sv9','m5','sv2d','sv2p','cbb5c','sv4a','twm','pbl','m6','palworld-bp01'];
+const DEFAULT_IDS = ['gardevoir','penny','m1l','m1s','m2','m2a','m3','m4','mew','sv9','m5','sv2d','sv2p','cbb5c','sv4a','twm','pbl','m6','palworld-bp01','csv4c','csv10c'];
 
 function getActive() {
   try { return JSON.parse(localStorage.getItem(LS_ACTIVE)) || null; } catch (e) { return null; }

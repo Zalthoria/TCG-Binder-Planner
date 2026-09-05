@@ -1,6 +1,6 @@
 // Top-level IP shelves. The home page lists these; shelf.html filters by ?ip=
 window.IPS = [
-  { id:'pokemon',  name:'Pokémon',   accent:'#f5c518', blurb:'Master sets, character binders and sealed-era runs' },
+  { id:'pokemon',  name:'Pokémon',   accent:'#f5c518', blurb:'Master sets, character binders and sealed-era runs', logo:'logos/POKEMON.svg' },
   { id:'palworld', name:'Palworld',  accent:'#cfae74', blurb:'Bushiroad’s Palworld Official Card Game', logo:'logos/PALWORLD.png' },
   { id:'onepiece', name:'One Piece', accent:'#d64545', blurb:'Nothing tracked yet', logo:'logos/ONEPIECE.png' },
 ];
@@ -117,5 +117,9 @@ window.CATALOG = [
   { ip:'pokemon', id:'m6',   era:'JP — Mega Era', name:'M6 Storm Emeralda', desc:'ストームエメラルダ · Mega Rayquaza ex · Jul 2026',
     file:null, page:'binder.html?set=m6', lsOwned:'m6_storm_emeralda_owned_v1', lsPrices:'m6_storm_emeralda_prices_v1', total:113, release:'2026-07', cover:`logos/M6.png`, icon:'🐉' },
   { ip:'palworld', id:'palworld-bp01', era:'Palworld — Boosters', name:'Dawn of Palpagos (BP01)', desc:'100 base + 61 parallels + SSS · Jul 2026',
-    file:null, page:'binder.html?set=palworld-bp01', lsOwned:'pwbp01_owned_v1', lsPrices:'pwbp01_prices_v1', total:162, release:'2026-07', cover:`logos/BP01.svg`, icon:'🔷' }
+    file:null, page:'binder.html?set=palworld-bp01', lsOwned:'pwbp01_owned_v1', lsPrices:'pwbp01_prices_v1', total:162, release:'2026-07', cover:`logos/BP01.svg`, icon:'🔷' },
+  { ip:'pokemon', id:'csv4c',  era:'ZH — Chinese', name:'CSV4C Reward Round', desc:'嘉奖回合 · 129 main + 36 secret · Jul 2025',
+    file:null, page:'binder.html?set=csv4c', lsOwned:'csv4c_owned_v1', lsPrices:'csv4c_prices_v1', total:165, release:'2025-07', cover:`logos/CSV4C.svg`, icon:'🪙' },
+  { ip:'pokemon', id:'csv10c', era:'ZH — Chinese', name:'CSV10C Chasing Glory Together', desc:'共逐荣光 · 222 main + 65 secret · Jul 2026',
+    file:null, page:'binder.html?set=csv10c', lsOwned:'csv10c_owned_v1', lsPrices:'csv10c_prices_v1', total:287, release:'2026-07', cover:`logos/CSV10C.svg`, icon:'🏆' }
 ];
