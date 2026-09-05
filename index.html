@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TCG Binder Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=14">
+<link rel="stylesheet" href="css/app.css?v=15">
 <script>
 // Touch devices stuck on a desktop-width viewport (~980px) render everything tiny.
-// Scale the whole UI so the effective width feels phone-sized. No-op on real phone viewports.
 (function () {
   if (!matchMedia('(pointer: coarse)').matches) return;
   const z = Math.min(2.6, Math.max(1, window.innerWidth / 430));
@@ -18,10 +16,10 @@
 })();
 </script>
 <style>
-.wrap { max-width: 1280px; margin: 0 auto; padding: 26px 24px 90px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 26px 24px 90px; }
 
 /* Hero */
-.hero { display: flex; align-items: center; gap: 26px; padding: 28px 32px; margin-bottom: 26px; position: relative; overflow: hidden; }
+.hero { display: flex; align-items: center; gap: 26px; padding: 28px 32px; margin-bottom: 30px; position: relative; overflow: hidden; }
 .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(700px 260px at 8% 40%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%); pointer-events: none; }
 .hero h1 { font-size: 30px; font-weight: 900; letter-spacing: -.8px; }
 .hero h1 span { color: var(--accent); }
@@ -32,58 +30,49 @@
 .gstat .v { font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
 .gstat .l { font-size: 9.5px; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px; }
 
-/* Controls */
-.controls { display: flex; align-items: center; gap: 10px; margin-bottom: 26px; flex-wrap: wrap; }
-.controls .spacer { flex: 1; }
-#filter { width: 240px; }
+/* Section head */
+.sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+.sec-head h2 { font-size: 15px; font-weight: 800; letter-spacing: .2px; }
+.sec-head .n { font-size: 11.5px; font-weight: 700; color: var(--faint); }
+.sec-head::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 
-/* Era groups */
-.era { margin-bottom: 34px; }
-.era-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
-.era-head h2 { font-size: 15px; font-weight: 800; letter-spacing: .2px; }
-.era-head .n { font-size: 11.5px; font-weight: 700; color: var(--faint); }
-.era-head::after { content: ''; flex: 1; height: 1px; background: var(--line); }
-
-/* Binder cards */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-.bcard {
+/* IP tiles */
+.ips { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.ip {
   --a: var(--accent);
-  position: relative; padding: 20px 18px 16px; cursor: pointer; overflow: hidden;
+  position: relative; padding: 26px 24px 22px; cursor: pointer; overflow: hidden;
+  display: flex; flex-direction: column; gap: 16px; min-height: 210px;
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s;
-  display: flex; flex-direction: column; gap: 12px;
 }
-.bcard:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--a) 55%, transparent); box-shadow: 0 18px 44px rgba(0,0,0,.5), 0 0 30px color-mix(in srgb, var(--a) 10%, transparent); }
-.bcard::before { content: ''; position: absolute; inset: 0; background: radial-gradient(320px 150px at 50% -30px, color-mix(in srgb, var(--a) 13%, transparent), transparent 75%); pointer-events: none; transition: opacity .2s; opacity: .8; }
-.bcard:hover::before { opacity: 1; }
-.bc-logo { height: 72px; display: flex; align-items: center; justify-content: center; }
-.bc-logo img { max-height: 72px; max-width: 82%; object-fit: contain; filter: drop-shadow(0 6px 16px color-mix(in srgb, var(--a) 45%, transparent)); transition: transform .25s ease; }
-.bcard:hover .bc-logo img { transform: scale(1.06); }
-.bc-name { font-size: 14.5px; font-weight: 800; letter-spacing: -.2px; text-align: center; }
-.bc-desc { font-size: 11px; color: var(--faint); text-align: center; margin-top: -8px; min-height: 14px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bc-prog { display: flex; align-items: center; gap: 10px; }
-.bc-bar { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.07); overflow: hidden; }
-.bc-bar i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, color-mix(in srgb, var(--a) 70%, transparent), var(--a)); box-shadow: 0 0 8px color-mix(in srgb, var(--a) 60%, transparent); transition: width .6s cubic-bezier(.22,1,.36,1); }
-.bc-pct { font-size: 13px; font-weight: 800; color: var(--a); min-width: 40px; text-align: right; }
-.bc-count { font-size: 10.5px; font-weight: 600; color: var(--faint); text-align: center; }
-.bc-flag { position: absolute; top: 10px; right: 10px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 999px; }
-.bc-flag.complete { background: color-mix(in srgb, var(--a) 22%, transparent); color: var(--a); border: 1px solid color-mix(in srgb, var(--a) 50%, transparent); }
-.bc-flag.soon { background: rgba(255,255,255,.05); color: var(--faint); border: 1px solid var(--line); }
-.bcard.soon { opacity: .45; cursor: default; filter: saturate(.4); }
-.bcard.soon:hover { transform: none; box-shadow: none; border-color: var(--line); }
+.ip:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--a) 55%, transparent);
+  box-shadow: 0 20px 50px rgba(0,0,0,.5), 0 0 34px color-mix(in srgb, var(--a) 12%, transparent); }
+.ip::before { content: ''; position: absolute; inset: 0;
+  background: radial-gradient(420px 200px at 50% -40px, color-mix(in srgb, var(--a) 16%, transparent), transparent 75%);
+  pointer-events: none; transition: opacity .2s; opacity: .85; }
+.ip:hover::before { opacity: 1; }
+.ip.empty { opacity: .5; cursor: default; filter: saturate(.35); }
+.ip.empty:hover { transform: none; box-shadow: none; border-color: var(--line); }
 
-/* Manage modal */
-.mg-body { padding: 22px 26px 30px; }
-.mg-title { font-size: 18px; font-weight: 800; }
-.mg-sub { font-size: 12px; color: var(--dim); margin: 3px 0 16px; }
-.mg-era { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.3px; color: var(--dim); margin: 16px 0 8px; }
-.mg-row { display: flex; align-items: center; gap: 11px; padding: 7px 10px; border-radius: 9px; cursor: pointer; transition: background .12s; }
-.mg-row:hover { background: var(--panel2); }
-.mg-row img { width: 40px; height: 26px; object-fit: contain; }
-.mg-row .mn { flex: 1; font-size: 13px; font-weight: 600; }
-.mg-row .mn span { display: block; font-size: 10.5px; color: var(--faint); font-weight: 600; }
-.mg-row input { width: 16px; height: 16px; accent-color: var(--accent); }
-.mg-row .na { font-size: 10px; color: var(--faint); }
+.ip-mark { display: flex; align-items: center; gap: 14px; }
+.ip-glyph { width: 46px; height: 46px; border-radius: 13px; flex: none; display: grid; place-items: center;
+  font-size: 21px; font-weight: 900; letter-spacing: -1px;
+  background: color-mix(in srgb, var(--a) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--a) 42%, transparent); color: var(--a);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--a) 22%, transparent); }
+.ip-name { font-size: 20px; font-weight: 900; letter-spacing: -.5px; }
+.ip-blurb { font-size: 11.5px; color: var(--faint); font-weight: 600; margin-top: 2px; }
+
+.ip-body { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 11px; }
+.ip-nums { display: flex; align-items: baseline; gap: 8px; }
+.ip-nums .big { font-size: 27px; font-weight: 900; letter-spacing: -1px; color: var(--a); font-variant-numeric: tabular-nums; }
+.ip-nums .of { font-size: 12.5px; font-weight: 700; color: var(--faint); font-variant-numeric: tabular-nums; }
+.ip-bar { height: 7px; border-radius: 4px; background: rgba(255,255,255,.07); overflow: hidden; }
+.ip-bar i { display: block; height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--a) 65%, transparent), var(--a));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--a) 55%, transparent);
+  transition: width .7s cubic-bezier(.22,1,.36,1); }
+.ip-foot { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 700; color: var(--faint); }
+.ip-foot .go { color: var(--a); }
 
 @media (max-width: 800px) {
   .hero { flex-direction: column; text-align: center; }
@@ -109,34 +98,17 @@
     </div>
   </header>
 
-  <div class="controls">
-    <input type="search" id="filter" placeholder="Filter binders…">
-    <div class="spacer"></div>
-    <button class="btn" id="btn-manage">⚙ Manage binders</button>
+  <div class="sec-head">
+    <h2>Choose a game</h2>
+    <span class="n" id="ip-count"></span>
   </div>
 
-  <main id="eras"></main>
+  <main class="ips" id="ips"></main>
 </div>
 
-<!-- Manage binders modal -->
-<div class="overlay" id="mg">
-  <div class="sheet" style="max-width:540px">
-    <div class="mg-body">
-      <div class="mg-title">Manage binders</div>
-      <div class="mg-sub">Choose which binders appear on your shelf. Sets without a page yet are placeholders.</div>
-      <div id="mg-list"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:18px">
-        <button class="btn" id="mg-cancel">Cancel</button>
-        <button class="btn primary" id="mg-save">Save</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="js/sync.js?v=14"></script>
-<script src="data/catalog.js?v=14"></script>
-<script src="data/themes.js?v=14"></script>
-<script src="js/registry.js?v=14"></script>
-<script src="js/dashboard.js?v=14"></script>
+<script src="js/sync.js?v=15"></script>
+<script src="data/catalog.js?v=15"></script>
+<script src="data/themes.js?v=15"></script>
+<script src="js/ip-home.js?v=15"></script>
 </body>
 </html>

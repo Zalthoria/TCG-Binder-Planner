@@ -1,5 +1,9 @@
 // Auto-generated: dominant accent per logo (keyed by logo filename stem)
 window.LOGO_THEMES = {
+ "PALWORLD": {
+  "accent": "#3fa8e8",
+  "deep": "#0b1b2a"
+ },
  "M6": {
   "accent": "#2fd18d",
   "deep": "#06231a"

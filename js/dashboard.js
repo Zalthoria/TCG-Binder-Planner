@@ -8,7 +8,9 @@ const el = (tag, cls, html) => { const d = document.createElement(tag); if (cls)
 
 // ── Active binder list (legacy-compatible) ──────────────────────────────
 const LS_ACTIVE = 'tcgplanner_active_binders_v1';
-const DEFAULT_IDS = ['gardevoir','penny','m1l','m1s','m2','m2a','m3','m4','mew','sv9','m5','sv2d','sv2p','cbb5c','sv4a','twm','pbl','m6'];
+const IP = new URLSearchParams(location.search).get('ip') || 'pokemon';
+const IPDEF = (window.IPS || []).find(i => i.id === IP) || { id: IP, name: IP, accent: null, blurb: '' };
+const DEFAULT_IDS = ['gardevoir','penny','m1l','m1s','m2','m2a','m3','m4','mew','sv9','m5','sv2d','sv2p','cbb5c','sv4a','twm','pbl','m6','palworld-bp01'];
 
 function getActive() {
   try { return JSON.parse(localStorage.getItem(LS_ACTIVE)) || null; } catch (e) { return null; }
@@ -25,8 +27,11 @@ function ensureDefaults() {
 let filterQ = '';
 
 function render() {
+  if ($('ip-title')) $('ip-title').textContent = IPDEF.name;
+  if ($('ip-tag') && IPDEF.blurb) $('ip-tag').textContent = IPDEF.blurb;
+  if (IPDEF.accent) document.documentElement.style.setProperty('--accent', IPDEF.accent);
   const active = getActive() || [];
-  const entries = window.CATALOG.filter(c => active.includes(c.id));
+  const entries = window.CATALOG.filter(c => c.ip === IP && active.includes(c.id));
   const q = filterQ.trim().toLowerCase();
   const shown = q ? entries.filter(c => (c.name + ' ' + c.era + ' ' + (c.desc || '')).toLowerCase().includes(q)) : entries;
 
@@ -109,7 +114,7 @@ function openManage() {
   const box = $('mg-list');
   box.innerHTML = '';
   let lastEra = null;
-  window.CATALOG.forEach(c => {
+  window.CATALOG.filter(c => c.ip === IP).forEach(c => {
     if (c.era !== lastEra) { box.appendChild(el('div', 'mg-era', c.era)); lastEra = c.era; }
     const hasPage = !!c.page || !!c.file;
     const row = el('label', 'mg-row',

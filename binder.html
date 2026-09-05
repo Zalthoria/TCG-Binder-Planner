@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=14">
+<link rel="stylesheet" href="css/app.css?v=15">
 <script>
 // Touch devices stuck on a desktop-width viewport (~980px) render everything tiny.
 // Scale the whole UI so the effective width feels phone-sized. No-op on real phone viewports.
@@ -371,10 +371,22 @@ select.btn option { background: #161311; color: var(--txt); }
   </div>
 </div>
 
-<script src="js/sync.js?v=14"></script>
-<script src="data/catalog.js?v=14"></script>
-<script src="data/themes.js?v=14"></script>
-<script src="js/registry.js?v=14"></script>
-<script src="js/engine.js?v=14"></script>
+<script src="js/sync.js?v=15"></script>
+<script src="data/catalog.js?v=15"></script>
+<script src="data/themes.js?v=15"></script>
+<script src="js/registry.js?v=15"></script>
+<script src="js/engine.js?v=15"></script>
+<script>
+/* Back-link points at the shelf for this set's IP (falls back to the IP home). */
+(function () {
+  var id = new URLSearchParams(location.search).get('set');
+  var c  = (window.CATALOG || []).find(function (x) { return x.id === id; });
+  var a  = document.querySelector('a.back');
+  if (!a || !c || !c.ip) return;
+  var ip = (window.IPS || []).find(function (i) { return i.id === c.ip; });
+  a.href = 'shelf.html?ip=' + encodeURIComponent(c.ip);
+  a.textContent = '\u2190 ' + (ip ? ip.name : 'All binders');
+})();
+</script>
 </body>
 </html>
