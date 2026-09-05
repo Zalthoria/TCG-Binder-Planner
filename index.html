@@ -74,6 +74,11 @@
 .ip-foot { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 700; color: var(--faint); }
 .ip-foot .go { color: var(--a); }
 
+.ip-mark.has-logo { flex-direction: column; align-items: flex-start; gap: 9px; }
+.ip-logo { height: 46px; display: flex; align-items: center; }
+.ip-logo img { height: 100%; width: auto; max-width: 210px; object-fit: contain;
+  filter: drop-shadow(0 5px 14px color-mix(in srgb, var(--a) 40%, transparent)); }
+
 @media (max-width: 800px) {
   .hero { flex-direction: column; text-align: center; }
   .gstats { flex-wrap: wrap; justify-content: center; }

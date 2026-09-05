@@ -35,12 +35,31 @@ function ipTile(ip) {
   const tile = el('div', 'ip glass' + (s.sets ? '' : ' empty'));
   tile.style.setProperty('--a', ip.accent);
 
-  const mark = el('div', 'ip-mark');
-  mark.appendChild(el('div', 'ip-glyph', ip.name.trim().charAt(0)));
-  const names = el('div');
-  names.appendChild(el('div', 'ip-name', ip.name));
-  names.appendChild(el('div', 'ip-blurb', ip.blurb || ''));
-  mark.appendChild(names);
+    const mark = el('div', 'ip-mark');
+  const glyph = () => el('div', 'ip-glyph', ip.name.trim().charAt(0));
+  if (ip.logo) {
+    // A real wordmark already carries the name, so it replaces the text row.
+    mark.classList.add('has-logo');
+    const box = el('div', 'ip-logo');
+    const im = el('img');
+    im.alt = ip.name; im.loading = 'lazy';
+    im.onerror = () => {                       // fall back to the letter tile
+      mark.classList.remove('has-logo');
+      box.remove();
+      mark.prepend(el('div', 'ip-name', ip.name));
+      mark.prepend(glyph());
+    };
+    im.src = ip.logo;
+    box.appendChild(im);
+    mark.appendChild(box);
+    mark.appendChild(el('div', 'ip-blurb', ip.blurb || ''));
+  } else {
+    mark.appendChild(glyph());
+    const names = el('div');
+    names.appendChild(el('div', 'ip-name', ip.name));
+    names.appendChild(el('div', 'ip-blurb', ip.blurb || ''));
+    mark.appendChild(names);
+  }
   tile.appendChild(mark);
 
   const body = el('div', 'ip-body');

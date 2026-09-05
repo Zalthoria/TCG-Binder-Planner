@@ -1,8 +1,8 @@
 // Top-level IP shelves. The home page lists these; shelf.html filters by ?ip=
 window.IPS = [
-  { id:'pokemon',  name:'Pok'+'\u00e9'+'mon',   accent:'#f5c518', blurb:'Master sets, character binders and sealed-era runs' },
-  { id:'palworld', name:'Palworld',  accent:'#3fa8e8', blurb:'Bushiroad'+'\u2019'+'s Palworld Official Card Game' },
-  { id:'onepiece', name:'One Piece', accent:'#d64545', blurb:'Nothing tracked yet' },
+  { id:'pokemon',  name:'Pokémon',   accent:'#f5c518', blurb:'Master sets, character binders and sealed-era runs' },
+  { id:'palworld', name:'Palworld',  accent:'#cfae74', blurb:'Bushiroad’s Palworld Official Card Game', logo:'logos/PALWORLD.png' },
+  { id:'onepiece', name:'One Piece', accent:'#d64545', blurb:'Nothing tracked yet', logo:'logos/ONEPIECE.png' },
 ];
 // Auto-extracted from legacy index.html — master set registry
 window.CATALOG = [
@@ -117,5 +117,5 @@ window.CATALOG = [
   { ip:'pokemon', id:'m6',   era:'JP — Mega Era', name:'M6 Storm Emeralda', desc:'ストームエメラルダ · Mega Rayquaza ex · Jul 2026',
     file:null, page:'binder.html?set=m6', lsOwned:'m6_storm_emeralda_owned_v1', lsPrices:'m6_storm_emeralda_prices_v1', total:113, release:'2026-07', cover:`logos/M6.png`, icon:'🐉' },
   { ip:'palworld', id:'palworld-bp01', era:'Palworld — Boosters', name:'Dawn of Palpagos (BP01)', desc:'100 base + 61 parallels + SSS · Jul 2026',
-    file:null, page:'binder.html?set=palworld-bp01', lsOwned:'pwbp01_owned_v1', lsPrices:'pwbp01_prices_v1', total:162, release:'2026-07', cover:`logos/PALWORLD.svg`, icon:'🔷' }
+    file:null, page:'binder.html?set=palworld-bp01', lsOwned:'pwbp01_owned_v1', lsPrices:'pwbp01_prices_v1', total:162, release:'2026-07', cover:`logos/BP01.svg`, icon:'🔷' }
 ];
