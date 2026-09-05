@@ -35,18 +35,34 @@ function ipTile(ip) {
   const tile = el('div', 'ip glass' + (s.sets ? '' : ' empty'));
   tile.style.setProperty('--a', ip.accent);
 
-    const mark = el('div', 'ip-mark');
+      const mark = el('div', 'ip-mark');
   const glyph = () => el('div', 'ip-glyph', ip.name.trim().charAt(0));
-  if (ip.logo) {
-    // A real wordmark already carries the name, so it replaces the text row.
+  const nameBlock = () => {
+    const n = el('div');
+    n.appendChild(el('div', 'ip-name', ip.name));
+    n.appendChild(el('div', 'ip-blurb', ip.blurb || ''));
+    return n;
+  };
+  if (ip.logo && ip.logoIcon) {
+    // Square mark: sits in the glyph slot, name still needed beside it.
+    const box = el('div', 'ip-icon');
+    const im = el('img');
+    im.alt = ip.name; im.loading = 'lazy';
+    im.onerror = () => { box.replaceWith(glyph()); };
+    im.src = ip.logo;
+    box.appendChild(im);
+    mark.appendChild(box);
+    mark.appendChild(nameBlock());
+  } else if (ip.logo) {
+    // Wordmark already carries the name, so it replaces the text row.
     mark.classList.add('has-logo');
     const box = el('div', 'ip-logo');
     const im = el('img');
     im.alt = ip.name; im.loading = 'lazy';
-    im.onerror = () => {                       // fall back to the letter tile
+    im.onerror = () => {
       mark.classList.remove('has-logo');
       box.remove();
-      mark.prepend(el('div', 'ip-name', ip.name));
+      mark.prepend(nameBlock());
       mark.prepend(glyph());
     };
     im.src = ip.logo;
@@ -55,10 +71,7 @@ function ipTile(ip) {
     mark.appendChild(el('div', 'ip-blurb', ip.blurb || ''));
   } else {
     mark.appendChild(glyph());
-    const names = el('div');
-    names.appendChild(el('div', 'ip-name', ip.name));
-    names.appendChild(el('div', 'ip-blurb', ip.blurb || ''));
-    mark.appendChild(names);
+    mark.appendChild(nameBlock());
   }
   tile.appendChild(mark);
 
