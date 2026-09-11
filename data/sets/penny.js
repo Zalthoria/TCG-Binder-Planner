@@ -1,13 +1,11 @@
 /* penny — every print of Penny / Cassiopeia, plus every card she appears on.
-   45 slots, five full 9-pocket pages. Rows read JP | EN | CN across where all
-   three languages got the print; page 3's stamp row runs EN | JP | EN so the
-   Japanese card centres. Grouped by character — see `penny-art` for the same
-   cards grouped by illustrator. */
+   54 slots, six full 9-pocket pages. Pages 1-5 read JP | EN | CN across;
+   page 6 is the Traditional Chinese line, one row per set. */
 registerSet('penny', {
   binder: {
     title:    'Penny (ボタン) — All Prints',
-    subtitle: '45 slots · JP | EN | CN · three per row',
-    navTitle: 'Penny — All Prints · 45 slots',
+    subtitle: '54 slots · JP | EN | CN + Traditional Chinese',
+    navTitle: 'Penny — All Prints · 54 slots',
     lsOwned:  'penny_owned_v1',
     lsWatched:'penny_watched_v1',
     lsPrices: 'penny_prices_v1',
@@ -33,6 +31,10 @@ registerSet('penny', {
     { label: 'Cameo (JP)', color: '#c07840' },
     { label: 'Cameo (EN)', color: '#e09860' },
     { label: 'Cameo (CN)', color: '#e07850' },
+    { label: 'TC Regular', color: '#3fb894' },
+    { label: 'TC SR', color: '#5cc46a' },
+    { label: 'TC SAR', color: '#3fc0c0' },
+    { label: 'Cameo (TC)', color: '#8fc04a' },
     ],
   },
   bcDefault: { bg: '#1b1b22', col: '#aaaaaa' },
@@ -57,6 +59,10 @@ registerSet('penny', {
     'cameo-jp': { bg: '#2a1a0f', col: '#c07840' },
     'cameo-en': { bg: '#33220f', col: '#e09860' },
     'cameo-cn': { bg: '#331c14', col: '#e07850' },
+    'r-tc':     { bg: '#10241f', col: '#3fb894' },
+    'sr-tc':    { bg: '#13291a', col: '#5cc46a' },
+    'sar-tc':   { bg: '#0f2a2a', col: '#3fc0c0' },
+    'cameo-tc': { bg: '#1a2a12', col: '#8fc04a' },
   },
   sdefs: [
     { label: 'Page 1 · Penny — base, parallels, one-offs', f: s => s.sec === 'p1' },
@@ -64,9 +70,10 @@ registerSet('penny', {
     { label: 'Page 3 · Cassiopeia & the stamped cards', f: s => s.sec === 'p3' },
     { label: 'Page 4 · Cassiopeia & Clive', f: s => s.sec === 'p4' },
     { label: 'Page 5 · Friends in Paldea', f: s => s.sec === 'p5' },
+    { label: 'Page 6 · Traditional Chinese — one row per set', f: s => s.sec === 'p6' },
   ],
   slots: [
-    // ══ PAGE 1 · PENNY — BASE, PARALLELS, ONE-OFFS ════════
+    // ══ PAGE 1 · PENNY — BASE, PARALLELS, ONE-OFFS ══════
     // Row 1 · the base print
     { id:'SV1S-077', name:'Penny', set:'Scarlet ex', v:'r-jp', lang:'jp', sec:'p1',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
@@ -93,7 +100,7 @@ registerSet('penny', {
       img:'cards/penny-cn/SVP-208CN.webp' },
     { id:'CSV1C-124MB', name:'Penny', set:'亘古开来', v:'mb-cn', lang:'cn', sec:'p1',
       img:'cards/penny-cn/CSV1C-124MB.webp' },
-    // ══ PAGE 2 · PENNY — THE ARTWORK ════════
+    // ══ PAGE 2 · PENNY — THE ARTWORK ══════
     // Row 1 · full art
     { id:'SV1S-100', name:'Penny', set:'Scarlet ex', v:'sr-jp', lang:'jp', sec:'p2',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
@@ -121,7 +128,7 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239' },
     { id:'CBB2C-1004', name:'Penny', set:'宝石包 Vol.2', v:'sar-cn', lang:'cn', sec:'p2',
       img:'cards/penny-cn/CBB2C-1004.webp' },
-    // ══ PAGE 3 · CASSIOPEIA & THE STAMPED CARDS ════════
+    // ══ PAGE 3 · CASSIOPEIA & THE STAMPED CARDS ══════
     // Row 1 · Cassiopeia full art
     { id:'SV6a-085', name:'Cassiopeia', set:'Night Wanderer', v:'sr-jp', lang:'jp', sec:'p3',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_85_R_JP_SM.png',
@@ -150,7 +157,7 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-94' },
     { id:'CSV8C-252', name:'Cassiopeia', set:'璀璨诡幻', v:'sar-cn', lang:'cn', sec:'p3',
       img:'cards/penny-cn/CSV8C-252.webp' },
-    // ══ PAGE 4 · CASSIOPEIA & CLIVE ════════
+    // ══ PAGE 4 · CASSIOPEIA & CLIVE ══════
     // Row 1 · Cassiopeia base print
     { id:'SV6a-061', name:'Cassiopeia', set:'Night Wanderer', v:'r-jp', lang:'jp', sec:'p4',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_61_R_JP_SM.png',
@@ -177,7 +184,7 @@ registerSet('penny', {
       img:'cards/penny-cn/CSV8C-193.webp' },
     { id:'CSV8C-193MB', name:'Cassiopeia', set:'璀璨诡幻', v:'mb-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV8C-193.webp' },
-    // ══ PAGE 5 · FRIENDS IN PALDEA ════════
+    // ══ PAGE 5 · FRIENDS IN PALDEA ══════
     // Row 1 · base print
     { id:'SV8a-174', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p5',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
@@ -205,5 +212,27 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-109' },
     { id:'CSV95C-195MB', name:'Friends in Paldea', set:'太晶盛聚', v:'mb-cn', lang:'cn', sec:'p5',
       img:'cards/penny-cn/CSV95C-195MB.webp' },
+    // ══ PAGE 6 · TRADITIONAL CHINESE — ONE ROW PER SET ══════
+    // Row 1 · 朱ex — Penny, all three
+    { id:'SV1SF-077', name:'Penny', set:'SV1S 朱ex', v:'r-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV1SF-077.webp' },
+    { id:'SV1SF-100', name:'Penny', set:'SV1S 朱ex', v:'sr-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV1SF-100.webp' },
+    { id:'SV1SF-105', name:'Penny', set:'SV1S 朱ex', v:'sar-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV1SF-105.webp' },
+    // Row 2 · 閃色寶藏ex — Penny ×2, Clive
+    { id:'SV4aF-182', name:'Penny', set:'SV4a 閃色寶藏ex', v:'r-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV4aF-182.webp' },
+    { id:'SV4aF-354', name:'Penny', set:'SV4a 閃色寶藏ex', v:'sar-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV4aF-354.webp' },
+    { id:'SV4aF-352', name:'Clive', set:'SV4a 閃色寶藏ex', v:'cameo-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV4aF-352.webp' },
+    // Row 3 · 黑夜漫遊者 — Cassiopeia, all three
+    { id:'SV6aF-061', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'r-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV6aF-061.webp' },
+    { id:'SV6aF-085', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'sr-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV6aF-085.webp' },
+    { id:'SV6aF-091', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'sar-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV6aF-091.webp' },
   ],
 });

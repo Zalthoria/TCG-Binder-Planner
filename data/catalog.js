@@ -8,8 +8,8 @@ window.IPS = [
 window.CATALOG = [
   { ip:'pokemon', id:'gardevoir', era:'Custom',   name:'Gardevoir — All Prints',       desc:'All 57 EN prints across every era',
     file:'gardevoir.html', page:'binder.html?set=gardevoir', lsOwned:'gardevoir_owned_v1',   lsPrices:'gardevoir_prices_v1',   total:57,   release:'0000-00', cover:`logos/GARDEVOIR.png`, icon:'🌸' },
-  { ip:'pokemon', id:'penny', era:'Custom',       name:'Penny (ボタン) — All Prints',   desc:'JP + EN + CN prints and cameos, 45 slots',
-    file:'penny.html', page:'binder.html?set=penny',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:45,   release:'0000-01', cover:`logos/PENNY.png`, icon:'👓' },
+  { ip:'pokemon', id:'penny', era:'Custom',       name:'Penny (ボタン) — All Prints',   desc:'JP + EN + CN + TC prints and cameos, 54 slots',
+    file:'penny.html', page:'binder.html?set=penny',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:54,   release:'0000-01', cover:`logos/PENNY.png`, icon:'👓' },
   { ip:'pokemon', id:'penny-art', era:'Custom',       name:'Penny — By Artist',        desc:'Same 45 cards, grouped by illustrator',
     file:null, page:'binder.html?set=penny-art', lsOwned:'penny_owned_v1',   lsPrices:'penny_prices_v1',    total:45,   release:'0000-02', cover:`logos/PENNY.png`, icon:'🎨' },
   { ip:'pokemon', id:'prc',  era:'EN — XY', name:'Primal Clash (PRC)',    desc:'M Gardevoir EX · Feb 2015',
