@@ -1,11 +1,12 @@
-/* penny — every print of Penny / Cassiopeia, plus every card she appears on.
-   54 slots, six full 9-pocket pages. Pages 1-5 read JP | EN | CN across;
-   page 6 is the Traditional Chinese line, one row per set. */
+/* penny — the Penny / Cassiopeia master set: every variation in Japanese,
+   English, Simplified Chinese and Traditional Chinese, plus every card she
+   appears in the artwork of. 60 slots across seven pages; the last row of
+   page 7 is left open because 60 does not divide by nine. */
 registerSet('penny', {
   binder: {
-    title:    'Penny (ボタン) — All Prints',
-    subtitle: '54 slots · JP | EN | CN + Traditional Chinese',
-    navTitle: 'Penny — All Prints · 54 slots',
+    title:    'Penny (ボタン) — Master Set',
+    subtitle: '60 slots · JP · EN · 简体 · 繁體',
+    navTitle: 'Penny — Master Set · 60 slots',
     lsOwned:  'penny_owned_v1',
     lsWatched:'penny_watched_v1',
     lsPrices: 'penny_prices_v1',
@@ -35,6 +36,8 @@ registerSet('penny', {
     { label: 'TC SR', color: '#5cc46a' },
     { label: 'TC SAR', color: '#3fc0c0' },
     { label: 'Cameo (TC)', color: '#8fc04a' },
+    { label: 'TC Mirror', color: '#9ec8b4' },
+    { label: 'TC Poké Ball', color: '#4fc0a0' },
     ],
   },
   bcDefault: { bg: '#1b1b22', col: '#aaaaaa' },
@@ -63,14 +66,17 @@ registerSet('penny', {
     'sr-tc':    { bg: '#13291a', col: '#5cc46a' },
     'sar-tc':   { bg: '#0f2a2a', col: '#3fc0c0' },
     'cameo-tc': { bg: '#1a2a12', col: '#8fc04a' },
+    'mirror-tc':{ bg: '#1c2420', col: '#9ec8b4' },
+    'ball-tc':  { bg: '#0f2622', col: '#4fc0a0' },
   },
   sdefs: [
     { label: 'Page 1 · Penny — base, parallels, one-offs', f: s => s.sec === 'p1' },
     { label: 'Page 2 · Penny — the artwork', f: s => s.sec === 'p2' },
     { label: 'Page 3 · Cassiopeia & the stamped cards', f: s => s.sec === 'p3' },
     { label: 'Page 4 · Cassiopeia & Clive', f: s => s.sec === 'p4' },
-    { label: 'Page 5 · Friends in Paldea', f: s => s.sec === 'p5' },
-    { label: 'Page 6 · Traditional Chinese — one row per set', f: s => s.sec === 'p6' },
+    { label: 'Page 5 · Traditional Chinese', f: s => s.sec === 'p5' },
+    { label: 'Page 6 · The cameos', f: s => s.sec === 'p6' },
+    { label: 'Page 7 · Friends in Paldea — every parallel', f: s => s.sec === 'p7' },
   ],
   slots: [
     // ══ PAGE 1 · PENNY — BASE, PARALLELS, ONE-OFFS ══════
@@ -184,55 +190,70 @@ registerSet('penny', {
       img:'cards/penny-cn/CSV8C-193.webp' },
     { id:'CSV8C-193MB', name:'Cassiopeia', set:'璀璨诡幻', v:'mb-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV8C-193.webp' },
-    // ══ PAGE 5 · FRIENDS IN PALDEA ══════
-    // Row 1 · base print
-    { id:'SV8a-174', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p5',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-174' },
-    { id:'PRE-109', name:'Friends in Paldea', set:'Prismatic Evolutions', v:'cameo-en', lang:'en', sec:'p5',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_109_R_EN_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-109' },
-    { id:'CSV95C-195', name:'Friends in Paldea', set:'太晶盛聚', v:'cameo-cn', lang:'cn', sec:'p5',
-      img:'cards/penny-cn/CSV95C-195.webp' },
-    // Row 2 · full art
-    { id:'SV8a-195', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p5',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_195_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-195' },
-    { id:'PRE-137', name:'Friends in Paldea', set:'Prismatic Evolutions', v:'cameo-en', lang:'en', sec:'p5',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_137_R_EN_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-137' },
-    { id:'CSV95C-216', name:'Friends in Paldea', set:'太晶盛聚', v:'cameo-cn', lang:'cn', sec:'p5',
-      img:'cards/penny-cn/CSV95C-216.webp' },
-    // Row 3 · the parallels
-    { id:'SV8a-174M', name:'Friends in Paldea', set:'Terastal Festival ex', v:'mirror-jp', lang:'jp', sec:'p5',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-174' },
-    { id:'PRE-109PB', name:'Friends in Paldea', set:'Prismatic Evolutions', v:'ball-en', lang:'en', sec:'p5',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_109_R_EN_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-109' },
-    { id:'CSV95C-195MB', name:'Friends in Paldea', set:'太晶盛聚', v:'mb-cn', lang:'cn', sec:'p5',
-      img:'cards/penny-cn/CSV95C-195MB.webp' },
-    // ══ PAGE 6 · TRADITIONAL CHINESE — ONE ROW PER SET ══════
-    // Row 1 · 朱ex — Penny, all three
-    { id:'SV1SF-077', name:'Penny', set:'SV1S 朱ex', v:'r-tc', lang:'tc', sec:'p6',
+    // ══ PAGE 5 · TRADITIONAL CHINESE ══════
+    // Row 1 · 朱ex — Penny
+    { id:'SV1SF-077', name:'Penny', set:'SV1S 朱ex', v:'r-tc', lang:'tc', sec:'p5',
       img:'cards/penny-tc/SV1SF-077.webp' },
-    { id:'SV1SF-100', name:'Penny', set:'SV1S 朱ex', v:'sr-tc', lang:'tc', sec:'p6',
+    { id:'SV1SF-100', name:'Penny', set:'SV1S 朱ex', v:'sr-tc', lang:'tc', sec:'p5',
       img:'cards/penny-tc/SV1SF-100.webp' },
-    { id:'SV1SF-105', name:'Penny', set:'SV1S 朱ex', v:'sar-tc', lang:'tc', sec:'p6',
+    { id:'SV1SF-105', name:'Penny', set:'SV1S 朱ex', v:'sar-tc', lang:'tc', sec:'p5',
       img:'cards/penny-tc/SV1SF-105.webp' },
-    // Row 2 · 閃色寶藏ex — Penny ×2, Clive
-    { id:'SV4aF-182', name:'Penny', set:'SV4a 閃色寶藏ex', v:'r-tc', lang:'tc', sec:'p6',
+    // Row 2 · 閃色寶藏ex — Penny + mirror
+    { id:'SV4aF-182', name:'Penny', set:'SV4a 閃色寶藏ex', v:'r-tc', lang:'tc', sec:'p5',
       img:'cards/penny-tc/SV4aF-182.webp' },
-    { id:'SV4aF-354', name:'Penny', set:'SV4a 閃色寶藏ex', v:'sar-tc', lang:'tc', sec:'p6',
+    { id:'SV4aF-182M', name:'Penny', set:'SV4a 閃色寶藏ex', v:'mirror-tc', lang:'tc', sec:'p5',
+      img:'cards/penny-tc/SV4aF-182.webp' },
+    { id:'SV4aF-354', name:'Penny', set:'SV4a 閃色寶藏ex', v:'sar-tc', lang:'tc', sec:'p5',
       img:'cards/penny-tc/SV4aF-354.webp' },
+    // Row 3 · 黑夜漫遊者 — Cassiopeia
+    { id:'SV6aF-061', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'r-tc', lang:'tc', sec:'p5',
+      img:'cards/penny-tc/SV6aF-061.webp' },
+    { id:'SV6aF-085', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'sr-tc', lang:'tc', sec:'p5',
+      img:'cards/penny-tc/SV6aF-085.webp' },
+    { id:'SV6aF-091', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'sar-tc', lang:'tc', sec:'p5',
+      img:'cards/penny-tc/SV6aF-091.webp' },
+    // ══ PAGE 6 · THE CAMEOS ══════
+    // Row 1 · the Traditional Chinese cameos
     { id:'SV4aF-352', name:'Clive', set:'SV4a 閃色寶藏ex', v:'cameo-tc', lang:'tc', sec:'p6',
       img:'cards/penny-tc/SV4aF-352.webp' },
-    // Row 3 · 黑夜漫遊者 — Cassiopeia, all three
-    { id:'SV6aF-061', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'r-tc', lang:'tc', sec:'p6',
-      img:'cards/penny-tc/SV6aF-061.webp' },
-    { id:'SV6aF-085', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'sr-tc', lang:'tc', sec:'p6',
-      img:'cards/penny-tc/SV6aF-085.webp' },
-    { id:'SV6aF-091', name:'Cassiopeia', set:'SV6a 黑夜漫遊者', v:'sar-tc', lang:'tc', sec:'p6',
-      img:'cards/penny-tc/SV6aF-091.webp' },
+    { id:'SV8aF-174', name:'Friends in Paldea', set:'SV8a 太晶慶典ex', v:'cameo-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV8aF-174.webp' },
+    { id:'SV8aF-195', name:'Friends in Paldea', set:'SV8a 太晶慶典ex', v:'cameo-tc', lang:'tc', sec:'p6',
+      img:'cards/penny-tc/SV8aF-195.webp' },
+    // Row 2 · Friends in Paldea — base print
+    { id:'SV8a-174', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p6',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-174' },
+    { id:'PRE-109', name:'Friends in Paldea', set:'Prismatic Evolutions', v:'cameo-en', lang:'en', sec:'p6',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_109_R_EN_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-109' },
+    { id:'CSV95C-195', name:'Friends in Paldea', set:'太晶盛聚', v:'cameo-cn', lang:'cn', sec:'p6',
+      img:'cards/penny-cn/CSV95C-195.webp' },
+    // Row 3 · Friends in Paldea — full art
+    { id:'SV8a-195', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p6',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_195_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-195' },
+    { id:'PRE-137', name:'Friends in Paldea', set:'Prismatic Evolutions', v:'cameo-en', lang:'en', sec:'p6',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_137_R_EN_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-137' },
+    { id:'CSV95C-216', name:'Friends in Paldea', set:'太晶盛聚', v:'cameo-cn', lang:'cn', sec:'p6',
+      img:'cards/penny-cn/CSV95C-216.webp' },
+    // ══ PAGE 7 · FRIENDS IN PALDEA — EVERY PARALLEL ══════
+    // Row 1 · parallels — JP mirror, both EN reverses
+    { id:'SV8a-174M', name:'Friends in Paldea', set:'Terastal Festival ex', v:'mirror-jp', lang:'jp', sec:'p7',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-174' },
+    { id:'PRE-109RH', name:'Friends in Paldea', set:'Prismatic Evolutions', v:'rh-en', lang:'en', sec:'p7',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_109_R_EN_SM.png' },
+    { id:'PRE-109PB', name:'Friends in Paldea', set:'Prismatic Evolutions', v:'ball-en', lang:'en', sec:'p7',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_109_R_EN_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-109' },
+    // Row 2 · parallels — both CN balls, the TC ball
+    { id:'CSV95C-195PB', name:'Friends in Paldea', set:'太晶盛聚', v:'pb-cn', lang:'cn', sec:'p7',
+      img:'cards/penny-cn/CSV95C-195.webp' },
+    { id:'CSV95C-195MB', name:'Friends in Paldea', set:'太晶盛聚', v:'mb-cn', lang:'cn', sec:'p7',
+      img:'cards/penny-cn/CSV95C-195MB.webp' },
+    { id:'SV8aF-174PB', name:'Friends in Paldea', set:'SV8a 太晶慶典ex', v:'ball-tc', lang:'tc', sec:'p7',
+      img:'cards/penny-tc/SV8aF-174PB.webp' },
   ],
 });
