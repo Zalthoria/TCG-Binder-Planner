@@ -1,7 +1,8 @@
 /* penny-art — the same 45 cards as `penny`, grouped by illustrator instead of by
-   character. Seven artists, each an exact multiple of three, so every artist
-   occupies whole rows and no page is short. Built to compare against `penny`;
-   it shares penny_owned_v1 so ticks show in both. */
+   character. Seven artists, each an exact multiple of three.
+   Furusawa and Nitanda each fill a page outright; the three single-row artists
+   share page 3; only yuu (15 cards) spans a page break.
+   Shares penny_owned_v1 so ticks show in both binders. */
 registerSet('penny-art', {
   binder: {
     title:    'Penny — By Artist',
@@ -60,9 +61,9 @@ registerSet('penny-art', {
   sdefs: [
     { label: 'Page 1 · yuu — base, parallels, marked', f: s => s.sec === 'p1' },
     { label: 'Page 2 · yuu concluded · OKACHEKE', f: s => s.sec === 'p2' },
-    { label: 'Page 3 · aspara · Furusawa', f: s => s.sec === 'p3' },
-    { label: 'Page 4 · Furusawa · burari · Taiga Kayama', f: s => s.sec === 'p4' },
-    { label: 'Page 5 · Cona Nitanda', f: s => s.sec === 'p5' },
+    { label: 'Page 3 · aspara · burari · Taiga Kayama', f: s => s.sec === 'p3' },
+    { label: 'Page 4 · Atsushi Furusawa — all nine', f: s => s.sec === 'p4' },
+    { label: 'Page 5 · Cona Nitanda — all nine', f: s => s.sec === 'p5' },
   ],
   slots: [
     // ══ PAGE 1 · YUU — BASE, PARALLELS, MARKED ══════════
@@ -121,7 +122,7 @@ registerSet('penny-art', {
       pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-252' },
     { id:'CSV1C-162', name:'Penny', set:'亘古开来', v:'sar-cn', lang:'cn', sec:'p2',
       img:'cards/penny-cn/CSV1C-162.webp' },
-    // ══ PAGE 3 · ASPARA · FURUSAWA ══════════
+    // ══ PAGE 3 · ASPARA · BURARI · TAIGA KAYAMA ══════════
     // aspara · alt art
     { id:'SV4a-354', name:'Penny', set:'Shiny Treasure ex', v:'sar-jp', lang:'jp', sec:'p3',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_354_R_JP_SM.png',
@@ -131,24 +132,42 @@ registerSet('penny-art', {
       pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239' },
     { id:'CBB2C-1004', name:'Penny', set:'宝石包 Vol.2', v:'sar-cn', lang:'cn', sec:'p3',
       img:'cards/penny-cn/CBB2C-1004.webp' },
+    // burari · alt art
+    { id:'SV6a-091', name:'Cassiopeia', set:'Night Wanderer', v:'sar-jp', lang:'jp', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_91_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-91' },
+    { id:'SFA-094', name:'Cassiopeia', set:'Shrouded Fable', v:'sir-en', lang:'en', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_094_R_EN_LG.png',
+      pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-94' },
+    { id:'CSV8C-252', name:'Cassiopeia', set:'璀璨诡幻', v:'sar-cn', lang:'cn', sec:'p3',
+      img:'cards/penny-cn/CSV8C-252.webp' },
+    // Taiga Kayama · Clive, she’s in the art
+    { id:'SV4a-352', name:'Clive', set:'Shiny Treasure ex', v:'cameo-jp', lang:'jp', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_352_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/clive-352' },
+    { id:'PAF-236', name:'Clive', set:'Paldean Fates', v:'cameo-en', lang:'en', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_236_R_EN_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/clive-236' },
+    { id:'CSV5C-158', name:'Clive', set:'黑晶炽诚', v:'cameo-cn', lang:'cn', sec:'p3',
+      img:'cards/penny-cn/CSV5C-158.webp' },
+    // ══ PAGE 4 · ATSUSHI FURUSAWA — ALL NINE ══════════
     // Furusawa · the base illustration
-    { id:'SV6a-061', name:'Cassiopeia', set:'Night Wanderer', v:'r-jp', lang:'jp', sec:'p3',
+    { id:'SV6a-061', name:'Cassiopeia', set:'Night Wanderer', v:'r-jp', lang:'jp', sec:'p4',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_61_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-61' },
-    { id:'SFA-056', name:'Cassiopeia', set:'Shrouded Fable', v:'r-en', lang:'en', sec:'p3',
+    { id:'SFA-056', name:'Cassiopeia', set:'Shrouded Fable', v:'r-en', lang:'en', sec:'p4',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_056_R_EN_LG.png',
       pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-56' },
-    { id:'CSV8C-193', name:'Cassiopeia', set:'璀璨诡幻', v:'r-cn', lang:'cn', sec:'p3',
+    { id:'CSV8C-193', name:'Cassiopeia', set:'璀璨诡幻', v:'r-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV8C-193.webp' },
     // Furusawa · the parallels
-    { id:'SFA-056RH', name:'Cassiopeia', set:'Shrouded Fable', v:'rh-en', lang:'en', sec:'p3',
+    { id:'SFA-056RH', name:'Cassiopeia', set:'Shrouded Fable', v:'rh-en', lang:'en', sec:'p4',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_056_R_EN_LG.png',
       pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-reverse-holo-56' },
-    { id:'CSV8C-193PB', name:'Cassiopeia', set:'璀璨诡幻', v:'pb-cn', lang:'cn', sec:'p3',
+    { id:'CSV8C-193PB', name:'Cassiopeia', set:'璀璨诡幻', v:'pb-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV8C-193.webp' },
-    { id:'CSV8C-193MB', name:'Cassiopeia', set:'璀璨诡幻', v:'mb-cn', lang:'cn', sec:'p3',
+    { id:'CSV8C-193MB', name:'Cassiopeia', set:'璀璨诡幻', v:'mb-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV8C-193.webp' },
-    // ══ PAGE 4 · FURUSAWA · BURARI · TAIGA KAYAMA ══════════
     // Furusawa · the full art
     { id:'SV6a-085', name:'Cassiopeia', set:'Night Wanderer', v:'sr-jp', lang:'jp', sec:'p4',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_85_R_JP_SM.png',
@@ -158,25 +177,7 @@ registerSet('penny-art', {
       pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-86' },
     { id:'CSV8C-234', name:'Cassiopeia', set:'璀璨诡幻', v:'sr-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV8C-234.webp' },
-    // burari · alt art
-    { id:'SV6a-091', name:'Cassiopeia', set:'Night Wanderer', v:'sar-jp', lang:'jp', sec:'p4',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_91_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-91' },
-    { id:'SFA-094', name:'Cassiopeia', set:'Shrouded Fable', v:'sir-en', lang:'en', sec:'p4',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_094_R_EN_LG.png',
-      pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-94' },
-    { id:'CSV8C-252', name:'Cassiopeia', set:'璀璨诡幻', v:'sar-cn', lang:'cn', sec:'p4',
-      img:'cards/penny-cn/CSV8C-252.webp' },
-    // Taiga Kayama · Clive, she’s in the art
-    { id:'SV4a-352', name:'Clive', set:'Shiny Treasure ex', v:'cameo-jp', lang:'jp', sec:'p4',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_352_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/clive-352' },
-    { id:'PAF-236', name:'Clive', set:'Paldean Fates', v:'cameo-en', lang:'en', sec:'p4',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PAF/PAF_236_R_EN_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/clive-236' },
-    { id:'CSV5C-158', name:'Clive', set:'黑晶炽诚', v:'cameo-cn', lang:'cn', sec:'p4',
-      img:'cards/penny-cn/CSV5C-158.webp' },
-    // ══ PAGE 5 · CONA NITANDA ══════════
+    // ══ PAGE 5 · CONA NITANDA — ALL NINE ══════════
     // Cona Nitanda · the base illustration
     { id:'SV8a-174', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p5',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
