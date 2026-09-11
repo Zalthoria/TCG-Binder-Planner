@@ -8,7 +8,7 @@ window.IPS = [
 window.CATALOG = [
   { ip:'pokemon', id:'gardevoir', era:'Custom',   name:'Gardevoir — All Prints',       desc:'All 57 EN prints across every era',
     file:'gardevoir.html', page:'binder.html?set=gardevoir', lsOwned:'gardevoir_owned_v1',   lsPrices:'gardevoir_prices_v1',   total:57,   release:'0000-00', cover:`logos/GARDEVOIR.png`, icon:'🌸' },
-  { ip:'pokemon', id:'penny', era:'Custom',       name:'Penny (ボタン) — Master Set',   desc:'Every variation \u00b7 JP \u00b7 EN \u00b7 \u7b80\u4f53 \u00b7 \u7e41\u9ad4, 60 slots',
+  { ip:'pokemon', id:'penny', era:'Custom',       name:'Penny (ボタン) — Master Set',   desc:'Every variation · JP · EN · 简体 · 繁體, 60 slots',
     file:'penny.html', page:'binder.html?set=penny',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:60,   release:'0000-01', cover:`logos/PENNY.png`, icon:'👓' },
   { ip:'pokemon', id:'penny-art', era:'Custom',       name:'Penny — By Artist',        desc:'Same 45 cards, grouped by illustrator',
     file:null, page:'binder.html?set=penny-art', lsOwned:'penny_owned_v1',   lsPrices:'penny_prices_v1',    total:45,   release:'0000-02', cover:`logos/PENNY.png`, icon:'🎨' },
