@@ -11,10 +11,13 @@ const $  = id => document.getElementById(id);
 const el = (tag, cls, html) => { const d = document.createElement(tag); if (cls) d.className = cls; if (html != null) d.innerHTML = html; return d; };
 
 // ── Boot: dynamically load the set's data file ──────────────────────────
+// Bump ASSET_V (and the ?v= in the .html files) to force browsers off a cached set file.
+const ASSET_V = '17';
+
 (function boot() {
   if (!SET_ID) return fail('No set specified.');
   const s = document.createElement('script');
-  s.src = 'data/sets/' + SET_ID + '.js';
+  s.src = 'data/sets/' + SET_ID + '.js?v=' + ASSET_V;
   s.onload = () => window.SETS[SET_ID] ? init(window.SETS[SET_ID]) : fail('Set file loaded but nothing registered.');
   s.onerror = () => fail(`No data file found for “${SET_ID}”.`);
   document.head.appendChild(s);
