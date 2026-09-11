@@ -13,7 +13,7 @@
 registerSet('penny', {
   binder: {
   title:    'Penny (ボタン) — All Prints',
-  subtitle: '30 slots · JP / EN / cameos / chase',
+  subtitle: '30 slots · chase → cameos → EN → JP',
   navTitle: 'Penny — All Prints · 30 slots',
   lsOwned:  'penny_owned_v1',
   lsWatched:'penny_watched_v1',
@@ -51,13 +51,13 @@ registerSet('penny', {
 },
   bcDefault: { bg: '#181410', col: '#666' },
   sdefs: [
-  { label: 'Page 1 · Japanese', f: s => s.sec === 'jp' },
-  { label: 'Page 2 · English',  f: s => s.sec === 'en' },
-  { label: 'Page 3 · Cameos',   f: s => s.sec === 'cameo' },
-  { label: 'Page 4 · The chase', f: s => s.sec === 'chase' },
+  { label: 'Page 1 · The chase', f: s => s.sec === 'chase' },
+  { label: 'Page 2 · Cameos',   f: s => s.sec === 'cameo' },
+  { label: 'Page 3 · English',  f: s => s.sec === 'en' },
+  { label: 'Page 4 · Japanese', f: s => s.sec === 'jp' },
 ],
   slots: [
-  // ══ PAGE 1 · JAPANESE ═══════════════════════════════════════════════════
+  // ══ SECTION · JAPANESE (page 4) ═══════════════════════════════════════════════════
   // Row 1 — base art, three finishes
   { id:'SV1S-077', name:'Penny', set:'Scarlet ex', v:'r-jp', sec:'jp',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
@@ -89,7 +89,7 @@ registerSet('penny', {
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_91_R_JP_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-91' },
 
-  // ══ PAGE 2 · ENGLISH ════════════════════════════════════════════════════
+  // ══ SECTION · ENGLISH (page 3) ════════════════════════════════════════════════════
   // Row 1 — base art + the two EN-only reverse holos
   { id:'SVI-183',   name:'Penny', set:'Scarlet & Violet', v:'r-en', sec:'en',
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
@@ -121,7 +121,7 @@ registerSet('penny', {
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_094_R_EN_LG.png',
     pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-94' },
 
-  // ══ PAGE 3 · CAMEOS ═════════════════════════════════════════════════════
+  // ══ SECTION · CAMEOS (page 2) ═════════════════════════════════════════════════════
   // Cards NOT named Penny, but she is in the artwork. Only the Clive SIR/SAR
   // art has her — PAF-078 and PAF-227 are different art by GOSSAN.
   // Row 1 — the alternate finishes
@@ -155,7 +155,7 @@ registerSet('penny', {
     img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/PRE/PRE_137_R_EN_SM.png',
     pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-137' },
 
-  // ══ PAGE 4 · THE CHASE ══════════════════════════════════════════════════
+  // ══ SECTION · THE CHASE (page 1) ══════════════════════════════════════════════════
   // The three hardest to source, deliberately on their own page with room
   // left for whatever gets printed next.
   { id:'SV4a-182M', name:'Penny', set:'Shiny Treasure ex', v:'mirror-jp', sec:'chase',
