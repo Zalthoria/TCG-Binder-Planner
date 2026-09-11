@@ -1,6 +1,7 @@
-/* Penny / Cassiopeia master set — 45 slots, five full 9-pocket pages.
-   JP + EN + Simplified Chinese, plus every card she appears on.
-   Rows run JP | EN | CN across, so each row is one print in three languages. */
+/* penny — every print of Penny / Cassiopeia, plus every card she appears on.
+   45 slots, five full 9-pocket pages. Rows read JP | EN | CN across where all
+   three languages got the print. Grouped by character; see `penny-art` for the
+   same cards grouped by illustrator. */
 registerSet('penny', {
   binder: {
     title:    'Penny (ボタン) — All Prints',
@@ -57,14 +58,15 @@ registerSet('penny', {
     'cameo-cn': { bg: '#331c14', col: '#e07850' },
   },
   sdefs: [
-    { label: 'Page 1 · Penny — the shared prints', f: s => s.sec === 'p1' },
+    { label: 'Page 1 · Penny — base, parallels, one-offs', f: s => s.sec === 'p1' },
     { label: 'Page 2 · Penny — the artwork', f: s => s.sec === 'p2' },
-    { label: 'Page 3 · One-offs & Cassiopeia', f: s => s.sec === 'p3' },
+    { label: 'Page 3 · Cassiopeia & the stamped cards', f: s => s.sec === 'p3' },
     { label: 'Page 4 · Cassiopeia & Clive', f: s => s.sec === 'p4' },
     { label: 'Page 5 · Friends in Paldea', f: s => s.sec === 'p5' },
   ],
   slots: [
-    // ══ PAGE 1 · PENNY — THE SHARED PRINTS ════════════════
+    // ══ PAGE 1 · PENNY — BASE, PARALLELS, ONE-OFFS ════════
+    // Row 1 · the base print
     { id:'SV1S-077', name:'Penny', set:'Scarlet ex', v:'r-jp', lang:'jp', sec:'p1',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_77_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-77' },
@@ -73,6 +75,7 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183' },
     { id:'CSV1C-124', name:'Penny', set:'亘古开来', v:'r-cn', lang:'cn', sec:'p1',
       img:'cards/penny-cn/CSV1C-124.webp' },
+    // Row 2 · each language’s parallel
     { id:'SV4a-182M', name:'Penny', set:'Shiny Treasure ex', v:'mirror-jp', lang:'jp', sec:'p1',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_182_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182' },
@@ -81,16 +84,16 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-reverse-holo-183' },
     { id:'CSV1C-124PB', name:'Penny', set:'亘古开来', v:'pb-cn', lang:'cn', sec:'p1',
       img:'cards/penny-cn/CSV1C-124PB.webp' },
-    { id:'SVP-057', name:'Penny', set:'SV-P Promo', v:'promo-jp', lang:'jp', sec:'p1',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-p-promos/penny-57' },
-    { id:'SVI-183PP', name:'Penny', set:'Play! Prize Pack', v:'promo-en', lang:'en', sec:'p1',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183' },
-    { id:'SVI-183WC', name:'Penny', set:'WC Deck 2024', v:'promo-en', lang:'en', sec:'p1',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-world-championships-2024/penny-fernando-cifuentes' },
-    // ══ PAGE 2 · PENNY — THE ARTWORK ════════════════
+    // Row 3 · the one-offs
+    { id:'SV4a-182', name:'Penny', set:'Shiny Treasure ex', v:'r-jp', lang:'jp', sec:'p1',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_182_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182' },
+    { id:'SVP-208CN', name:'Penny', set:'中文版 SV-P', v:'promo-cn', lang:'cn', sec:'p1',
+      img:'cards/penny-cn/SVP-208CN.webp' },
+    { id:'CSV1C-124MB', name:'Penny', set:'亘古开来', v:'mb-cn', lang:'cn', sec:'p1',
+      img:'cards/penny-cn/CSV1C-124MB.webp' },
+    // ══ PAGE 2 · PENNY — THE ARTWORK ════════
+    // Row 1 · full art
     { id:'SV1S-100', name:'Penny', set:'Scarlet ex', v:'sr-jp', lang:'jp', sec:'p2',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_100_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-100' },
@@ -99,6 +102,7 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-239' },
     { id:'CSV1C-151', name:'Penny', set:'亘古开来', v:'sr-cn', lang:'cn', sec:'p2',
       img:'cards/penny-cn/CSV1C-151.webp' },
+    // Row 2 · OKACHEKE alt art
     { id:'SV1S-105', name:'Penny', set:'Scarlet ex', v:'sar-jp', lang:'jp', sec:'p2',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV1S/SV1S_105_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-scarlet-ex/penny-105' },
@@ -107,6 +111,7 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-252' },
     { id:'CSV1C-162', name:'Penny', set:'亘古开来', v:'sar-cn', lang:'cn', sec:'p2',
       img:'cards/penny-cn/CSV1C-162.webp' },
+    // Row 3 · aspara alt art
     { id:'SV4a-354', name:'Penny', set:'Shiny Treasure ex', v:'sar-jp', lang:'jp', sec:'p2',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_354_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-354' },
@@ -115,22 +120,27 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/penny-239' },
     { id:'CBB2C-1004', name:'Penny', set:'宝石包 Vol.2', v:'sar-cn', lang:'cn', sec:'p2',
       img:'cards/penny-cn/CBB2C-1004.webp' },
-    // ══ PAGE 3 · ONE-OFFS & CASSIOPEIA ════════════════
-    { id:'SV4a-182', name:'Penny', set:'Shiny Treasure ex', v:'r-jp', lang:'jp', sec:'p3',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_182_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/penny-182' },
-    { id:'SVP-208CN', name:'Penny', set:'中文版 SV-P', v:'promo-cn', lang:'cn', sec:'p3',
-      img:'cards/penny-cn/SVP-208CN.webp' },
-    { id:'CSV1C-124MB', name:'Penny', set:'亘古开来', v:'mb-cn', lang:'cn', sec:'p3',
-      img:'cards/penny-cn/CSV1C-124MB.webp' },
-    { id:'SV6a-061', name:'Cassiopeia', set:'Night Wanderer', v:'r-jp', lang:'jp', sec:'p3',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_61_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-61' },
-    { id:'SFA-056', name:'Cassiopeia', set:'Shrouded Fable', v:'r-en', lang:'en', sec:'p3',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_056_R_EN_LG.png',
-      pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-56' },
-    { id:'CSV8C-193', name:'Cassiopeia', set:'璀璨诡幻', v:'r-cn', lang:'cn', sec:'p3',
-      img:'cards/penny-cn/CSV8C-193.webp' },
+    // ══ PAGE 3 · CASSIOPEIA & THE STAMPED CARDS ════════
+    // Row 1 · Cassiopeia alt art
+    { id:'SV6a-091', name:'Cassiopeia', set:'Night Wanderer', v:'sar-jp', lang:'jp', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_91_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-91' },
+    { id:'SFA-094', name:'Cassiopeia', set:'Shrouded Fable', v:'sir-en', lang:'en', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_094_R_EN_LG.png',
+      pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-94' },
+    { id:'CSV8C-252', name:'Cassiopeia', set:'璀璨诡幻', v:'sar-cn', lang:'cn', sec:'p3',
+      img:'cards/penny-cn/CSV8C-252.webp' },
+    // Row 2 · the stamped cards
+    { id:'SVP-057', name:'Penny', set:'SV-P Promo', v:'promo-jp', lang:'jp', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SVP/SVP_57_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-sv-p-promos/penny-57' },
+    { id:'SVI-183PP', name:'Penny', set:'Play! Prize Pack', v:'promo-en', lang:'en', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-scarlet-violet/penny-183' },
+    { id:'SVI-183WC', name:'Penny', set:'WC Deck 2024', v:'promo-en', lang:'en', sec:'p3',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SVI/SVI_183_R_EN_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-world-championships-2024/penny-fernando-cifuentes' },
+    // Row 3 · Cassiopeia full art
     { id:'SV6a-085', name:'Cassiopeia', set:'Night Wanderer', v:'sr-jp', lang:'jp', sec:'p3',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_85_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-85' },
@@ -139,15 +149,17 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-86' },
     { id:'CSV8C-234', name:'Cassiopeia', set:'璀璨诡幻', v:'sr-cn', lang:'cn', sec:'p3',
       img:'cards/penny-cn/CSV8C-234.webp' },
-    // ══ PAGE 4 · CASSIOPEIA & CLIVE ════════════════
-    { id:'SV6a-091', name:'Cassiopeia', set:'Night Wanderer', v:'sar-jp', lang:'jp', sec:'p4',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_91_R_JP_SM.png',
-      pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-91' },
-    { id:'SFA-094', name:'Cassiopeia', set:'Shrouded Fable', v:'sir-en', lang:'en', sec:'p4',
-      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_094_R_EN_LG.png',
-      pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-94' },
-    { id:'CSV8C-252', name:'Cassiopeia', set:'璀璨诡幻', v:'sar-cn', lang:'cn', sec:'p4',
-      img:'cards/penny-cn/CSV8C-252.webp' },
+    // ══ PAGE 4 · CASSIOPEIA & CLIVE ════════
+    // Row 1 · Cassiopeia base print
+    { id:'SV6a-061', name:'Cassiopeia', set:'Night Wanderer', v:'r-jp', lang:'jp', sec:'p4',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV6a/SV6a_61_R_JP_SM.png',
+      pc:'https://www.pricecharting.com/game/pokemon-japanese-night-wanderer/cassiopeia-61' },
+    { id:'SFA-056', name:'Cassiopeia', set:'Shrouded Fable', v:'r-en', lang:'en', sec:'p4',
+      img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_056_R_EN_LG.png',
+      pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-56' },
+    { id:'CSV8C-193', name:'Cassiopeia', set:'璀璨诡幻', v:'r-cn', lang:'cn', sec:'p4',
+      img:'cards/penny-cn/CSV8C-193.webp' },
+    // Row 2 · Cassiopeia parallels
     { id:'SFA-056RH', name:'Cassiopeia', set:'Shrouded Fable', v:'rh-en', lang:'en', sec:'p4',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/SFA/SFA_056_R_EN_LG.png',
       pc:'https://www.pricecharting.com/game/pokemon-shrouded-fable/cassiopeia-reverse-holo-56' },
@@ -155,6 +167,7 @@ registerSet('penny', {
       img:'cards/penny-cn/CSV8C-193.webp' },
     { id:'CSV8C-193MB', name:'Cassiopeia', set:'璀璨诡幻', v:'mb-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV8C-193.webp' },
+    // Row 3 · Clive — she’s in the art
     { id:'SV4a-352', name:'Clive', set:'Shiny Treasure ex', v:'cameo-jp', lang:'jp', sec:'p4',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV4a/SV4a_352_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-shiny-treasure-ex/clive-352' },
@@ -163,7 +176,8 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-paldean-fates/clive-236' },
     { id:'CSV5C-158', name:'Clive', set:'黑晶炽诚', v:'cameo-cn', lang:'cn', sec:'p4',
       img:'cards/penny-cn/CSV5C-158.webp' },
-    // ══ PAGE 5 · FRIENDS IN PALDEA ════════════════
+    // ══ PAGE 5 · FRIENDS IN PALDEA ════════
+    // Row 1 · base print
     { id:'SV8a-174', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p5',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-174' },
@@ -172,6 +186,7 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-109' },
     { id:'CSV95C-195', name:'Friends in Paldea', set:'太晶盛聚', v:'cameo-cn', lang:'cn', sec:'p5',
       img:'cards/penny-cn/CSV95C-195.webp' },
+    // Row 2 · full art
     { id:'SV8a-195', name:'Friends in Paldea', set:'Terastal Festival ex', v:'cameo-jp', lang:'jp', sec:'p5',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_195_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-195' },
@@ -180,6 +195,7 @@ registerSet('penny', {
       pc:'https://www.pricecharting.com/game/pokemon-prismatic-evolutions/friends-in-paldea-137' },
     { id:'CSV95C-216', name:'Friends in Paldea', set:'太晶盛聚', v:'cameo-cn', lang:'cn', sec:'p5',
       img:'cards/penny-cn/CSV95C-216.webp' },
+    // Row 3 · the parallels
     { id:'SV8a-174M', name:'Friends in Paldea', set:'Terastal Festival ex', v:'mirror-jp', lang:'jp', sec:'p5',
       img:'https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/SV8a/SV8a_174_R_JP_SM.png',
       pc:'https://www.pricecharting.com/game/pokemon-japanese-terastal-festival-ex/friends-in-paldea-174' },
