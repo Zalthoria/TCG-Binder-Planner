@@ -12,7 +12,7 @@ const el = (tag, cls, html) => { const d = document.createElement(tag); if (cls)
 
 // ── Boot: dynamically load the set's data file ──────────────────────────
 // Bump ASSET_V (and the ?v= in the .html files) to force browsers off a cached set file.
-const ASSET_V = '19';
+const ASSET_V = '20';
 
 (function boot() {
   if (!SET_ID) return fail('No set specified.');
