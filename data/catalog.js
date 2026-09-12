@@ -12,6 +12,8 @@ window.CATALOG = [
     file:'penny.html', page:'binder.html?set=penny',    lsOwned:'penny_owned_v1',         lsPrices:'penny_prices_v1',        total:60,   release:'0000-01', cover:`logos/PENNY.png`, icon:'👓' },
   { ip:'pokemon', id:'penny-art', era:'Custom',       name:'Penny — By Artist',        desc:'Same 45 cards, grouped by illustrator',
     file:null, page:'binder.html?set=penny-art', lsOwned:'penny_owned_v1',   lsPrices:'penny_prices_v1',    total:45,   release:'0000-02', cover:`logos/PENNY.png`, icon:'🎨' },
+  { ip:'pokemon', id:'penny-jpen', era:'Custom',      name:'Penny — JP & EN Only',      desc:'Chinese lines removed, 30 slots',
+    file:null, page:'binder.html?set=penny-jpen', lsOwned:'penny_owned_v1',  lsPrices:'penny_prices_v1',    total:30,   release:'0000-03', cover:`logos/PENNY.png`, icon:'🗾' },
   { ip:'pokemon', id:'prc',  era:'EN — XY', name:'Primal Clash (PRC)',    desc:'M Gardevoir EX · Feb 2015',
     file:null, lsOwned:'prc_owned_v1', lsPrices:'prc_prices_v1', total:160, release:'2015-02', cover:`logos/PRC.png`, icon:'🌊' },
   { ip:'pokemon', id:'sts',  era:'EN — XY', name:'Steam Siege (STS)',     desc:'M Gardevoir EX · Aug 2016',
