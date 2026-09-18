@@ -199,6 +199,16 @@ input::placeholder { color: var(--faint); }
 .slot .bdg.prc { right: 4px; top: 26px; background: rgba(0,0,0,.65); color: var(--star); font-size: 9px; }
 .hide-owned .slot.owned { display: none; }
 
+/* card whose official scan hasn't been published yet */
+.slot .noart {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px; text-align: center;
+  padding: 8px; font-size: 10px; font-weight: 700; color: #6f6759; line-height: 1.3;
+  background: repeating-linear-gradient(45deg, #14110e, #14110e 9px, #171310 9px, #171310 18px);
+}
+.slot .noart span { font-size: 9px; font-weight: 800; color: var(--bc, #7a7060); letter-spacing: .4px; }
+.slot .noart i { font-size: 8.5px; font-style: normal; color: #4e4941; margin-top: 2px; }
+
 /* click-to-toggle flip */
 .slot.flipping { animation: cardFlip .48s cubic-bezier(.4,.1,.3,1); pointer-events: none; }
 @keyframes cardFlip {

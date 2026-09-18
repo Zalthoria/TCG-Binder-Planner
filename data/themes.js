@@ -1,5 +1,13 @@
 // Auto-generated: dominant accent per logo (keyed by logo filename stem)
 window.LOGO_THEMES = {
+ "30C": {
+  "accent": "#e0b34f",
+  "deep": "#261c0c"
+ },
+ "M6A": {
+  "accent": "#d3a044",
+  "deep": "#261d0c"
+ },
  "CSV10C": {
   "accent": "#e0673f",
   "deep": "#2a1109"

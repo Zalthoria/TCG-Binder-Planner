@@ -112,16 +112,24 @@ function init(SET) {
     d.style.setProperty('--bc', c.col);
     d.style.setProperty('--bcbg', c.bg);
     d.dataset.key = key;
-    const img = el('img');
-    img.loading = 'lazy'; img.alt = s.name;
-    if (s.img2) img.onerror = () => { img.onerror = null; img.src = s.img2; };  // fallback scan
-  // Landscape scans (Items, Structures) are wider than tall; rotate them 90deg CW
-  // so they fill the portrait pocket with the cost in the top-right corner.
-  img.addEventListener('load', () => {
-    if (img.naturalWidth > img.naturalHeight) img.classList.add('land');
-  });
-    img.src = s.img;                                                            // set src last
-    d.appendChild(img);
+    const noArt = () => el('div', 'noart', `<span>${s.id}</span>${s.name}<i>artwork not released yet</i>`);
+    if (!s.img) {
+      d.appendChild(noArt());                       // scan not published yet
+    } else {
+      const img = el('img');
+      img.loading = 'lazy'; img.alt = s.name;
+      img.onerror = () => {
+        if (s.img2 && img.src !== s.img2) { img.src = s.img2; return; }   // fallback scan
+        img.onerror = null; img.remove(); d.insertBefore(noArt(), d.firstChild);
+      };
+      // Landscape scans (Items, Structures) are wider than tall; rotate them 90deg CW
+      // so they fill the portrait pocket with the cost in the top-right corner.
+      img.addEventListener('load', () => {
+        if (img.naturalWidth > img.naturalHeight) img.classList.add('land');
+      });
+      img.src = s.img;                                                          // set src last
+      d.appendChild(img);
+    }
     // reverse-holo variants share the base card's image — differentiate visually
     if ((SET.reverseVs || []).includes(s.v)) {
       d.appendChild(el('div', 'holo'));
