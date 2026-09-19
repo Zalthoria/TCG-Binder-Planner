@@ -79,15 +79,20 @@ for (let n = 136; n <= 165; n++) {                          // Classic Collectio
     img: jpImg(n), pc: c ? `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/${slug(c.name)}-${n}` : undefined,
   });
 }
+// JP RGB Mews sit outside the official 1-165 numbering (unacknowledged secrets),
+// so they're identified as G/RGB etc. Scans from TCG Republic, bundled locally.
+const JP_RGB_IMG = { G: '825108', R: '825106', B: '825107' };
 RGB.forEach(([c, colour]) => jpSlots.push({
-  id: `M6a-${c}`, name: `Mew (${colour})`, v: 'rgb',
-  // B's scan isn't up yet — engine falls back to the placeholder
-  img: c === 'B' ? null : `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_${c}_R_JP_LG.png`,
+  id: `M6a-${c}/RGB`, name: `Mew (${colour})`, v: 'rgb',
+  img: `images/m6a/${JP_RGB_IMG[c]}.jpg`,
   pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-${c.toLowerCase()}`,
 }));
-// energy last, starting a fresh page (br) so the 8 sit together
+// energy last, starting a fresh page (br) so the 8 sit together.
+// JP energies are the lettered cards G/R/W/L/P/F/D/M on Limitless.
+const JP_E = ['G', 'R', 'W', 'L', 'P', 'F', 'D', 'M'];
 ENERGY.forEach((e, i) => jpSlots.push({
-  id: `M6a-E${String(i + 1).padStart(2, '0')}`, name: `${e} Energy (foil)`, v: 'energy', img: null,
+  id: `M6a-${JP_E[i]}`, name: `${e} Energy (foil)`, v: 'energy',
+  img: `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_${JP_E[i]}_R_JP_LG.png`,
   ...(i === 0 ? { br: true } : {}),
 }));
 
