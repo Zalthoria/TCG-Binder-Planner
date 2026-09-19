@@ -32,13 +32,9 @@ const enSlots = lists.en.map(c => ({
   id: `30C-${String(c.num).padStart(3, '0')}`, name: c.name, v: enV(c),
   img: enImg(c.num), pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/${slug(c.name)}-${c.num}`,
 }));
-// The RGB Mew trio — Secret Rares lettered G / R / B instead of numbered
+// The RGB Mew trio — Secret Rares lettered G / R / B instead of numbered.
+// They close out the binder, after the energy.
 const RGB = [['G', 'Green'], ['R', 'Red'], ['B', 'Blue']];
-RGB.forEach(([c, colour]) => enSlots.push({
-  id: `30C-${c}`, name: `Mew (${colour})`, v: 'rgb',
-  img: `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_${c}_R_EN_SM.png`,
-  pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/mew-${c.toLowerCase()}`,
-}));
 
 // Classic Collection — same 30 reprints as JP (EN numbers them by original printing)
 const ccList = [...extra.cc];
@@ -52,6 +48,11 @@ ccList.forEach((c, i) => enSlots.push({
 ENERGY.forEach((e, i) => enSlots.push({
   id: `30C-E${String(i + 1).padStart(2, '0')}`, name: `${e} Energy (foil)`, v: 'energy', img: null,
 }));
+RGB.forEach(([c, colour]) => enSlots.push({
+  id: `30C-${c}`, name: `Mew (${colour})`, v: 'rgb',
+  img: `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_${c}_R_EN_SM.png`,
+  pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/mew-${c.toLowerCase()}`,
+}));
 
 // ── Japanese (M6a) ──────────────────────────────────────────────────────
 const jpSlots = lists.jp.map(c => ({
@@ -64,13 +65,6 @@ extra.sec.forEach(c => jpSlots.push({                       // 104-135: AR / SAR
   v: c.rarity.toLowerCase() === 'ar' ? 'ir' : c.rarity.toLowerCase() === 'sar' ? 'sar' : 'fur',
   img: null, pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/${slug(c.name)}-${c.num}`,
 }));
-RGB.forEach(([c, colour]) => jpSlots.push({
-  id: `M6a-${c}`, name: `Mew (${colour})`, v: 'rgb',
-  // B's scan isn't up yet — engine falls back to the placeholder
-  img: c === 'B' ? null : `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_${c}_R_JP_LG.png`,
-  pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-${c.toLowerCase()}`,
-}));
-
 const ccByNum = {};
 extra.cc.forEach(c => ccByNum[c.num] = c);
 // 151-152 is one LEGEND card printed across two halves — each half is its own slot
@@ -85,6 +79,12 @@ for (let n = 136; n <= 165; n++) {                          // Classic Collectio
 }
 ENERGY.forEach((e, i) => jpSlots.push({
   id: `M6a-E${String(i + 1).padStart(2, '0')}`, name: `${e} Energy (foil)`, v: 'energy', img: null,
+}));
+RGB.forEach(([c, colour]) => jpSlots.push({
+  id: `M6a-${c}`, name: `Mew (${colour})`, v: 'rgb',
+  // B's scan isn't up yet — engine falls back to the placeholder
+  img: c === 'B' ? null : `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_${c}_R_JP_LG.png`,
+  pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-${c.toLowerCase()}`,
 }));
 
 // ── Emit ────────────────────────────────────────────────────────────────
@@ -140,9 +140,9 @@ emit('30c.js', '30c', {
   `{ label: '#053-128 Main', f: s => { const n = parseInt(s.id.slice(4)); return n >= 53 && n <= 128; } }`,
   `{ label: 'Illustration Rares', f: s => s.v === 'ir' }`,
   `{ label: 'SIR + FUR', f: s => s.v === 'sar' || s.v === 'fur' }`,
-  `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
   `{ label: 'Classic Collection', f: s => s.v === 'classic' }`,
   `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
+  `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
 ], enSlots);
 
 emit('m6a.js', 'm6a', {
@@ -157,7 +157,7 @@ emit('m6a.js', 'm6a', {
   `{ label: '#047-103 Main', f: s => { const n = parseInt(s.id.slice(4)); return n >= 47 && n <= 103; } }`,
   `{ label: 'AR (104-123)', f: s => s.v === 'ir' }`,
   `{ label: 'SAR + FUR', f: s => s.v === 'sar' || s.v === 'fur' }`,
-  `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
   `{ label: 'Classic Collection', f: s => s.v === 'classic' }`,
   `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
+  `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
 ], jpSlots);
