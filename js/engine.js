@@ -11,8 +11,11 @@ const $  = id => document.getElementById(id);
 const el = (tag, cls, html) => { const d = document.createElement(tag); if (cls) d.className = cls; if (html != null) d.innerHTML = html; return d; };
 
 // ── Boot: dynamically load the set's data file ──────────────────────────
-// Bump ASSET_V (and the ?v= in the .html files) to force browsers off a cached set file.
-const ASSET_V = '24';
+// Version comes from this script's own ?v= so set files can never be served
+// from cache after a deploy — bumping the ?v= in the .html files is enough.
+const ASSET_V = ((document.currentScript && document.currentScript.src) ||
+  (document.querySelector('script[src*="js/engine.js"]') || {}).src || ''
+).match(/[?&]v=([^&]+)/)?.[1] || String(Date.now());
 
 (function boot() {
   if (!SET_ID) return fail('No set specified.');
