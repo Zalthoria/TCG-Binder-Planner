@@ -124,8 +124,8 @@ window.CATALOG = [
     file:null, page:'binder.html?set=csv4c', lsOwned:'csv4c_owned_v1', lsPrices:'csv4c_prices_v1', total:165, release:'2025-07', cover:`logos/CSV4C.svg`, icon:'🪙' },
   { ip:'pokemon', id:'csv10c', era:'ZH — Chinese', name:'CSV10C Chasing Glory Together', desc:'共逐荣光 · 222 main + 65 secret · Jul 2026',
     file:null, page:'binder.html?set=csv10c', lsOwned:'csv10c_owned_v1', lsPrices:'csv10c_prices_v1', total:287, release:'2026-07', cover:`logos/CSV10C.svg`, icon:'🏆' },
-  { ip:'pokemon', id:'30c',  era:'EN — Mega Era', name:'30th Celebration (30C)', desc:'30th Anniversary · 128 main + 30 secret + Classic Collection · Sep 2026',
-    file:null, page:'binder.html?set=30c', lsOwned:'30c_owned_v1', lsPrices:'30c_prices_v1', total:196, release:'2026-09', cover:`logos/30C.png`, icon:'🎉' },
-  { ip:'pokemon', id:'m6a',  era:'JP — Mega Era', name:'M6a 30th Celebration', desc:'30周年 · 103 main + 32 secret + Classic Collection · Sep 2026',
-    file:null, page:'binder.html?set=m6a', lsOwned:'m6a_owned_v1', lsPrices:'m6a_prices_v1', total:173, release:'2026-09', cover:`logos/M6A.png`, icon:'🎉' }
+  { ip:'pokemon', id:'30c',  era:'EN — Mega Era', name:'30th Celebration (30C)', desc:'30th Anniversary · 128 main + 33 secret + Classic Collection · Sep 2026',
+    file:null, page:'binder.html?set=30c', lsOwned:'30c_owned_v1', lsPrices:'30c_prices_v1', total:199, release:'2026-09', cover:`logos/30C.png`, icon:'🎉' },
+  { ip:'pokemon', id:'m6a',  era:'JP — Mega Era', name:'M6a 30th Celebration', desc:'30周年 · 103 main + 35 secret + Classic Collection · Sep 2026',
+    file:null, page:'binder.html?set=m6a', lsOwned:'m6a_owned_v1', lsPrices:'m6a_prices_v1', total:176, release:'2026-09', cover:`logos/M6A.png`, icon:'🎉' }
 ];

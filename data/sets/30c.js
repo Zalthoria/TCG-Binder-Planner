@@ -3,8 +3,8 @@
 registerSet('30c', {
   binder: {
     title: "30th Celebration (30C)",
-    subtitle: "196 slots · 128 main + 30 secret + 30 Classic Collection + 8 foil energy",
-    navTitle: "30th Celebration · 196 slots (Master Set)",
+    subtitle: "199 slots · 128 main + 33 secret + 30 Classic Collection + 8 foil energy",
+    navTitle: "30th Celebration · 199 slots (Master Set)",
     lsOwned: "30c_owned_v1",
     lsWatched: "30c_watched_v1",
     lsPrices: "30c_prices_v1",
@@ -35,6 +35,10 @@ registerSet('30c', {
             color: "#7be3ff"
         },
         {
+            label: "RGB Mew",
+            color: "#7fd4a0"
+        },
+        {
             label: "Classic Collection",
             color: "#c89a3a"
         },
@@ -44,13 +48,14 @@ registerSet('30c', {
         }
     ]
 },
-  bc: {pika:{bg:"#2a2408",col:"#f2c744"},fur:{bg:"#07222a",col:"#7be3ff"},classic:{bg:"#2a2010",col:"#c89a3a"},energy:{bg:"#0f2412",col:"#8ad38a"}},
+  bc: {pika:{bg:"#2a2408",col:"#f2c744"},fur:{bg:"#07222a",col:"#7be3ff"},classic:{bg:"#2a2010",col:"#c89a3a"},energy:{bg:"#0f2412",col:"#8ad38a"},rgb:{bg:"#0c2418",col:"#7fd4a0"}},
   sdefs: [
     { label: '#001-022 Main', f: s => { const n = parseInt(s.id.slice(4)); return n >= 1 && n <= 22; } },
     { label: 'Pikachu ×30', f: s => s.v === 'pika' },
     { label: '#053-128 Main', f: s => { const n = parseInt(s.id.slice(4)); return n >= 53 && n <= 128; } },
     { label: 'Illustration Rares', f: s => s.v === 'ir' },
     { label: 'SIR + FUR', f: s => s.v === 'sar' || s.v === 'fur' },
+    { label: 'RGB Mew', f: s => s.v === 'rgb' },
     { label: 'Classic Collection', f: s => s.v === 'classic' },
     { label: 'Foil Energy', f: s => s.v === 'energy' }
   ],
@@ -213,6 +218,9 @@ registerSet('30c', {
   {id:"30C-156",name:"Salamence ex",v:"sar",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_156_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/salamence-ex-156"},
   {id:"30C-157",name:"Mewtwo ex",v:"fur",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_157_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mewtwo-ex-157"},
   {id:"30C-158",name:"Mew ex",v:"fur",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_158_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-ex-158"},
+  {id:"30C-G",name:"Mew (Green)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_G_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-g"},
+  {id:"30C-R",name:"Mew (Red)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_R_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-r"},
+  {id:"30C-B",name:"Mew (Blue)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_B_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-b"},
   {id:"30C-CC01",name:"Pikachu",v:"classic",img:null,pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/pikachu"},
   {id:"30C-CC02",name:"Charizard ★",v:"classic",img:null,pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/charizard"},
   {id:"30C-CC03",name:"Misty",v:"classic",img:null,pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/misty"},

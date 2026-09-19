@@ -32,6 +32,14 @@ const enSlots = lists.en.map(c => ({
   id: `30C-${String(c.num).padStart(3, '0')}`, name: c.name, v: enV(c),
   img: enImg(c.num), pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/${slug(c.name)}-${c.num}`,
 }));
+// The RGB Mew trio — Secret Rares lettered G / R / B instead of numbered
+const RGB = [['G', 'Green'], ['R', 'Red'], ['B', 'Blue']];
+RGB.forEach(([c, colour]) => enSlots.push({
+  id: `30C-${c}`, name: `Mew (${colour})`, v: 'rgb',
+  img: `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_${c}_R_EN_SM.png`,
+  pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/mew-${c.toLowerCase()}`,
+}));
+
 // Classic Collection — same 30 reprints as JP (EN numbers them by original printing)
 const ccList = [...extra.cc];
 ccList.push({ num: 151, name: 'Darkrai & Cresselia LEGEND (top)' },
@@ -56,6 +64,13 @@ extra.sec.forEach(c => jpSlots.push({                       // 104-135: AR / SAR
   v: c.rarity.toLowerCase() === 'ar' ? 'ir' : c.rarity.toLowerCase() === 'sar' ? 'sar' : 'fur',
   img: null, pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/${slug(c.name)}-${c.num}`,
 }));
+RGB.forEach(([c, colour]) => jpSlots.push({
+  id: `M6a-${c}`, name: `Mew (${colour})`, v: 'rgb',
+  // B's scan isn't up yet — engine falls back to the placeholder
+  img: c === 'B' ? null : `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_${c}_R_JP_LG.png`,
+  pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-${c.toLowerCase()}`,
+}));
+
 const ccByNum = {};
 extra.cc.forEach(c => ccByNum[c.num] = c);
 // 151-152 is one LEGEND card printed across two halves — each half is its own slot
@@ -80,6 +95,7 @@ const LEGEND = [
   { label: 'IR', color: '#4a9eff' },
   { label: 'SIR', color: '#ff6ab0' },
   { label: 'FUR', color: '#7be3ff' },
+  { label: 'RGB Mew', color: '#7fd4a0' },
   { label: 'Classic Collection', color: '#c89a3a' },
   { label: 'Energy', color: '#8ad38a' },
 ];
@@ -88,6 +104,7 @@ const BC = {
   fur:     { bg: '#07222a', col: '#7be3ff' },
   classic: { bg: '#2a2010', col: '#c89a3a' },
   energy:  { bg: '#0f2412', col: '#8ad38a' },
+  rgb:     { bg: '#0c2418', col: '#7fd4a0' },
 };
 
 function emit(file, id, binder, sdefs, slots) {
@@ -113,7 +130,7 @@ ${lines}
 
 emit('30c.js', '30c', {
   title: '30th Celebration (30C)',
-  subtitle: `${enSlots.length} slots · 128 main + 30 secret + 30 Classic Collection + 8 foil energy`,
+  subtitle: `${enSlots.length} slots · 128 main + 33 secret + 30 Classic Collection + 8 foil energy`,
   navTitle: `30th Celebration · ${enSlots.length} slots (Master Set)`,
   lsOwned: '30c_owned_v1', lsWatched: '30c_watched_v1', lsPrices: '30c_prices_v1',
   cols: 3, legend: LEGEND,
@@ -123,13 +140,14 @@ emit('30c.js', '30c', {
   `{ label: '#053-128 Main', f: s => { const n = parseInt(s.id.slice(4)); return n >= 53 && n <= 128; } }`,
   `{ label: 'Illustration Rares', f: s => s.v === 'ir' }`,
   `{ label: 'SIR + FUR', f: s => s.v === 'sar' || s.v === 'fur' }`,
+  `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
   `{ label: 'Classic Collection', f: s => s.v === 'classic' }`,
   `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
 ], enSlots);
 
 emit('m6a.js', 'm6a', {
   title: 'M6a 30th Celebration',
-  subtitle: `${jpSlots.length} slots · 103 main + 32 secret + 30 Classic Collection + 8 foil energy`,
+  subtitle: `${jpSlots.length} slots · 103 main + 35 secret + 30 Classic Collection + 8 foil energy`,
   navTitle: `M6a 30th Celebration · ${jpSlots.length} slots (Master Set)`,
   lsOwned: 'm6a_owned_v1', lsWatched: 'm6a_watched_v1', lsPrices: 'm6a_prices_v1',
   cols: 3, legend: LEGEND,
@@ -139,6 +157,7 @@ emit('m6a.js', 'm6a', {
   `{ label: '#047-103 Main', f: s => { const n = parseInt(s.id.slice(4)); return n >= 47 && n <= 103; } }`,
   `{ label: 'AR (104-123)', f: s => s.v === 'ir' }`,
   `{ label: 'SAR + FUR', f: s => s.v === 'sar' || s.v === 'fur' }`,
+  `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
   `{ label: 'Classic Collection', f: s => s.v === 'classic' }`,
   `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
 ], jpSlots);
