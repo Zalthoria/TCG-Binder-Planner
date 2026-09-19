@@ -248,7 +248,7 @@ registerSet('30c', {
   {id:"30C-CC28",name:"Mew VMAX",v:"classic",img:null,pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-vmax"},
   {id:"30C-CC29",name:"Arceus VSTAR",v:"classic",img:null,pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/arceus-vstar"},
   {id:"30C-CC30",name:"Magikarp",v:"classic",img:null,pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/magikarp"},
-  {id:"30C-G",name:"Mew (Green)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_G_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-g"},
+  {id:"30C-G",name:"Mew (Green)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_G_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-g",br:true,padTop:"center"},
   {id:"30C-R",name:"Mew (Red)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_R_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-r"},
   {id:"30C-B",name:"Mew (Blue)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_B_R_EN_SM.png",pc:"https://www.pricecharting.com/game/pokemon-30th-celebration/mew-b"},
   {id:"30C-E01",name:"Grass Energy (foil)",v:"energy",img:null,br:true},

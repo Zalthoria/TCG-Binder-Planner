@@ -45,10 +45,12 @@ ccList.forEach((c, i) => enSlots.push({
   id: `30C-CC${String(i + 1).padStart(2, '0')}`, name: c.name, v: 'classic', img: null,
   pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/${slug(c.name)}`,
 }));
-RGB.forEach(([c, colour]) => enSlots.push({
+// the Mew trio gets a page to itself, centred on the middle row
+RGB.forEach(([c, colour], i) => enSlots.push({
   id: `30C-${c}`, name: `Mew (${colour})`, v: 'rgb',
   img: `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_${c}_R_EN_SM.png`,
   pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/mew-${c.toLowerCase()}`,
+  ...(i === 0 ? { br: true, padTop: 'center' } : {}),
 }));
 // energy last, starting a fresh page (br) so the 8 sit together
 ENERGY.forEach((e, i) => enSlots.push({
@@ -82,10 +84,11 @@ for (let n = 136; n <= 165; n++) {                          // Classic Collectio
 // JP RGB Mews sit outside the official 1-165 numbering (unacknowledged secrets),
 // so they're identified as G/RGB etc. Scans from TCG Republic, bundled locally.
 const JP_RGB_IMG = { G: '825108', R: '825106', B: '825107' };
-RGB.forEach(([c, colour]) => jpSlots.push({
+RGB.forEach(([c, colour], i) => jpSlots.push({
   id: `M6a-${c}/RGB`, name: `Mew (${colour})`, v: 'rgb',
   img: `images/m6a/${JP_RGB_IMG[c]}.jpg`,
   pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-${c.toLowerCase()}`,
+  ...(i === 0 ? { br: true, padTop: 'center' } : {}),
 }));
 // energy last, starting a fresh page (br) so the 8 sit together.
 // JP energies are the lettered cards G/R/W/L/P/F/D/M on Limitless.

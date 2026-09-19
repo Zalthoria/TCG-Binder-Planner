@@ -82,8 +82,20 @@ function init(SET) {
     if (_pages && _pagesKey === key) return _pages;
     const per = spp(), out = [];
     let cur = [];
-    SLOTS.forEach(s => {
-      if (s.br && cur.length) { while (cur.length < per) cur.push(null); out.push(cur); cur = []; }
+    SLOTS.forEach((s, idx) => {
+      if (s.br) {
+        if (cur.length) { while (cur.length < per) cur.push(null); out.push(cur); cur = []; }
+        // padTop:'center' drops the run of same-variant cards onto the middle row
+        let pad = s.padTop === 'center'
+          ? (() => {
+              let run = 0;
+              for (let k = idx; k < SLOTS.length && SLOTS[k].v === s.v; k++) run++;
+              const midRow = Math.floor((rows - 1) / 2);
+              return midRow * cols + Math.max(0, Math.floor((cols - run) / 2));
+            })()
+          : (s.padTop || 0);
+        while (pad-- > 0 && cur.length < per - 1) cur.push(null);
+      }
       cur.push(s);
       if (cur.length === per) { out.push(cur); cur = []; }
     });

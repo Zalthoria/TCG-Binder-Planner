@@ -225,7 +225,7 @@ registerSet('m6a', {
   {id:"M6a-163",name:"Mew VMAX",v:"classic",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_163_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-vmax-163"},
   {id:"M6a-164",name:"Arceus VSTAR",v:"classic",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_164_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/arceus-vstar-164"},
   {id:"M6a-165",name:"Magikarp",v:"classic",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_165_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/magikarp-165"},
-  {id:"M6a-G/RGB",name:"Mew (Green)",v:"rgb",img:"images/m6a/825108.jpg",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-g"},
+  {id:"M6a-G/RGB",name:"Mew (Green)",v:"rgb",img:"images/m6a/825108.jpg",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-g",br:true,padTop:"center"},
   {id:"M6a-R/RGB",name:"Mew (Red)",v:"rgb",img:"images/m6a/825106.jpg",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-r"},
   {id:"M6a-B/RGB",name:"Mew (Blue)",v:"rgb",img:"images/m6a/825107.jpg",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-b"},
   {id:"M6a-G",name:"Grass Energy (foil)",v:"energy",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_G_R_JP_LG.png",br:true},
