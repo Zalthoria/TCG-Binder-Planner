@@ -347,8 +347,9 @@ function init(SET) {
         const cells = pageCells(p);
         cells.forEach(s => g.appendChild(s ? makeSlot(s) : el('div', 'pocket-empty')));
         const slots = cells.filter(Boolean);
-        // pad a partially-filled page with empty pockets
-        for (let i = slots.length; i < spp(); i++) g.appendChild(el('div', 'pocket-empty'));
+        // pad a partially-filled page with empty pockets (cells already include
+        // any padding added by a page break, so count cells — not just cards)
+        for (let i = cells.length; i < spp(); i++) g.appendChild(el('div', 'pocket-empty'));
         pg.appendChild(g);
       }
       wrap.appendChild(pg);
