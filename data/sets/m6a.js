@@ -56,8 +56,8 @@ registerSet('m6a', {
     { label: 'AR (104-123)', f: s => s.v === 'ir' },
     { label: 'SAR + FUR', f: s => s.v === 'sar' || s.v === 'fur' },
     { label: 'Classic Collection', f: s => s.v === 'classic' },
-    { label: 'Foil Energy', f: s => s.v === 'energy' },
-    { label: 'RGB Mew', f: s => s.v === 'rgb' }
+    { label: 'RGB Mew', f: s => s.v === 'rgb' },
+    { label: 'Foil Energy', f: s => s.v === 'energy' }
   ],
   slots: [
   {id:"M6a-1",name:"Exeggcute",v:"main",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_1_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/exeggcute-1"},
@@ -225,16 +225,16 @@ registerSet('m6a', {
   {id:"M6a-163",name:"Mew VMAX",v:"classic",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_163_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-vmax-163"},
   {id:"M6a-164",name:"Arceus VSTAR",v:"classic",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_164_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/arceus-vstar-164"},
   {id:"M6a-165",name:"Magikarp",v:"classic",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_165_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/magikarp-165"},
-  {id:"M6a-E01",name:"Grass Energy (foil)",v:"energy",img:null},
+  {id:"M6a-G",name:"Mew (Green)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_G_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-g"},
+  {id:"M6a-R",name:"Mew (Red)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_R_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-r"},
+  {id:"M6a-B",name:"Mew (Blue)",v:"rgb",img:null,pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-b"},
+  {id:"M6a-E01",name:"Grass Energy (foil)",v:"energy",img:null,br:true},
   {id:"M6a-E02",name:"Fire Energy (foil)",v:"energy",img:null},
   {id:"M6a-E03",name:"Water Energy (foil)",v:"energy",img:null},
   {id:"M6a-E04",name:"Lightning Energy (foil)",v:"energy",img:null},
   {id:"M6a-E05",name:"Psychic Energy (foil)",v:"energy",img:null},
   {id:"M6a-E06",name:"Fighting Energy (foil)",v:"energy",img:null},
   {id:"M6a-E07",name:"Darkness Energy (foil)",v:"energy",img:null},
-  {id:"M6a-E08",name:"Metal Energy (foil)",v:"energy",img:null},
-  {id:"M6a-G",name:"Mew (Green)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_G_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-g"},
-  {id:"M6a-R",name:"Mew (Red)",v:"rgb",img:"https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_R_R_JP_LG.png",pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-r"},
-  {id:"M6a-B",name:"Mew (Blue)",v:"rgb",img:null,pc:"https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-b"}
+  {id:"M6a-E08",name:"Metal Energy (foil)",v:"energy",img:null}
   ]
 });

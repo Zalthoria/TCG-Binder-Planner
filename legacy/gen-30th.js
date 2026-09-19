@@ -45,13 +45,15 @@ ccList.forEach((c, i) => enSlots.push({
   id: `30C-CC${String(i + 1).padStart(2, '0')}`, name: c.name, v: 'classic', img: null,
   pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/${slug(c.name)}`,
 }));
-ENERGY.forEach((e, i) => enSlots.push({
-  id: `30C-E${String(i + 1).padStart(2, '0')}`, name: `${e} Energy (foil)`, v: 'energy', img: null,
-}));
 RGB.forEach(([c, colour]) => enSlots.push({
   id: `30C-${c}`, name: `Mew (${colour})`, v: 'rgb',
   img: `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_${c}_R_EN_SM.png`,
   pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/mew-${c.toLowerCase()}`,
+}));
+// energy last, starting a fresh page (br) so the 8 sit together
+ENERGY.forEach((e, i) => enSlots.push({
+  id: `30C-E${String(i + 1).padStart(2, '0')}`, name: `${e} Energy (foil)`, v: 'energy', img: null,
+  ...(i === 0 ? { br: true } : {}),
 }));
 
 // ── Japanese (M6a) ──────────────────────────────────────────────────────
@@ -77,14 +79,16 @@ for (let n = 136; n <= 165; n++) {                          // Classic Collectio
     img: jpImg(n), pc: c ? `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/${slug(c.name)}-${n}` : undefined,
   });
 }
-ENERGY.forEach((e, i) => jpSlots.push({
-  id: `M6a-E${String(i + 1).padStart(2, '0')}`, name: `${e} Energy (foil)`, v: 'energy', img: null,
-}));
 RGB.forEach(([c, colour]) => jpSlots.push({
   id: `M6a-${c}`, name: `Mew (${colour})`, v: 'rgb',
   // B's scan isn't up yet — engine falls back to the placeholder
   img: c === 'B' ? null : `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpc/M6a/M6a_${c}_R_JP_LG.png`,
   pc: `https://www.pricecharting.com/game/pokemon-japanese-30th-celebration/mew-${c.toLowerCase()}`,
+}));
+// energy last, starting a fresh page (br) so the 8 sit together
+ENERGY.forEach((e, i) => jpSlots.push({
+  id: `M6a-E${String(i + 1).padStart(2, '0')}`, name: `${e} Energy (foil)`, v: 'energy', img: null,
+  ...(i === 0 ? { br: true } : {}),
 }));
 
 // ── Emit ────────────────────────────────────────────────────────────────
@@ -141,8 +145,8 @@ emit('30c.js', '30c', {
   `{ label: 'Illustration Rares', f: s => s.v === 'ir' }`,
   `{ label: 'SIR + FUR', f: s => s.v === 'sar' || s.v === 'fur' }`,
   `{ label: 'Classic Collection', f: s => s.v === 'classic' }`,
-  `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
   `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
+  `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
 ], enSlots);
 
 emit('m6a.js', 'm6a', {
@@ -158,6 +162,6 @@ emit('m6a.js', 'm6a', {
   `{ label: 'AR (104-123)', f: s => s.v === 'ir' }`,
   `{ label: 'SAR + FUR', f: s => s.v === 'sar' || s.v === 'fur' }`,
   `{ label: 'Classic Collection', f: s => s.v === 'classic' }`,
-  `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
   `{ label: 'RGB Mew', f: s => s.v === 'rgb' }`,
+  `{ label: 'Foil Energy', f: s => s.v === 'energy' }`,
 ], jpSlots);

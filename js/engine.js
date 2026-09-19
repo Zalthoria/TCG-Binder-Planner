@@ -73,12 +73,31 @@ function init(SET) {
   const saveLayout = () => localStorage.setItem(LS_LAYOUT, JSON.stringify({ cols, rows, sheets }));
 
   const spp        = () => cols * rows;
-  const pageCount  = () => Math.ceil(TOTAL / spp());           // pages that hold cards
+
+  // Pagination. A slot flagged br:true starts a fresh page — the page before it
+  // is padded with empty pockets — so a section can own its own page.
+  let _pages = null, _pagesKey = '';
+  function pages() {
+    const key = cols + 'x' + rows;
+    if (_pages && _pagesKey === key) return _pages;
+    const per = spp(), out = [];
+    let cur = [];
+    SLOTS.forEach(s => {
+      if (s.br && cur.length) { while (cur.length < per) cur.push(null); out.push(cur); cur = []; }
+      cur.push(s);
+      if (cur.length === per) { out.push(cur); cur = []; }
+    });
+    if (cur.length) out.push(cur);
+    _pages = out; _pagesKey = key;
+    return out;
+  }
+  const pageCount  = () => pages().length;                     // pages that hold cards
   const pagesPerBinder = () => sheets * 2;                     // each sheet holds cards front & back
   const binderCount = () => Math.max(1, Math.ceil(pageCount() / pagesPerBinder()));
   const capacity   = () => binderCount() * pagesPerBinder();   // physical pages incl. empty
   const spreadMax  = () => Math.ceil((capacity() + 1) / 2);    // page 0 = cover
-  const pageSlots  = p => SLOTS.slice((p - 1) * spp(), p * spp());
+  const pageSlots  = p => (pages()[p - 1] || []).filter(Boolean);
+  const pageCells  = p => pages()[p - 1] || [];                // includes null padding
   const spreadOf   = p => Math.ceil((p + 1) / 2);              // which spread shows page p
 
   // ── State ─────────────────────────────────────────────────────────────
@@ -325,8 +344,9 @@ function init(SET) {
       } else {
         pg.appendChild(el('div', 'page-label', `Page ${p} / ${pageCount()}`));
         const g = el('div', 'page-grid');
-        const slots = pageSlots(p);
-        slots.forEach(s => g.appendChild(makeSlot(s)));
+        const cells = pageCells(p);
+        cells.forEach(s => g.appendChild(s ? makeSlot(s) : el('div', 'pocket-empty')));
+        const slots = cells.filter(Boolean);
         // pad a partially-filled page with empty pockets
         for (let i = slots.length; i < spp(); i++) g.appendChild(el('div', 'pocket-empty'));
         pg.appendChild(g);
