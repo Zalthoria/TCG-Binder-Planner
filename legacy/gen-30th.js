@@ -41,8 +41,10 @@ const ccList = [...extra.cc];
 ccList.push({ num: 151, name: 'Darkrai & Cresselia LEGEND (top)' },
             { num: 152, name: 'Darkrai & Cresselia LEGEND (bottom)' });
 ccList.sort((a, b) => a.num - b.num);
+// Limitless numbers the EN Classic Collection CC1-CC30 (unpadded in image URLs)
 ccList.forEach((c, i) => enSlots.push({
-  id: `30C-CC${String(i + 1).padStart(2, '0')}`, name: c.name, v: 'classic', img: null,
+  id: `30C-CC${String(i + 1).padStart(2, '0')}`, name: c.name, v: 'classic',
+  img: `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/tpci/30C/30C_CC${i + 1}_R_EN_SM.png`,
   pc: `https://www.pricecharting.com/game/pokemon-30th-celebration/${slug(c.name)}`,
 }));
 // the Mew trio gets a page to itself, centred on the middle row
